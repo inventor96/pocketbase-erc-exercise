@@ -127,6 +127,37 @@ routerAdd("GET", "/report", (c) => {
 			HAVING COUNT(tasks.id) > 1\
 			ORDER BY count DESC")
 		.all(multiple_tasks)
+	const multiple_tasks_details = []
+	multiple_tasks.forEach(item => {
+		// get task details
+		var task_details = arrayOf(new DynamicModel({
+			"task_id": "",
+			"need_user_callsign": "",
+			"need_user_stake": "",
+			"resource_user_callsign": "",
+			"resource_user_stake": "",
+		}))
+		$app.dao().db()
+			.newQuery('SELECT tasks.id AS task_id, need_users.callsign AS need_user_callsign, need_stakes.name AS need_user_stake, resource_users.callsign AS resource_user_callsign, resource_stakes.name AS resource_user_stake\
+				FROM tasks\
+				LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
+				LEFT JOIN stakes AS resource_stakes ON resource_stakes.id = resource_users.stake\
+				LEFT JOIN users AS need_users ON need_users.id = tasks.need_user\
+				LEFT JOIN stakes AS need_stakes ON need_stakes.id = need_users.stake\
+				WHERE tasks.item = {:item_id}')
+			.bind({
+				"item_id": item.id
+			})
+			.all(task_details)
+		
+		// add the details to the report
+		multiple_tasks_details.push({
+			id: item.id,
+			description: item.description,
+			count: item.count,
+			tasks: task_details
+		})
+	})
 
 	const top_needs_users = arrayOf(new DynamicModel({
 		"username": "",
@@ -264,7 +295,7 @@ routerAdd("GET", "/report", (c) => {
 		"multiple_tasks": {
 			"count": multiple_tasks.length,
 			"description": "Items that were used in more than one task",
-			"report": multiple_tasks
+			"report": multiple_tasks_details
 		},
 		"top_needs_users": {
 			"count": top_needs_users.length,
