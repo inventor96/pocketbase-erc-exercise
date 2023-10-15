@@ -156,11 +156,6 @@ onModelBeforeUpdate((e) => {
 						GROUP BY items.id\
 						ORDER BY used ASC, RANDOM()\
 						LIMIT 1')
-					/* .select('id')
-					.from('items')
-					.orderBy('id')
-					.limit(1)
-					.offset(Math.floor(Math.random() * items.count)) */
 					.one(task)
 
 				// pick resource user
