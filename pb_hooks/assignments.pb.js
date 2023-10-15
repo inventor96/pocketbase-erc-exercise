@@ -145,7 +145,7 @@ onModelBeforeUpdate((e) => {
 				.one(tasks)
 
 			// create multiple tasks based on previous task count
-			var new_task_count = tasks.count > 0 ? 10 : 3
+			var new_task_count = tasks.count > 0 ? 1 : 3
 			for (let j = 0; j < new_task_count; j++) {
 				// pick a random task
 				var task = new DynamicModel({ "id": "" })
