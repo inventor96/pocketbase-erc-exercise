@@ -67,15 +67,15 @@ onModelBeforeUpdate((e) => {
 
 	// shoring up
 	const tasks_collection = $app.dao().findCollectionByNameOrId("tasks")
+	const stake_weight = exercise_record.get('stake_distribution')
+	const region_weight = exercise_record.get('region_distribution')
+	const storehouse_weight = exercise_record.get('storehouse_distribution')
+	const scope_total = stake_weight + region_weight + storehouse_weight
 	const items = new DynamicModel({ "count": 0 })
 	$app.dao().db().newQuery("SELECT COUNT(id) AS count FROM items;").one(items)
 
 	function chooseUser(user_id) {
 		const eligible_users = arrayOf(new DynamicModel({ "id": "" }))
-		const stake_weight = exercise_record.get('stake_distribution')
-		const region_weight = exercise_record.get('region_distribution')
-		const storehouse_weight = exercise_record.get('storehouse_distribution')
-		const scope_total = stake_weight + region_weight + storehouse_weight
 		const user_model = $app.dao().findRecordById('users', user_id)
 		const region_id = $app.dao().findRecordById("stakes", user_model.get('stake')).get('region')
 
