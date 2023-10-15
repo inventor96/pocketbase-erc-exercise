@@ -1,0 +1,112 @@
+{{define "title"}}
+ERC Exercise Signup
+{{end}}
+
+{{define "head"}}
+<style>
+	div.mb-1:has(+ input) {
+		display: none;
+	}
+
+	div.mb-1:has(+ input:focus) {
+		display: block;
+	}
+</style>
+{{end}}
+
+{{define "container"}}
+<h1>ERC Exercise Signup</h1>
+<p>Already have an account? <a href="/login">Head over to the login page</a>.</p>
+<form id="signup_form">
+	<div class="mb-4">
+		<label for="username" class="form-label fs-5 fw-bold">Username</label>
+		<input type="text" class="form-control" id="username" name="username" required minlength="3">
+	</div>
+	<div class="mb-4">
+		<label for="password" class="form-label fs-5 fw-bold">Pin Code</label>
+		<div class="mb-1"><i class="bi bi-info-circle-fill text-primary"></i> Minimum 6 characters or digits.</div>
+		<input type="password" class="form-control" id="password" name="password" required minlength="6">
+	</div>
+	<div class="mb-4">
+		<label for="stake" class="form-label fs-5 fw-bold">Participation Stake</label>
+		<div class="mb-1"><i class="bi bi-info-circle-fill text-primary"></i> Make sure to pick the Stake you're participating with during the exercise.</div>
+		<select class="form-select" id="stake" name="stake" required>
+			<option selected disabled value="">Select one...</option>
+			{{range .stakes}}
+			<option value="{{.Id}}">{{.Name}}</option>
+			{{end}}
+		</select>
+	</div>
+	<div class="mb-4">
+		<label for="callsign" class="form-label fs-5 fw-bold">Callsign</label>
+		<div class="mb-1"><i class="bi bi-info-circle-fill text-primary"></i> If you have an assigned FCC callsign (e.g. Amatuer Radio, GMRS, etc.), use that. Otherwise leave this blank and we'll generate one for you.</div>
+		<input type="text" class="form-control" id="callsign" name="callsign">
+	</div>
+	<button id="submit" class="btn btn-primary mt-3" type="submit">
+		<span class="spinner-grow spinner-grow-sm"></span>
+		Create your ERC Exercise account
+	</button>
+</form>
+{{end}}
+
+{{define "script"}}
+<script type="text/javascript">
+	// redirect if logged in
+	if (pb.authStore.isValid) {
+		window.location.href = '/'
+	}
+
+	$(() => {
+		// capitalize callsign, require alphanumeric
+		$('#callsign').on('input', (e) => e.target.value = e.target.value.toUpperCase().replace(/[^a-zA-Z0-9]/, ''))
+
+		// handle submit
+		const $submit = $('#submit')
+		$('#signup_form').on('submit', () => {
+			$submit.prop('disabled', true)
+
+			// get callsign if needed
+			if (!$('#callsign').val()) {
+				$.get('/callsign', response => {
+					$('#callsign').val(response.callsign)
+					createUser()
+				})
+			} else {
+				createUser()
+			}
+
+			return false
+		})
+
+		// create a new user with their stake
+		function createUser() {
+			const user_data = {
+				"username": $('#username').val(),
+				"password": $('#password').val(),
+				"passwordConfirm": $('#password').val(),
+				"stake": $('#stake').val(),
+				"callsign": $('#callsign').val(),
+				"ready": false,
+			}
+			pb.collection('users').create(user_data)
+				.then(() => {
+					// log in
+					pb.collection('users').authWithPassword($('#username').val(), $('#password').val())
+						.then(() => {
+							if (pb.authStore.isValid) {
+								window.location.href = "/"
+							}
+						})
+						.catch(error => {
+							alert(`There was an error while logging you in: ${error}`)
+							$submit.prop('disabled', false)
+						})
+				})
+				.catch(error => {
+					alert(`There was an error while creating your account: ${error}\n\nMaybe that username or callsign is already in use?`)
+					$submit.prop('disabled', false)
+				})
+		}
+	})
+</script>
+{{end}}

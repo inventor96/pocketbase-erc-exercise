@@ -1,0 +1,408 @@
+{{define "container"}}
+<h1>Hi <span class="user-disp"><span class="placeholder-glow"><span class="placeholder col-1"></span></span></span>!</h1>
+<h3 class="mb-4">Your callsign is <span class="fw-bold callsign-disp text-success"><span class="placeholder-glow"><span class="placeholder col-1"></span></span></span>.</h3>
+
+<div class="card mb-5">
+	<div class="card-body">
+		<h5 class="card-title">Needs</h5>
+		<p class="card-subtitle mb-3"><i class="bi bi-info-circle-fill text-primary"></i> Click the button when you're ready for needs assignments!</p>
+		<button type="button" id="ready_btn" class="btn btn-success mb-4">
+			<span id="ready_btn_spinner" class="spinner-grow spinner-grow-sm"></span>
+			<span id="ready_btn_text">I'm ready to be assigned needs!</span>
+		</button>
+		<ul id="needs_list" class="list-group">
+			<li class="list-group-item"><span class="placeholder-glow"><span class="placeholder col-4"></span></span></li>
+		</ul>
+	</div>
+</div>
+
+<div class="card mb-5">
+	<div class="card-body">
+		<h5 class="card-title">Resources</h5>
+		<p class="card-subtitle mb-3"><i class="bi bi-info-circle-fill text-primary"></i> You will be prompted to accept more resources when someone is ready for more needs assignments.</p>
+		<ul id="resources_list" class="list-group">
+			<li class="list-group-item"><span class="placeholder-glow"><span class="placeholder col-4"></span></span></li>
+		</ul>
+	</div>
+</div>
+
+<div class="card mb-5">
+	<div class="card-body">
+		<div class="row">
+			<div class="col">
+				<h5 class="card-title text-center">Stats</h5>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col p-2 border">
+				<h6 class="text-center">Needs Fulfilled</h6>
+				<p id="needs_count" class="text-center m-0">0</p>
+			</div>
+			<div class="col p-2 border">
+				<h6 class="text-center">Resources Provided</h6>
+				<p id="resources_count" class="text-center m-0">0</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="cancel_confirm_modal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Missing Resource</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure you've gone all the way up the hierarchy to find the resource?</p>
+				<p>If you're sure you can't find the resource, you can skip this assignment an move on to another one, but you won't be able to come back to this one.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">I'll keep searching</button>
+				<button type="button" id="cancel_confirm" class="btn btn-primary" data-bs-dismiss="modal" data-bs-id="">
+					<span class="spinner-grow spinner-grow-sm"></span>
+					Skip this assignment
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="success_modal" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p class="fs-1 text-success text-center"><i class="bi bi-check-circle-fill"></i></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="resource_prompt_modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Will you accept another resource?</h5>
+			</div>
+			<div class="modal-body">
+				<p>It looks like someone else has received <span id="resource_name" class="fw-bold"></span> as a need. Would you be willing to be the resource for the individual's need?</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="resource_reject" class="btn btn-secondary resource-action" data-id="" data-action="reject">
+					<span class="spinner-grow spinner-grow-sm"></span>
+					Not this time (<span id="interaction_timer">120</span>)
+				</button>
+				<button type="button" id="resource_accept" class="btn btn-primary resource-action" data-id="" data-action="accept">
+					<span class="spinner-grow spinner-grow-sm"></span>
+					Sure, I can be the resource!
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+{{end}}
+
+{{define "script"}}
+<script type="text/javascript">
+	const resource_prompt_modal = new bootstrap.Modal('#resource_prompt_modal')
+	const $resource_prompt_modal = $('#resource_prompt_modal')
+	const notification = new Audio('/notification.mp3')
+	var resource_prompt_queue = []
+	var notified_resources = []
+	var interaction_timeout
+
+	function showResourcePrompt() {
+		// skip if it's already shown or transitioning
+		if (resource_prompt_modal._isShown || resource_prompt_modal._isTransitioning || resource_prompt_queue.length == 0) {
+			return
+		}
+
+		// get next resource
+		var i = 0
+		while (i < resource_prompt_queue.length && notified_resources.includes(resource_prompt_queue[i].id)) {
+			i++
+		}
+
+		// nothing for us to do here
+		if (i == resource_prompt_queue.length) {
+			return
+		}
+
+		// show the prompt
+		$('.resource-action').data('id', resource_prompt_queue[i].id)
+		$('#resource_name').text(resource_prompt_queue[i].expand.item.description)
+		resource_prompt_modal.show()
+		notification.play()
+		notified_resources.push(resource_prompt_queue[i].id)
+		const $interaction_timer = $('#interaction_timer')
+		$interaction_timer.text('120')
+
+		// automatically reject after no interaction
+		interaction_timeout = setInterval(() => {
+			const timer = Number($interaction_timer.text()) - 1
+			$interaction_timer.text(timer)
+			if (timer == 0) {
+				clearInterval(interaction_timeout)
+				$('#resource_reject').trigger('click')
+			}
+		}, 1000)
+	}
+	$resource_prompt_modal.on('hidden.bs.modal', () => setTimeout(showResourcePrompt, 100))
+
+	// redirect if not logged in
+	if (!pb.authStore.isValid) {
+		window.location.href = '/login'
+	}
+
+	function checkUpdateStatusView() {
+		const $ready_btn = $('#ready_btn')
+		const $ready_btn_spinner = $('#ready_btn_spinner')
+		const $ready_btn_text = $('#ready_btn_text')
+		const $needs_list = $('#needs_list')
+		const $resources_list = $('#resources_list')
+
+		// refresh user details
+		pb.collection('users').authRefresh().then(() => {
+			// check if there's open needs
+			pb.collection('tasks').getFullList({
+				filter: `need_user = "${pb.authStore.model.id}" && completed = "" && cancelled = "" && resource_confirmed = true`,
+				sort: 'created',
+				expand: 'item',
+				requestKey: 'needs'
+			})
+				.then(needs_list => {
+					if (needs_list.length > 0) {
+						// user has open needs
+						$ready_btn.prop('disabled', true)
+						$ready_btn_spinner.addClass('d-none')
+						$ready_btn_text.text("Woohoo! Go find the resources for your needs!")
+						// TODO: might need to refactor this so we don't delete and recreate elements
+						$needs_list.empty()
+						var i = 0
+						needs_list.forEach(need => {
+							// determine priority badge color
+							var badge_type;
+							switch (need.expand.item.priority) {
+								case 'Emergency': badge_type = 'danger'; break;
+								case 'Priority': badge_type = 'warning'; break;
+								case 'Welfare': badge_type = 'primary'; break;
+								case 'Routine': badge_type = 'success'; break;
+								default: break;
+							}
+
+							// add row
+							$needs_list.append(`<li class="list-group-item ${++i % 2 ? 'list-group-item-secondary' : ''}">\
+									<div class="row row-cols-1 row-cols-md-2 gy-2 align-items-center">\
+										<div class="col">\
+											<span class="badge text-bg-${badge_type}">${need.expand.item.priority}</span>\
+											<span class="fw-bold">${need.expand.item.description}</span>\
+											(${need.expand.item.quantity})\
+										</div>\
+										<div class="col">\
+											<form class="need-check" id="${need.id}">\
+												<div class="input-group">\
+													<input type="text" placeholder="Resource callsign" class="form-control callsign-input" required>\
+													<button type="submit" class="btn btn-success">\
+														<span class="spinner-grow spinner-grow-sm"></span>\
+														Fulfill Need\
+													</button>\
+												</div>\
+												<button type="button" class="btn btn-warning mt-2" data-bs-id="${need.id}" data-bs-toggle="modal" data-bs-target="#cancel_confirm_modal">\
+													<span class="spinner-grow spinner-grow-sm"></span>\
+													I Can't Find It\
+												</button>\
+											</form>\
+										</div>\
+									</div>\
+								</li>`)
+						})
+					} else {
+						// no needs
+						$needs_list.empty()
+						$needs_list.append('<li class="list-group-item"><span class="placeholder-glow"><span class="placeholder col-4"></span></span></li>')
+
+						if (pb.authStore.model.ready) {
+							// user ready
+							$ready_btn.prop('disabled', true)
+							$ready_btn_spinner.removeClass('d-none')
+							$ready_btn_text.text("Waiting to be assigned needs...")
+						} else {
+							// user not ready
+							$ready_btn.prop('disabled', false)
+							$ready_btn_spinner.removeClass('d-none')
+							$ready_btn_text.text("I'm ready to be assigned needs!")
+						}
+					}
+				})
+				.catch(error => {
+					if (!error.message.match('request was autocancelled')) {
+						alert(`There was an error while checking for assigned needs:\n${error}\nPlease refresh the page.`)
+					}
+				})
+
+			// check if there's open resources
+			pb.collection('tasks').getFullList({
+				filter: `resource_user = "${pb.authStore.model.id}" && completed = "" && cancelled = "" && resource_confirmed = true`,
+				sort: 'created',
+				expand: 'item',
+				requestKey: 'resources'
+			})
+				.then(resource_list => {
+					$resources_list.empty()
+					if (resource_list.length > 0) {
+						var i = 0
+						resource_list.forEach(resource => {
+							$resources_list.append(`<li class="list-group-item ${++i % 2 ? 'list-group-item-secondary' : ''}">\
+									<span class="fw-bold">${resource.expand.item.description}</span>\
+									(${resource.expand.item.quantity})\
+								</li>`)
+						});
+					} else {
+						$resources_list.append('<li class="list-group-item"><span class="placeholder-glow"><span class="placeholder col-4"></span></span></li>')
+					}
+				})
+				.catch(error => {
+					if (!error.message.match('request was autocancelled')) {
+						alert(`There was an error while checking for assigned resources:\n${error}`)
+					}
+				})
+
+			// check for resources pending confirmation
+			pb.collection('tasks').getFullList({
+				filter: `resource_user = "${pb.authStore.model.id}" && completed = "" && cancelled = "" && resource_confirmed = false && resource_rejected = false`,
+				sort: 'created',
+				expand: 'item',
+				requestKey: 'pending_resources'
+			})
+				.then(pending_resources_list => {
+					resource_prompt_queue = pending_resources_list
+					showResourcePrompt()
+				})
+				.catch(error => console.warn('There was an error while fetching pending resources:', error))
+
+			// get count of completed needs
+			pb.collection('tasks').getList(1, 1, {
+				filter: `need_user = "${pb.authStore.model.id}" && completed != ""`,
+				requestKey: 'needs_count'
+			})
+				.then(response => $('#needs_count').text(response.totalItems))
+
+			// get count of completed resources
+			pb.collection('tasks').getList(1, 1, {
+				filter: `resource_user = "${pb.authStore.model.id}" && completed != ""`,
+				requestKey: 'resources_count'
+			})
+				.then(response => $('#resources_count').text(response.totalItems))
+		})
+	}
+
+	$(() => {
+		// update user info
+		$('.user-disp').text(pb.authStore.model.username)
+		$('.callsign-disp').text(pb.authStore.model.callsign)
+
+		// handle external updates for this user
+		pb.collection('users').subscribe(pb.authStore.model.id, checkUpdateStatusView)
+		pb.collection('tasks').subscribe('*', checkUpdateStatusView)
+
+		// handle ready button
+		const $ready_btn = $('#ready_btn')
+		$ready_btn.on('click', () => {
+			$ready_btn.prop('disabled', true)
+
+			// update the user
+			pb.collection('users').update(pb.authStore.model.id, { ready: true })
+				//.then(checkUpdateStatusView) // not needed since the realtime api will trigger the update
+				.catch(error => {
+					alert(`There was an error while marking you as ready:\n${error}\nPlease refresh the page.`)
+				})
+		})
+
+		$('#needs_list')
+		// capitalize callsign, require alphanumeric
+			.on('input', '.callsign-input', (e) => e.currentTarget.value = e.currentTarget.value.toUpperCase().replace(/[^a-zA-Z0-9]/, ''))
+
+		// handle callsign submission
+			.on('submit', '.need-check', (e) => {
+				const $form = $(e.target)
+				const $form_btn = $form.find('button')
+				const $form_input = $form.find('input')
+				$form_btn.prop('disabled', true)
+				$form_input.prop('disabled', true)
+				const need_callsign = $form_input.val()
+
+				// make request
+				pb.send('/fulfill-need', {
+					method: "POST",
+					body: {
+						need_id: e.target.id,
+						need_callsign
+					}
+				})
+					.then(response => {
+						if (response.success) {
+							const success_modal = new bootstrap.Modal('#success_modal')
+							success_modal.show()
+							setTimeout(() => success_modal.hide(), 2000)
+						} else {
+							alert("Hmm... That doesn't look like the callsign of the person who has the resource. Keep trying! Feel free to ask exercise administrators for help if needed.")
+							$form_btn.prop('disabled', false)
+							$form_input.prop('disabled', false)
+						}
+					})
+					.catch(error => {
+						alert(`There was an error while checking the callsign:\n${error}`)
+						$form_btn.prop('disabled', false)
+						$form_input.prop('disabled', false)
+					})
+
+				return false
+			})
+
+		// handle task cancellation
+		const $cancel_confirm = $('#cancel_confirm')
+		$('#cancel_confirm_modal').on('show.bs.modal', e => $cancel_confirm.data('bs-id', $(e.relatedTarget).data('bs-id')))
+		$cancel_confirm.on('click', () => {
+			$cancel_confirm.prop('disabled', true)
+			pb.collection('tasks').update($cancel_confirm.data('bs-id'), { cancelled: new Date().toISOString().replace('T', ' ').substr(0, 19) })
+				.then(() => {
+					(new bootstrap.Modal('#cancel_confirm_modal')).hide()
+					$cancel_confirm.prop('disabled', false)
+				})
+				.catch(error => {
+					alert(`There was an error while skipping the assignment:\n${error}`)
+					$cancel_confirm.prop('disabled', false)
+				}) 
+		})
+
+		// handle resource accept/reject
+		$('.resource-action').on('click', e => {
+			clearInterval(interaction_timeout)
+			const $action_button = $(e.target)
+			$action_button.prop('disabled', true)
+
+			const id = $action_button.data('id')
+			const action = $action_button.data('action')
+
+			pb.collection('tasks').update(id, {
+				resource_confirmed: action == 'accept',
+				resource_rejected: action == 'reject'
+			})
+				.then(() => {
+					resource_prompt_modal.hide()
+					$action_button.prop('disabled', false)
+				})
+				.catch(error => {
+					alert(`There was an error while ${action}ing the resource:\n${error}\n\nYou probably need to refresh the page.`)
+					$action_button.prop('disabled', false)
+				})
+		})
+
+		// update status view
+		checkUpdateStatusView()
+	})
+</script>
+{{end}}
