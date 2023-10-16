@@ -290,7 +290,20 @@ routerAdd("GET", "/report", (c) => {
 			WHERE resource_stakes.region != need_stakes.region\
 				AND tasks.cancelled != ''")
 		.one(storehouse_tasks_cancelled)
-	
+
+	const user_participation = new DynamicModel({ "count": 0 })
+	$app.dao().db()
+		.newQuery("SELECT COUNT(DISTINCT id) AS count\
+			FROM (\
+				SELECT resource_user AS id FROM tasks\
+				WHERE resource_confirmed = true\
+				UNION\
+				SELECT need_user AS id FROM tasks\
+					WHERE completed != ''\
+						OR cancelled != ''\
+			)")
+		.one(user_participation)
+
 	c.json(200, {
 		"multiple_tasks": {
 			"count": multiple_tasks.length,
@@ -335,6 +348,10 @@ routerAdd("GET", "/report", (c) => {
 					"failure": Math.round((storehouse_tasks_cancelled.count / storehouse_tasks.count) * 100) + "%",
 				},
 			}
+		},
+		"user_participation": {
+			"description": "The number of users with evidence of participation in the exercise",
+			"report": user_participation.count
 		}
 	})
 })
