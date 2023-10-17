@@ -11,6 +11,7 @@ The application is built to handle only one exercise at a time. If it was to hos
 Note that these setup instructions are for Linux hosts. You'll have to adjust and refactor stuff as necessary for other platforms.
 
 1. Get this repo on your host.
+1. Before proceeding, consider the point in [Production-ready Setup](#production-ready-setup) regarding a reverse proxy.
 1. If needed, update the URL in the initial config (found in `pb_migrations/1697331567_initial_settings.js`).
 1. If needed, update the URL for the frontend (look for `new PocketBase` in `pb_hooks/views/base.html`).
 1. Do the initial start manually (e.g. `./pocketbase serve`).
