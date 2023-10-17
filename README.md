@@ -96,6 +96,6 @@ If the user decides they are unable to find the resource user, they can click th
 
 ### Reporting
 
-A JSON report is available publicly at the `/report` URL. This includes details about task success/failure rates per scope, a list of items that have been used in more than one task/assignment, as well as the top users for needs and resources.
+A JSON report is available publicly at the `/report` URL. This includes details about task success/failure rates per scope, a list of items that have been used in more than one task/assignment, the top users for needs and resources, and a participation head count. By default, the report shows stats for the timeframe of the most recent exercise for which the start time has passed (irrespective of the `started` status). Optionally, you can query for a specific exercise by adding the `exercise_id` query parameter to the URL. e.g. `/report?exercise_id=ID_FROM_THE_COLLECTION`.
 
 **Note:** Any items that are used in more than one task will cause confusion if the respective scopes overlap, because the application will still require the callsign of the resource user as defined by the assignment, even if the item is the same. This is why that part of the report is useful.
