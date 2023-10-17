@@ -17,7 +17,7 @@ Note that these setup instructions are for Linux hosts. You'll have to adjust an
 1. Create your admin user in the admin UI (e.g. if running locally, go to [http://127.0.0.1:8090/_](http://127.0.0.1:8090/_))
 1. Get CSV files for the items, regions, and stakes (the old data is in the root of the repo for reference/updating; note that the trailing new line is important). The uploader script is very simple, and does not support commas (`,`) in field values, nor does it process quoted fields. The columns are expected to be exactly as follows:
 	- `items.csv`: name (text), quantity (text), precedence* (integer)
-		- Allowed precedences: 1 (Emergency), 2 (Priority), 3, (Welfare), 4 (Routine)
+		- *Allowed precedences: 1 (Emergency), 2 (Priority), 3, (Welfare), 4 (Routine)
 	- `regions.csv`: id (integer), name (text)
 	- `stakes.csv`: id (integer), name (text), region id (integer)
 1. Get your admin auth token.
