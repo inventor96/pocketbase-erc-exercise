@@ -1,3 +1,5 @@
+/// <reference path="../pb_data/types.d.ts" />
+
 onModelBeforeUpdate((e) => {
 	const table = e.model.tableName()
 	const current_model = $app.dao().findRecordById(table, e.model.id)
