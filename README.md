@@ -4,7 +4,7 @@
 
 This is a simple application written for the [Pocketbase backend and framework](https://pocketbase.io/). The general idea is to generate need/resource pairs to give a real reason to pass around radio traffic for an ERC exercise. The app works with three scopes: stakes, regions, and storehouse (the top level, i.e. global). The logic tries to spread the pair across scopes as configured per exercise.
 
-The application is built to handle only one exercise at a time. If it was to host more than one concurrent exercise, there would be assignments made between the two exercises as if they were the same.
+The application is built to handle only one exercise at a time. If it was to host more than one concurrent exercise, there would be assignments made between the two exercises as if they were the same, and the reporting would also show everything as one exercise.
 
 ## Setup
 
