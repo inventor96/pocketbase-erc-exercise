@@ -305,6 +305,7 @@ routerAdd("GET", "/report", (c) => {
 		.one(user_participation)
 
 	// output report
+	const total_tasks = stake_tasks.count + region_tasks.count + storehouse_tasks.count
 	c.json(200, {
 		"exercise": reporting_exercise,
 		"reports": {
@@ -332,7 +333,8 @@ routerAdd("GET", "/report", (c) => {
 						"cancelled": stake_tasks_cancelled.count,
 						"pending": stake_tasks.count - stake_tasks_completed.count - stake_tasks_cancelled.count,
 						"success": Math.round((stake_tasks_completed.count / stake_tasks.count) * 100) + "%",
-						"failure": Math.round((stake_tasks_cancelled.count / stake_tasks.count) * 100) + "%"
+						"failure": Math.round((stake_tasks_cancelled.count / stake_tasks.count) * 100) + "%",
+						"scope_percentange": Math.round((stake_tasks.count / total_tasks) * 100) + "%",
 					},
 					"region": {
 						"total": region_tasks.count,
@@ -341,6 +343,7 @@ routerAdd("GET", "/report", (c) => {
 						"pending": region_tasks.count - region_tasks_completed.count - region_tasks_cancelled.count,
 						"success": Math.round((region_tasks_completed.count / region_tasks.count) * 100) + "%",
 						"failure": Math.round((region_tasks_cancelled.count / region_tasks.count) * 100) + "%",
+						"scope_percentange": Math.round((region_tasks.count / total_tasks) * 100) + "%",
 					},
 					"storehouse": {
 						"total": storehouse_tasks.count,
@@ -349,6 +352,7 @@ routerAdd("GET", "/report", (c) => {
 						"pending": storehouse_tasks.count - storehouse_tasks_completed.count - storehouse_tasks_cancelled.count,
 						"success": Math.round((storehouse_tasks_completed.count / storehouse_tasks.count) * 100) + "%",
 						"failure": Math.round((storehouse_tasks_cancelled.count / storehouse_tasks.count) * 100) + "%",
+						"scope_percentange": Math.round((storehouse_tasks.count / total_tasks) * 100) + "%",
 					},
 				}
 			},
