@@ -257,19 +257,19 @@
 				$.getJSON('/monitordata', function(data) {
 					// update the display
 					$('#participants').text(data.participants.total)
-					// $('#open_needs').text(data.open_needs)
-					// $('#fulfilled_needs').text(data.fulfilled_needs)
-					// $('#skipped_needs').text(data.skipped_needs)
+					$('#open_needs').text(data.tasks.total.open)
+					$('#fulfilled_needs').text(data.tasks.total.fulfilled)
+					$('#skipped_needs').text(data.tasks.total.skipped)
 					// $('#fulfillment_time_storehouse').text(data.fulfillment_time.storehouse + ' mins')
 					// $('#fulfillment_time_region').text(data.fulfillment_time.region + ' mins')
 					// $('#fulfillment_time_stake').text(data.fulfillment_time.stake + ' mins')
 
-					/* for (const scope in data.scope_needs) {
-						const scope_data = data.scope_needs[scope]
+					for (const scope in data.tasks.scope) {
+						const scope_data = data.tasks.scope[scope]
 						$(`#scope_needs_${scope}_open`).text(scope_data.open)
 						$(`#scope_needs_${scope}_fulfilled`).text(scope_data.fulfilled)
 						$(`#scope_needs_${scope}_skipped`).text(scope_data.skipped)
-					} */
+					}
 
 					$(`#region_participants`).empty()
 					for (const region of data.participants.by_region) {
