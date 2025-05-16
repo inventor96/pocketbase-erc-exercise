@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>ERC Exercise Monitor</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col">
+				<h3 class="alert alert-info text-center my-3" id="time_alert">The <span id="time_name">ERC Exercise</span> is scheduled to <span id="time_ref">start</span> in <span id="time_disp">...</span></h3>
+			</div>
+		</div>
+		<div class="row mb-3">
+			<div class="col">
+				<div class="card border-primary">
+					<div class="card-header bg-primary-subtle">
+						<h3 class="card-title">Participants</h3>
+					</div>
+					<div class="card-body text-center">
+						<div class="display-2" id="participants">0</div>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card border-warning">
+					<div class="card-header bg-warning-subtle">
+						<h3 class="card-title">Open Needs</h3>
+					</div>
+					<div class="card-body text-center">
+						<div class="display-2" id="open_needs">0</div>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card border-success">
+					<div class="card-header bg-success-subtle">
+						<h3 class="card-title">Fulfilled Needs</h3>
+					</div>
+					<div class="card-body text-center">
+						<div class="display-2" id="fulfilled_needs">0</div>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card border-danger">
+					<div class="card-header bg-danger-subtle">
+						<h3 class="card-title">Skipped Needs</h3>
+					</div>
+					<div class="card-body text-center">
+						<div class="display-2" id="skipped_needs">0</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row mb-3">
+			<div class="col">
+				<div class="card border-secondary">
+					<div class="card-header bg-secondary-subtle">
+						<h3 class="card-title">Avg Fulfillment Time</h3>
+					</div>
+					<div class="card-body">
+						<table class="table table-striped table-hover mb-0">
+							<tbody id="fulfillment_time">
+								<tr>
+									<th class="fs-4">Storehouse</th>
+									<td class="fs-4" id="fulfillment_time_storehouse">-- mins</td>
+								</tr>
+								<tr>
+									<th class="fs-4">Region</th>
+									<td class="fs-4" id="fulfillment_time_region">-- mins</td>
+								</tr>
+								<tr>
+									<th class="fs-4">Stake</th>
+									<td class="fs-4" id="fulfillment_time_stake">-- mins</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card border-secondary">
+					<div class="card-header bg-secondary-subtle">
+						<h3 class="card-title">Needs by Scope</h3>
+					</div>
+					<div class="card-body">
+						<table class="table table-striped table-hover mb-0">
+							<thead>
+								<tr>
+									<th class="fs-4" scope="col">Scope</th>
+									<th class="fs-4" scope="col">Open</th>
+									<th class="fs-4" scope="col">Fulfilled</th>
+									<th class="fs-4" scope="col">Skipped</th>
+								</tr>
+							</thead>
+							<tbody id="scope_needs">
+								<tr>
+									<td class="fs-4">Storehouse</td>
+									<td class="fs-4" id="scope_needs_storehouse_open">0</td>
+									<td class="fs-4" id="scope_needs_storehouse_fulfilled">0</td>
+									<td class="fs-4" id="scope_needs_storehouse_skipped">0</td>
+								</tr>
+								<tr>
+									<td class="fs-4">Region</td>
+									<td class="fs-4" id="scope_needs_region_open">0</td>
+									<td class="fs-4" id="scope_needs_region_fulfilled">0</td>
+									<td class="fs-4" id="scope_needs_region_skipped">0</td>
+								</tr>
+								<tr>
+									<td class="fs-4">Stake</td>
+									<td class="fs-4" id="scope_needs_stake_open">0</td>
+									<td class="fs-4" id="scope_needs_stake_fulfilled">0</td>
+									<td class="fs-4" id="scope_needs_stake_skipped">0</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row mb-3">
+			<div class="col">
+				<div class="card border-secondary">
+					<div class="card-header bg-secondary-subtle">
+						<h3 class="card-title">Participants by Region</h3>
+					</div>
+					<div class="card-body">
+						<table class="table table-striped table-hover mb-0">
+							<thead>
+								<tr>
+									<th scope="col">Region</th>
+									<th scope="col">Participants</th>
+								</tr>
+							</thead>
+							<tbody id="region_participants">
+								<tr>
+									<td colspan="2" class="text-center">
+										<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+										Loading...
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card border-secondary">
+					<div class="card-header bg-secondary-subtle">
+						<h3 class="card-title">Needs by Region</h3>
+					</div>
+					<div class="card-body">
+						<table class="table table-striped table-hover mb-0">
+							<thead>
+								<tr>
+									<th scope="col">Region</th>
+									<th scope="col">Open</th>
+									<th scope="col">Fulfilled</th>
+									<th scope="col">Skipped</th>
+								</tr>
+							</thead>
+							<tbody id="region_needs">
+								<tr>
+									<td colspan="4" class="text-center">
+										<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+										Loading...
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<script src="/pocketbase.umd.js"></script>
+	<script type="text/javascript">
+		const pb = new PocketBase('{{.appUrl}}')
+
+		$(() => {
+			function setCountdownColor(type) {
+				var remove = ''
+				switch (type) {
+					case 'info': remove = 'alert-success alert-warning alert-danger'; break;
+					case 'success': remove = 'alert-info alert-warning alert-danger'; break;
+					case 'warning': remove = 'alert-info alert-success alert-danger'; break;
+					case 'danger': remove = 'alert-info alert-success alert-warning'; break;
+				}
+
+				$('#time_alert')
+					.removeClass(remove)
+					.addClass(`alert-${type}`)
+			}
+
+			var time_interval
+			function displayCountdown() {
+				clearInterval(time_interval)
+				pb.collection('exercises').getFirstListItem(
+					`end >= "${new Date().toISOString().replace('T', ' ').substr(0, 19)}"`,
+					{ sort: '-start' }
+				)
+					.then(result => {
+						$('#time_name').text(result.name)
+						$('#time_ref').text(result.started ? 'end' : 'start')
+						const $time_disp = $('#time_disp')
+						const deadline = new Date(result.started ? result.end : result.start).getTime()
+						setCountdownColor(result.started ? 'success' : 'info')
+						time_interval = setInterval(() => {
+							// calculation
+							const now  = new Date().getTime()
+							const t = deadline - now
+
+							// set color
+							if (!result.started) {
+								setCountdownColor('info')
+							} else if (t < 1000 * 60 * 5) {
+								setCountdownColor('danger')
+							} else if (t < 1000 * 60 * 15) {
+								setCountdownColor('warning')
+							} else {
+								setCountdownColor('success')
+							}
+	
+							// check if we're in the past
+							if (t <= 0) {
+								clearInterval(time_interval)
+								if (result.started) {
+									$('#time_alert').text("There are no upcoming ERC exercises")
+								} else {
+									$('#time_alert').text("Just waiting for someone to give us the signal to start...")
+								}
+								return
+							}
+	
+							// formatting and display
+							const days = Math.floor(t / (1000 * 60 * 60 * 24))
+							const hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+							const minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0')
+							const seconds = Math.floor((t % (1000 * 60)) / 1000).toString().padStart(2, '0')
+							$time_disp.text(`${days}d ${hours}:${minutes}:${seconds}`)
+						}, 1000)
+					})
+					.catch(err => {
+						$('#time_alert').text("There are no upcoming ERC exercises")
+					})
+			}
+			displayCountdown()
+			pb.collection('exercises').subscribe('*', displayCountdown)
+		})
+	</script>
+</body>
+</html>

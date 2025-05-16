@@ -1,5 +1,6 @@
 /// <reference path="../pb_data/types.d.ts" />
 
+// render home page
 routerAdd("GET", "/", (c) => {
 	const html = $template.loadFiles(
 		`${__hooks}/views/base.html`,
@@ -11,6 +12,7 @@ routerAdd("GET", "/", (c) => {
 	return c.html(200, html)
 })
 
+// handle need fulfillment verification
 routerAdd("POST", "/fulfill-need", (c) => {
 	// get data
 	const user = c.get('authRecord')
@@ -35,6 +37,7 @@ routerAdd("POST", "/fulfill-need", (c) => {
 	return c.json(200, {"success": result})
 }, $apis.requireRecordAuth())
 
+// render the signup page
 routerAdd("GET", "/signup", (c) => {
 	const result = arrayOf(new DynamicModel({
 		"id": "",
@@ -58,6 +61,7 @@ routerAdd("GET", "/signup", (c) => {
 	return c.html(200, html)
 })
 
+// get a random callsign
 routerAdd("GET", "/callsign", (c) => {
 	// generate a unique callsign
 	var callsign;
@@ -79,6 +83,7 @@ routerAdd("GET", "/callsign", (c) => {
 	return c.json(200, {"callsign": callsign})
 })
 
+// render the login page
 routerAdd("GET", "/login", (c) => {
 	const html = $template.loadFiles(
 		`${__hooks}/views/base.html`,
@@ -90,6 +95,18 @@ routerAdd("GET", "/login", (c) => {
 	return c.html(200, html)
 })
 
+// render monitor page
+routerAdd("GET", "/monitor", (c) => {
+	const html = $template.loadFiles(
+		`${__hooks}/views/monitor.html`,
+	).render({
+		"appUrl": $app.settings().meta.appUrl,
+	})
+
+	return c.html(200, html)
+})
+
+// cron job to handle unconfirmed tasks
 routerAdd("GET", "/check-unconfirmed-tasks", (c) => {
 	// get all unconfirmed resources that haven't been updated in at least 130 seconds
 	const report = []
