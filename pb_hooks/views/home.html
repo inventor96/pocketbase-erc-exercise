@@ -10,6 +10,10 @@
 			<span id="ready_btn_spinner" class="spinner-grow spinner-grow-sm"></span>
 			<span id="ready_btn_text">I'm ready to be assigned needs!</span>
 		</button>
+		<button type="button" id="not_ready_btn" class="btn btn-warning mb-4 d-none">
+			<span id="not_ready_btn_spinner" class="spinner-grow spinner-grow-sm"></span>
+			<span id="not_ready_btn_text">I'm no longer ready for needs assignments</span>
+		</button>
 		<ul id="needs_list" class="list-group">
 			<li class="list-group-item"><span class="placeholder-glow"><span class="placeholder col-4"></span></span></li>
 		</ul>
@@ -161,11 +165,23 @@
 		const $ready_btn = $('#ready_btn')
 		const $ready_btn_spinner = $('#ready_btn_spinner')
 		const $ready_btn_text = $('#ready_btn_text')
+		const $not_ready_btn = $('#not_ready_btn')
 		const $needs_list = $('#needs_list')
 		const $resources_list = $('#resources_list')
 
 		// refresh user details
 		pb.collection('users').authRefresh().then(() => {
+			// show not ready button if user is ready
+			if (pb.authStore.model.ready) {
+				$not_ready_btn
+					.removeClass('d-none')
+					.prop('disabled', false)
+			} else {
+				$not_ready_btn
+					.addClass('d-none')
+					.prop('disabled', true)
+			}
+
 			// check if there's open needs
 			pb.collection('tasks').getFullList({
 				filter: `need_user = "${pb.authStore.model.id}" && completed = "" && cancelled = "" && resource_confirmed = true`,
@@ -315,15 +331,25 @@
 
 			// update the user
 			pb.collection('users').update(pb.authStore.model.id, { ready: true })
-				//.then(checkUpdateStatusView) // not needed since the realtime api will trigger the update
 				.catch(error => {
 					alert(`There was an error while marking you as ready:\n${error}\nPlease refresh the page.`)
 				})
 		})
 
-		$('#needs_list')
+		// handle not ready button
+		const $not_ready_btn = $('#not_ready_btn')
+		$not_ready_btn.on('click', () => {
+			$not_ready_btn.prop('disabled', true)
+
+			// update the user
+			pb.collection('users').update(pb.authStore.model.id, { ready: false })
+				.catch(error => {
+					alert(`There was an error while marking you as not ready:\n${error}\nPlease refresh the page.`)
+				})
+		})
+
 		// capitalize callsign, require alphanumeric
-			.on('input', '.callsign-input', (e) => e.currentTarget.value = e.currentTarget.value.toUpperCase().replace(/[^a-zA-Z0-9]/, ''))
+		$('#needs_list').on('input', '.callsign-input', (e) => e.currentTarget.value = e.currentTarget.value.toUpperCase().replace(/[^a-zA-Z0-9]/, ''))
 
 		// handle callsign submission
 			.on('submit', '.need-check', (e) => {
