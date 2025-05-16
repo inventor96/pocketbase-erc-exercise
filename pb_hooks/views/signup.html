@@ -29,6 +29,32 @@ ERC Exercise Signup
 		</select>
 	</div>
 	<div class="mb-4">
+		<label for="comm_type" class="form-label fs-5 fw-bold">Communication Type</label>
+		<div class="mb-1"><i class="bi bi-info-circle-fill text-primary"></i> Select the type of communication you will be using during the exercise. If you are using more than one, select the one you plan to use the most.</div>
+		<div class="btn-group" role="group" aria-label="Communication Type">
+			<input type="radio" class="btn-check" name="comm_type" id="ham" value="ham" autocomplete="off" required>
+			<label class="btn btn-outline-primary" for="ham">Ham/Amatuer Radio</label>
+			
+			<input type="radio" class="btn-check" name="comm_type" id="gmrs" value="gmrs" autocomplete="off">
+			<label class="btn btn-outline-primary" for="gmrs">GMRS</label>
+			
+			<input type="radio" class="btn-check" name="comm_type" id="frs" value="frs" autocomplete="off">
+			<label class="btn btn-outline-primary" for="frs">FRS/Walkie-Talkie</label>
+
+			<input type="radio" class="btn-check" name="comm_type" id="shares" value="shares" autocomplete="off">
+			<label class="btn btn-outline-primary" for="shares">SHARES</label>
+			
+			<input type="radio" class="btn-check" name="comm_type" id="text" value="text" autocomplete="off">
+			<label class="btn btn-outline-primary" for="text">Text/Chat</label>
+			
+			<input type="radio" class="btn-check" name="comm_type" id="inperson" value="inperson" autocomplete="off">
+			<label class="btn btn-outline-primary" for="inperson">In-Person</label>
+			
+			<input type="radio" class="btn-check" name="comm_type" id="other" value="other" autocomplete="off">
+			<label class="btn btn-outline-primary" for="other">Other</label>
+		</div>
+	</div>
+	<div class="mb-4">
 		<label for="callsign" class="form-label fs-5 fw-bold">Callsign</label>
 		<div class="mb-1"><i class="bi bi-info-circle-fill text-primary"></i> If you have an assigned FCC callsign (e.g. Amatuer Radio, GMRS, etc.), use that. Otherwise leave this blank and we'll generate one for you.</div>
 		<input type="text" class="form-control" id="callsign" name="callsign">
@@ -77,6 +103,7 @@ ERC Exercise Signup
 				"passwordConfirm": $('#password').val(),
 				"stake": $('#stake').val(),
 				"callsign": $('#callsign').val(),
+				"comm_type": $('#signup_form input[name="comm_type"]:checked').val(),
 				"ready": false,
 			}
 			pb.collection('users').create(user_data)
