@@ -52,6 +52,7 @@ routerAdd("GET", "/signup", (c) => {
 		`${__hooks}/views/signup.html`,
 	).render({
 		"stakes": result,
+		"appUrl": $app.settings().meta.appUrl,
 	})
 
 	return c.html(200, html)
@@ -82,7 +83,9 @@ routerAdd("GET", "/login", (c) => {
 	const html = $template.loadFiles(
 		`${__hooks}/views/base.html`,
 		`${__hooks}/views/login.html`,
-	).render()
+	).render({
+		"appUrl": $app.settings().meta.appUrl,
+	})
 
 	return c.html(200, html)
 })
