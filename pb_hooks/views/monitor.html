@@ -66,15 +66,15 @@
 							<tbody id="fulfillment_time">
 								<tr>
 									<th class="fs-4">Storehouse</th>
-									<td class="fs-4" id="fulfillment_time_storehouse">-- mins</td>
+									<td class="fs-4" id="fulfillment_time_storehouse">--</td>
 								</tr>
 								<tr>
 									<th class="fs-4">Region</th>
-									<td class="fs-4" id="fulfillment_time_region">-- mins</td>
+									<td class="fs-4" id="fulfillment_time_region">--</td>
 								</tr>
 								<tr>
 									<th class="fs-4">Stake</th>
-									<td class="fs-4" id="fulfillment_time_stake">-- mins</td>
+									<td class="fs-4" id="fulfillment_time_stake">--</td>
 								</tr>
 							</tbody>
 						</table>
@@ -260,9 +260,9 @@
 					$('#open_needs').text(data.tasks.total.open)
 					$('#fulfilled_needs').text(data.tasks.total.fulfilled)
 					$('#skipped_needs').text(data.tasks.total.skipped)
-					// $('#fulfillment_time_storehouse').text(data.fulfillment_time.storehouse + ' mins')
-					// $('#fulfillment_time_region').text(data.fulfillment_time.region + ' mins')
-					// $('#fulfillment_time_stake').text(data.fulfillment_time.stake + ' mins')
+					$('#fulfillment_time_storehouse').text(data.tasks.scope.storehouse.avg_time)
+					$('#fulfillment_time_region').text(data.tasks.scope.region.avg_time)
+					$('#fulfillment_time_stake').text(data.tasks.scope.stake.avg_time)
 
 					for (const scope in data.tasks.scope) {
 						const scope_data = data.tasks.scope[scope]
