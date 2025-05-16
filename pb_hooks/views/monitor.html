@@ -278,12 +278,13 @@
 						)
 					}
 
-					/* for (const region in data.region_needs) {
-						const region_data = data.region_needs[region]
+					$(`#region_needs`).empty()
+					for (const region in data.tasks.region) {
+						const region_data = data.tasks.region[region]
 						$(`#region_needs`).append(
 							`<tr><td>${region}</td><td>${region_data.open}</td><td>${region_data.fulfilled}</td><td>${region_data.skipped}</td></tr>`
 						)
-					} */
+					}
 				})
 				.catch(err => {
 					console.error(err)

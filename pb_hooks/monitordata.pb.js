@@ -220,6 +220,104 @@ routerAdd("GET", "/monitordata", function (c) {
 		})
 		.one(storehouse_tasks_cancelled)
 
+	// count of open tasks per region
+	const region_tasks_open_by_region = arrayOf(new DynamicModel({
+		"name": "",
+		"count": 0,
+	}))
+	$app.dao().db()
+		.newQuery("SELECT regions.name, COUNT(tasks.id) AS count\
+			FROM tasks\
+			LEFT JOIN users ON users.id = tasks.need_user\
+			LEFT JOIN stakes ON stakes.id = users.stake\
+			LEFT JOIN regions ON stakes.region = regions.id\
+			WHERE tasks.resource_confirmed = true\
+				AND tasks.cancelled = ''\
+				AND tasks.completed = ''\
+				AND tasks.created BETWEEN {:start} AND {:end}\
+			GROUP BY regions.name\
+			ORDER BY regions.name")
+		.bind({
+			"start": reporting_exercise.start,
+			"end": reporting_exercise.end
+		})
+		.all(region_tasks_open_by_region)
+
+	// count of completed tasks per region
+	const region_tasks_completed_by_region = arrayOf(new DynamicModel({
+		"name": "",
+		"count": 0,
+	}))
+	$app.dao().db()
+		.newQuery("SELECT regions.name, COUNT(tasks.id) AS count\
+			FROM tasks\
+			LEFT JOIN users ON users.id = tasks.need_user\
+			LEFT JOIN stakes ON stakes.id = users.stake\
+			LEFT JOIN regions ON stakes.region = regions.id\
+			WHERE tasks.completed != ''\
+				AND tasks.created BETWEEN {:start} AND {:end}\
+			GROUP BY regions.name\
+			ORDER BY regions.name")
+		.bind({
+			"start": reporting_exercise.start,
+			"end": reporting_exercise.end
+		})
+		.all(region_tasks_completed_by_region)
+
+	// count of cancelled tasks per region
+	const region_tasks_cancelled_by_region = arrayOf(new DynamicModel({
+		"name": "",
+		"count": 0,
+	}))
+	$app.dao().db()
+		.newQuery("SELECT regions.name, COUNT(tasks.id) AS count\
+			FROM tasks\
+			LEFT JOIN users ON users.id = tasks.need_user\
+			LEFT JOIN stakes ON stakes.id = users.stake\
+			LEFT JOIN regions ON stakes.region = regions.id\
+			WHERE tasks.cancelled != ''\
+				AND tasks.created BETWEEN {:start} AND {:end}\
+			GROUP BY regions.name\
+			ORDER BY regions.name")
+		.bind({
+			"start": reporting_exercise.start,
+			"end": reporting_exercise.end
+		})
+		.all(region_tasks_cancelled_by_region)
+
+	// organize region data to be per-region
+	const region_data = {}
+	region_tasks_open_by_region.forEach(region => {
+		if (!region_data[region.name]) {
+			region_data[region.name] = {
+				"open": 0,
+				"fulfilled": 0,
+				"skipped": 0,
+			}
+		}
+		region_data[region.name].open += region.count
+	})
+	region_tasks_completed_by_region.forEach(region => {
+		if (!region_data[region.name]) {
+			region_data[region.name] = {
+				"open": 0,
+				"fulfilled": 0,
+				"skipped": 0,
+			}
+		}
+		region_data[region.name].fulfilled += region.count
+	})
+	region_tasks_cancelled_by_region.forEach(region => {
+		if (!region_data[region.name]) {
+			region_data[region.name] = {
+				"open": 0,
+				"fulfilled": 0,
+				"skipped": 0,
+			}
+		}
+		region_data[region.name].skipped += region.count
+	})
+
 	// output
 	c.json(200, {
 		"participants": {
@@ -244,6 +342,7 @@ routerAdd("GET", "/monitordata", function (c) {
 					"skipped": storehouse_tasks_cancelled.count,
 				},
 			},
+			"region": region_data,
 			"total": {
 				"open": stake_tasks_open.count + region_tasks_open.count + storehouse_tasks_open.count,
 				"fulfilled": stake_tasks_completed.count + region_tasks_completed.count + storehouse_tasks_completed.count,
