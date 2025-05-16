@@ -13,7 +13,6 @@ Note that these setup instructions are for Linux hosts. You'll have to adjust an
 1. Get this repo on your host.
 1. Before proceeding, consider the point in [Production-ready Setup](#production-ready-setup) regarding a reverse proxy.
 1. If needed, update the URL in the initial config (found in `pb_migrations/1697331567_initial_settings.js`).
-1. If needed, update the URL for the frontend (look for `new PocketBase` in `pb_hooks/views/base.html`).
 1. Do the initial start manually (e.g. `./pocketbase serve`).
 1. Create your admin user in the admin UI (e.g. if running locally, go to [http://127.0.0.1:8090/_](http://127.0.0.1:8090/_))
 1. Get CSV files for the items, regions, and stakes (the old data is in the root of the repo for reference/updating; note that the trailing new line is important). The uploader script is very simple, and does not support commas (`,`) in field values, nor does it process quoted fields. The columns are expected to be exactly as follows:

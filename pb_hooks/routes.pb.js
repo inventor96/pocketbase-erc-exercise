@@ -4,7 +4,9 @@ routerAdd("GET", "/", (c) => {
 	const html = $template.loadFiles(
 		`${__hooks}/views/base.html`,
 		`${__hooks}/views/home.html`,
-	).render()
+	).render({
+		"appUrl": $app.settings().meta.appUrl,
+	})
 
 	return c.html(200, html)
 })

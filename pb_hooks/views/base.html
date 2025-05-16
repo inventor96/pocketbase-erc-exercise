@@ -47,7 +47,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 	<script src="/pocketbase.umd.js"></script>
 	<script type="text/javascript">
-		const pb = new PocketBase('https://exercise.idahoerc.org')
+		const pb = new PocketBase('{{.appUrl}}')
 
 		$(() => {
 			// handle logout
