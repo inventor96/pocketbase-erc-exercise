@@ -251,6 +251,54 @@
 			}
 			displayCountdown()
 			pb.collection('exercises').subscribe('*', displayCountdown)
+
+			function updateDisplay() {
+				// get the data using jquery
+				$.getJSON('/monitordata', function(data) {
+					// update the display
+					$('#participants').text(data.participants.total)
+					// $('#open_needs').text(data.open_needs)
+					// $('#fulfilled_needs').text(data.fulfilled_needs)
+					// $('#skipped_needs').text(data.skipped_needs)
+					// $('#fulfillment_time_storehouse').text(data.fulfillment_time.storehouse + ' mins')
+					// $('#fulfillment_time_region').text(data.fulfillment_time.region + ' mins')
+					// $('#fulfillment_time_stake').text(data.fulfillment_time.stake + ' mins')
+
+					/* for (const scope in data.scope_needs) {
+						const scope_data = data.scope_needs[scope]
+						$(`#scope_needs_${scope}_open`).text(scope_data.open)
+						$(`#scope_needs_${scope}_fulfilled`).text(scope_data.fulfilled)
+						$(`#scope_needs_${scope}_skipped`).text(scope_data.skipped)
+					} */
+
+					$(`#region_participants`).empty()
+					for (const region of data.participants.by_region) {
+						$(`#region_participants`).append(
+							`<tr><td>${region.name}</td><td>${region.participants}</td></tr>`
+						)
+					}
+
+					/* for (const region in data.region_needs) {
+						const region_data = data.region_needs[region]
+						$(`#region_needs`).append(
+							`<tr><td>${region}</td><td>${region_data.open}</td><td>${region_data.fulfilled}</td><td>${region_data.skipped}</td></tr>`
+						)
+					} */
+				})
+				.catch(err => {
+					console.error(err)
+					$('#participants').text('0')
+					$('#open_needs').text('0')
+					$('#fulfilled_needs').text('0')
+					$('#skipped_needs').text('0')
+					$('#fulfillment_time_storehouse').text('-- mins')
+					$('#fulfillment_time_region').text('-- mins')
+					$('#fulfillment_time_stake').text('-- mins')
+				})
+			}
+			updateDisplay()
+			pb.collection('users').subscribe('*', updateDisplay)
+			pb.collection('tasks').subscribe('*', updateDisplay)
 		})
 	</script>
 </body>
