@@ -6,7 +6,7 @@
 	<div class="card-body">
 		<div class="row">
 			<div class="col mb-2">
-				<h5 class="card-title">Needs</h5>
+				<h4 class="card-title">Needs</h4>
 				<p class="card-subtitle"><i class="bi bi-info-circle-fill text-primary"></i> Click the button when you're ready for needs assignments!</p>
 			</div>
 			<div class="w-100 d-lg-none"></div>
@@ -29,7 +29,7 @@
 
 <div class="card mb-5">
 	<div class="card-body">
-		<h5 class="card-title">Resources</h5>
+		<h4 class="card-title">Resources</h4>
 		<p class="card-subtitle mb-3"><i class="bi bi-info-circle-fill text-primary"></i> You will be prompted to accept more resources when someone is ready for more needs assignments.</p>
 		<ul id="resources_list" class="list-group">
 			<li class="list-group-item"><span class="placeholder-glow"><span class="placeholder col-4"></span></span></li>
@@ -41,17 +41,33 @@
 	<div class="card-body">
 		<div class="row">
 			<div class="col">
-				<h5 class="card-title text-center">Stats</h5>
+				<h4 class="card-title text-center">Statistics</h4>
 			</div>
 		</div>
-		<div class="row">
+		<div class="row row-cols-1 row-cols-lg-2 g-3">
 			<div class="col p-2 border">
-				<h6 class="text-center">Needs Fulfilled</h6>
-				<p id="needs_count" class="text-center m-0">0</p>
+				<h5 class="text-center px-2 py-1 fw-semibold text-success-emphasis bg-success-subtle border border-success-subtle rounded-2">Needs Fulfilled: <span id="needs_count">0</span></h5>
+				<table class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th scope="col">Item</th>
+							<th scope="col">Fulfilled By</th>
+						</tr>
+					</thead>
+					<tbody id="needs_fulfilled_list"></tbody>
+				</table>
 			</div>
 			<div class="col p-2 border">
-				<h6 class="text-center">Resources Provided</h6>
-				<p id="resources_count" class="text-center m-0">0</p>
+				<h5 class="text-center px-2 py-1 fw-semibold text-success-emphasis bg-success-subtle border border-success-subtle rounded-2">Resources Provided: <span id="resources_count">0</span></h5>
+				<table class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th scope="col">Item</th>
+							<th scope="col">Provided To</th>
+						</tr>
+					</thead>
+					<tbody id="resources_fulfilled_list"></tbody>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -61,7 +77,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">Missing Resource</h5>
+				<h4 class="modal-title">Missing Resource</h4>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -96,7 +112,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">Will you accept another resource?</h5>
+				<h4 class="modal-title">Will you accept another resource?</h4>
 			</div>
 			<div class="modal-body">
 				<p>It looks like someone else has received <span id="resource_name" class="fw-bold"></span> as a need. Would you be willing to be the resource for the individual's need?</p>
@@ -306,19 +322,63 @@
 				})
 				.catch(error => console.warn('There was an error while fetching pending resources:', error))
 
-			// get count of completed needs
-			pb.collection('tasks').getList(1, 1, {
+			// update list of fulfilled needs
+			pb.collection('tasks').getFullList({
 				filter: `need_user = "${pb.authStore.model.id}" && completed != ""`,
-				requestKey: 'needs_count'
+				sort: 'created',
+				expand: 'item,resource_user',
+				requestKey: 'fulfilled_needs'
 			})
-				.then(response => $('#needs_count').text(response.totalItems))
+				.then(fulfilled_needs_list => {
+					const $needs_fulfilled_list = $('#needs_fulfilled_list')
+					$needs_fulfilled_list.empty()
+					if (fulfilled_needs_list.length > 0) {
+						var i = 0
+						fulfilled_needs_list.forEach(need => {
+							$needs_fulfilled_list.append(`<tr>\
+									<td>${need.expand.item.description}</td>\
+									<td>${need.expand.resource_user.callsign}</td>\
+								</tr>`)
+						})
+					}
+					
+					// update count of fulfilled needs
+					$('#needs_count').text(fulfilled_needs_list.length)
+				})
+				.catch(error => {
+					if (!error.message.match('request was autocancelled')) {
+						alert(`There was an error while checking fulfilled needs:\n${error}\nPlease refresh the page.`)
+					}
+				})
 
-			// get count of completed resources
-			pb.collection('tasks').getList(1, 1, {
+			// update list of fulfilled resources
+			pb.collection('tasks').getFullList({
 				filter: `resource_user = "${pb.authStore.model.id}" && completed != ""`,
-				requestKey: 'resources_count'
+				sort: 'created',
+				expand: 'item,need_user',
+				requestKey: 'fulfilled_resources'
 			})
-				.then(response => $('#resources_count').text(response.totalItems))
+				.then(fulfilled_resources_list => {
+					const $resources_fulfilled_list = $('#resources_fulfilled_list')
+					$resources_fulfilled_list.empty()
+					if (fulfilled_resources_list.length > 0) {
+						var i = 0
+						fulfilled_resources_list.forEach(resource => {
+							$resources_fulfilled_list.append(`<tr>\
+									<td>${resource.expand.item.description}</td>\
+									<td>${resource.expand.need_user.callsign}</td>\
+								</tr>`)
+						})
+					}
+
+					// update count of fulfilled resources
+					$('#resources_count').text(fulfilled_resources_list.length)
+				})
+				.catch(error => {
+					if (!error.message.match('request was autocancelled')) {
+						alert(`There was an error while checking fulfilled resources:\n${error}\nPlease refresh the page.`)
+					}
+				})
 		})
 	}
 
