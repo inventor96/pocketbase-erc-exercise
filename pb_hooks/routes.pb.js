@@ -47,7 +47,15 @@ function cookieAuth(next) {
 			if (user) {
 				c.set('authRecord', user)
 			}
-		} catch (err) { /* no user. maybe admin? */}
+		} catch (err) {
+			// check for admin
+			try {
+				user = $app.dao().findAdminByToken(tokenValue, $app.settings().adminAuthToken.secret)
+				if (user) {
+					c.set('admin', user)
+				}
+			} catch (err) { /* no user or admin */}
+		}
 
 		return next(c)
 	}

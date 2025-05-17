@@ -1,0 +1,47 @@
+{{define "title"}}
+ERC Exercise Admin Login
+{{end}}
+
+{{define "container"}}
+<h1>ERC Exercise Admin Login</h1>
+<form id="login_form">
+	<div class="mb-4">
+		<label for="username" class="form-label fs-5 fw-bold">Username</label>
+		<input type="email" class="form-control" id="username" name="username" required>
+	</div>
+	<div class="mb-4">
+		<label for="password" class="form-label fs-5 fw-bold">Password</label>
+		<input type="password" class="form-control" id="password" name="password" required>
+	</div>
+	<button id="submit" class="btn btn-primary" type="submit">
+		<span class="spinner-grow spinner-grow-sm"></span>
+		Log in
+	</button>
+</form>
+{{end}}
+
+{{define "script"}}
+<script type="text/javascript">
+	$(() => {
+		// handle submit
+		const $submit = $('#submit')
+		$('#login_form').on('submit', () => {
+			$submit.prop('disabled', true)
+
+			// log in
+			pb.admins.authWithPassword($('#username').val(), $('#password').val())
+				.then(() => {
+					if (pb.authStore.isValid) {
+						window.location.href = "/admin"
+					}
+				})
+				.catch(error => {
+					alert(`There was an error while logging you in: ${error}`)
+					$submit.prop('disabled', false)
+				})
+
+			return false
+		})
+	})
+</script>
+{{end}}

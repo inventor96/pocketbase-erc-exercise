@@ -31,6 +31,9 @@
 							<li><a href="#" id="change_password" class="dropdown-item">Change Pin Code</a></li>
 							<li><hr class="dropdown-divider"></li>
 							<li><a href="#" id="logout" class="dropdown-item">Logout</a></li>
+							<li><hr class="dropdown-divider"></li>
+							<li><hr class="dropdown-divider"></li>
+							<li><a href="/admin" class="dropdown-item">Admin</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -198,7 +201,7 @@
 								if (result.started) {
 									$('#time_alert').text("There are no upcoming ERC exercises")
 								} else {
-									$('#time_alert').text("Just waiting for someone to give us the signal to start...")
+									$('#time_alert').text("Just waiting for an admin to give us the signal to start...")
 								}
 								return
 							}
