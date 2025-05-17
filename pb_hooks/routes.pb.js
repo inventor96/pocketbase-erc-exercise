@@ -8,42 +8,57 @@ onRecordAuthRequest((e) => {
 	e.httpContext.response().header().set('Set-Cookie', `token=${e.token}; Path=/; HttpOnly; SameSite=Lax; ${e.httpContext.scheme() === 'https' ? 'Secure' : ''}`)
 })
 
+// clear cookie on logout
+routerAdd("GET", "/logout", (c) => {
+	c.response().header().set('Set-Cookie', `token=; Path=/; HttpOnly; SameSite=Lax; ${c.scheme() === 'https' ? 'Secure' : ''}`)
+	return c.redirect(302, "/login")
+})
+
 // cookie authentication middleware
-function requireCookieAuth(next) {
+function cookieAuth(next) {
 	return (c) => {
+		// skip cookie processing if already authenticated
+		if (c.get('authRecord')) {
+			return next(c)
+		}
+
 		// get the auth token from the cookie
 		const header = c.request().header.get('Cookie')
 		if (!header) {
-			// redirect to login page
-			return this.redirect(302, "/login")
+			// no record
+			return next(c)
 		}
 		const cookies = header.split('; ')
 		const token = cookies.find(cookie => cookie.startsWith('token='))
 		if (!token) {
-			// redirect to login page
-			return this.redirect(302, "/login")
+			// no record
+			return next(c)
 		}
 		const tokenValue = token.split('=')[1]
 		if (!tokenValue) {
-			// redirect to login page
-			return this.redirect(302, "/login")
+			// no record
+			return next(c)
 		}
 
-		// check if the user is logged in
+		// set the auth record in the context
 		const user = $app.dao().findAuthRecordByToken(tokenValue, $app.settings().recordAuthToken.secret)
 		if (user) {
-			// set the auth record in the context
 			c.set('authRecord', user)
-			return next(c)
-		} else {
-			// redirect to login page
-			return this.redirect(302, "/login")
 		}
+
+		return next(c)
 	}
 }
+routerUse(cookieAuth)
 
 // render home page
 routerAdd("GET", "/", (c) => {
+	// redirect to login page if not logged in
+	if (!c.get('authRecord')) {
+		return c.redirect(302, "/login")
+	}
+
+	// render the home page
 	const html = $template.loadFiles(
 		`${__hooks}/views/base.html`,
 		`${__hooks}/views/home.html`,
@@ -52,7 +67,7 @@ routerAdd("GET", "/", (c) => {
 	})
 
 	return c.html(200, html)
-}, requireCookieAuth)
+})
 
 // handle need fulfillment verification
 routerAdd("POST", "/fulfill-need", (c) => {
