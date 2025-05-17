@@ -41,10 +41,13 @@ function cookieAuth(next) {
 		}
 
 		// set the auth record in the context
-		const user = $app.dao().findAuthRecordByToken(tokenValue, $app.settings().recordAuthToken.secret)
-		if (user) {
-			c.set('authRecord', user)
-		}
+		let user = null
+		try {
+			user = $app.dao().findAuthRecordByToken(tokenValue, $app.settings().recordAuthToken.secret)
+			if (user) {
+				c.set('authRecord', user)
+			}
+		} catch (err) { /* no user. maybe admin? */}
 
 		return next(c)
 	}
