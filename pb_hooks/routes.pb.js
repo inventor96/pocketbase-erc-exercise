@@ -1,5 +1,47 @@
 /// <reference path="../pb_data/types.d.ts" />
 
+// log all requests
+routerUse($apis.activityLogger($app))
+
+// set cookie on successful auth request
+onRecordAuthRequest((e) => {
+	e.httpContext.response().header().set('Set-Cookie', `token=${e.token}; Path=/; HttpOnly; SameSite=Lax; ${e.httpContext.scheme() === 'https' ? 'Secure' : ''}`)
+})
+
+// cookie authentication middleware
+function requireCookieAuth(next) {
+	return (c) => {
+		// get the auth token from the cookie
+		const header = c.request().header.get('Cookie')
+		if (!header) {
+			// redirect to login page
+			return this.redirect(302, "/login")
+		}
+		const cookies = header.split('; ')
+		const token = cookies.find(cookie => cookie.startsWith('token='))
+		if (!token) {
+			// redirect to login page
+			return this.redirect(302, "/login")
+		}
+		const tokenValue = token.split('=')[1]
+		if (!tokenValue) {
+			// redirect to login page
+			return this.redirect(302, "/login")
+		}
+
+		// check if the user is logged in
+		const user = $app.dao().findAuthRecordByToken(tokenValue, $app.settings().recordAuthToken.secret)
+		if (user) {
+			// set the auth record in the context
+			c.set('authRecord', user)
+			return next(c)
+		} else {
+			// redirect to login page
+			return this.redirect(302, "/login")
+		}
+	}
+}
+
 // render home page
 routerAdd("GET", "/", (c) => {
 	const html = $template.loadFiles(
@@ -10,7 +52,7 @@ routerAdd("GET", "/", (c) => {
 	})
 
 	return c.html(200, html)
-})
+}, requireCookieAuth)
 
 // handle need fulfillment verification
 routerAdd("POST", "/fulfill-need", (c) => {
@@ -39,6 +81,11 @@ routerAdd("POST", "/fulfill-need", (c) => {
 
 // render the signup page
 routerAdd("GET", "/signup", (c) => {
+	// redirect to home if already logged in
+	if (c.get('authRecord')) {
+		return c.redirect(302, "/")
+	}
+
 	const result = arrayOf(new DynamicModel({
 		"id": "",
 		"name": "",
@@ -85,6 +132,12 @@ routerAdd("GET", "/callsign", (c) => {
 
 // render the login page
 routerAdd("GET", "/login", (c) => {
+	// redirect to home if already logged in
+	if (c.get('authRecord')) {
+		return c.redirect(302, "/")
+	}
+
+	// render the login page
 	const html = $template.loadFiles(
 		`${__hooks}/views/base.html`,
 		`${__hooks}/views/login.html`,

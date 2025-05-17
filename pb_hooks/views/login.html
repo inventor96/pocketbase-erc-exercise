@@ -23,11 +23,6 @@ ERC Exercise Login
 
 {{define "script"}}
 <script type="text/javascript">
-	// redirect if logged in
-	if (pb.authStore.isValid) {
-		window.location.href = '/'
-	}
-
 	$(() => {
 		// handle submit
 		const $submit = $('#submit')

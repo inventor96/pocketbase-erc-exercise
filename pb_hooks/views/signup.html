@@ -2,9 +2,6 @@
 ERC Exercise Signup
 {{end}}
 
-{{define "head"}}
-{{end}}
-
 {{define "container"}}
 <h1>ERC Exercise Signup</h1>
 <p>Already have an account? <a href="/login">Head over to the login page</a>.</p>
@@ -68,11 +65,6 @@ ERC Exercise Signup
 
 {{define "script"}}
 <script type="text/javascript">
-	// redirect if logged in
-	if (pb.authStore.isValid) {
-		window.location.href = '/'
-	}
-
 	$(() => {
 		// capitalize callsign, require alphanumeric
 		$('#callsign').on('input', (e) => e.target.value = e.target.value.toUpperCase().replace(/[^a-zA-Z0-9]/, ''))
