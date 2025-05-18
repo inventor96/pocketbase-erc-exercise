@@ -53,6 +53,17 @@
 		const pb = new PocketBase('{{.appUrl}}')
 
 		$(() => {
+			// update user info
+			if (pb.authStore.isValid) {
+				if (pb.authStore.isAdmin) {
+					$('.user-disp').text(pb.authStore.model.email)
+					$('.callsign-disp').text('admin')
+				} else {
+					$('.user-disp').text(pb.authStore.model.username)
+					$('.callsign-disp').text(pb.authStore.model.callsign)
+				}
+			}
+
 			// handle logout
 			$('#logout').on('click', () => {
 				pb.authStore.clear()

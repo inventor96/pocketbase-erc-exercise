@@ -378,10 +378,6 @@
 	}
 
 	$(() => {
-		// update user info
-		$('.user-disp').text(pb.authStore.model.username)
-		$('.callsign-disp').text(pb.authStore.model.callsign)
-
 		// handle external updates for this user
 		pb.collection('users').subscribe(pb.authStore.model.id, checkUpdateStatusView)
 		pb.collection('tasks').subscribe('*', checkUpdateStatusView)

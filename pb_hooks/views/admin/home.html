@@ -72,9 +72,6 @@ ERC Exercise Admin
 {{define "script"}}
 <script type="text/javascript">
 	$(() => {
-		$('.user-disp').text(pb.authStore.model.email)
-		$('.callsign-disp').text('admin')
-
 		// update list of exercises
 		function updateExercises(exercises) {
 			const tbody = $('#exercise-list');
