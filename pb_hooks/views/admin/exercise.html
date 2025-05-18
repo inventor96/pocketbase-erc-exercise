@@ -1,0 +1,95 @@
+{{define "title"}}
+{{.pgTitle}}
+{{end}}
+
+{{define "container"}}
+<h1>{{.pgTitle}}</h1>
+<form id="exercise_form">
+	<div class="mb-4">
+		<label for="name" class="form-label fs-5 fw-bold">Name</label>
+		<input type="text" class="form-control" id="name" name="name" required minlength="3">
+	</div>
+	<div class="mb-4">
+		<label for="start" class="form-label fs-5 fw-bold">Start</label>
+		<input type="datetime-local" class="form-control" id="start" name="start" required>
+	</div>
+	<div class="mb-4">
+		<label for="end" class="form-label fs-5 fw-bold">End</label>
+		<input type="datetime-local" class="form-control" id="end" name="end" required>
+	</div>
+	<button id="submit" class="btn btn-primary" type="submit">
+		<span class="spinner-grow spinner-grow-sm"></span>
+		Save
+	</button>
+</form>
+{{end}}
+
+{{define "script"}}
+<script type="text/javascript">
+	function toLocalDatetimeInputValue(utcString) {
+		const date = new Date(utcString);
+		const pad = n => n.toString().padStart(2, '0');
+		return date.getFullYear() + '-' +
+			pad(date.getMonth() + 1) + '-' +
+			pad(date.getDate()) + 'T' +
+			pad(date.getHours()) + ':' +
+			pad(date.getMinutes());
+	}
+
+	function toUTCDateTimeString(localString) {
+		const date = new Date(localString);
+		return date.toISOString();
+	}
+
+	$(() => {
+		// handle form submission
+		$('#submit').on('click', function (e) {
+			e.preventDefault();
+			$('#submit').prop('disabled', true);
+
+			const form = $('#exercise_form');
+			if (!form[0].checkValidity()) {
+				form[0].reportValidity();
+				return;
+			}
+
+			const data = {
+				name: $('#name').val(),
+				start: toUTCDateTimeString($('#start').val()),
+				end: toUTCDateTimeString($('#end').val())
+			};
+
+			// create or update exercise
+			if ('{{.id}}' === 'new') {
+				pb.collection('exercises').create(data).then(() => {
+					alert('Exercise created successfully');
+					window.location.href = '/admin';
+				}).catch(err => {
+					console.error(err);
+					alert('Error creating exercise: ', err);
+				});
+			} else {
+				pb.collection('exercises').update('{{.id}}', data).then(() => {
+					alert('Exercise updated successfully');
+					window.location.href = '/admin';
+				}).catch(err => {
+					console.error(err);
+					alert('Error updating exercise: ', err);
+				});
+			}
+		});
+
+		// load exercise data
+		if ('{{.id}}' !== 'new') {
+			pb.collection('exercises').getOne('{{.id}}').then(exercise => {
+				$('#name').val(exercise.name);
+				$('#start').val(toLocalDatetimeInputValue(exercise.start));
+				$('#end').val(toLocalDatetimeInputValue(exercise.end));
+			}).catch(err => {
+				console.error(err);
+				alert('Error loading exercise data: ', err);
+			});
+		}
+	})
+</script>
+{{end}}
