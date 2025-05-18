@@ -17,6 +17,35 @@
 		<label for="end" class="form-label fs-5 fw-bold">End</label>
 		<input type="datetime-local" class="form-control" id="end" name="end" required>
 	</div>
+	<div class="mb-4">
+		<label for="stake_distribution" class="form-label fs-5 fw-bold">Stake Distribution</label>
+		<div class="input-group">
+			<input type="number" class="form-control" id="stake_distribution" name="stake_distribution" required min="0" max="100" value="50">
+			<span class="input-group-text">%</span>
+		</div>
+	</div>
+	<div class="mb-4">
+		<label for="region_distribution" class="form-label fs-5 fw-bold">Region Distribution</label>
+		<div class="input-group">
+			<input type="number" class="form-control" id="region_distribution" name="region_distribution" required min="0" max="100" value="35">
+			<span class="input-group-text">%</span>
+		</div>
+	</div>
+	<div class="mb-4">
+		<label for="storehouse_distribution" class="form-label fs-5 fw-bold">Storehouse Distribution</label>
+		<div class="input-group">
+			<input type="number" class="form-control" id="storehouse_distribution" name="storehouse_distribution" required min="0" max="100" value="15">
+			<span class="input-group-text">%</span>
+		</div>
+	</div>
+	<div class="mb-4">
+		<label for="distribution_total" class="form-label fs-5 fw-bold">Distribution Total</label>
+		<div class="input-group">
+			<input type="number" class="form-control is-valid" id="distribution_total" name="distribution_total" readonly disabled value="100">
+			<span class="input-group-text">%</span>
+		</div>
+		<div class="form-text">Total distribution must be 100%</div>
+	</div>
 	<button id="submit" class="btn btn-primary" type="submit">
 		<span class="spinner-grow spinner-grow-sm"></span>
 		Save
@@ -50,13 +79,30 @@
 			const form = $('#exercise_form');
 			if (!form[0].checkValidity()) {
 				form[0].reportValidity();
+				$('#submit').prop('disabled', false);
+				return;
+			}
+
+			// calculate total distribution
+			const stakeDistribution = parseFloat($('#stake_distribution').val());
+			const regionDistribution = parseFloat($('#region_distribution').val());
+			const storehouseDistribution = parseFloat($('#storehouse_distribution').val());
+			const totalDistribution = stakeDistribution + regionDistribution + storehouseDistribution;
+
+			// check if total distribution is 100%
+			if (totalDistribution !== 100) {
+				alert('Total distribution must be 100%');
+				$('#submit').prop('disabled', false);
 				return;
 			}
 
 			const data = {
 				name: $('#name').val(),
 				start: toUTCDateTimeString($('#start').val()),
-				end: toUTCDateTimeString($('#end').val())
+				end: toUTCDateTimeString($('#end').val()),
+				stake_distribution: stakeDistribution / 100,
+				region_distribution: regionDistribution / 100,
+				storehouse_distribution: storehouseDistribution / 100,
 			};
 
 			// create or update exercise
@@ -85,11 +131,30 @@
 				$('#name').val(exercise.name);
 				$('#start').val(toLocalDatetimeInputValue(exercise.start));
 				$('#end').val(toLocalDatetimeInputValue(exercise.end));
+				$('#stake_distribution').val(exercise.stake_distribution * 100);
+				$('#region_distribution').val(exercise.region_distribution * 100);
+				$('#storehouse_distribution').val(exercise.storehouse_distribution * 100);
+				checkDistribution();
 			}).catch(err => {
 				console.error(err);
 				alert('Error loading exercise data: ', err);
 			});
 		}
+
+		// update total distribution on input change
+		function checkDistribution() {
+			const stakeDistribution = parseFloat($('#stake_distribution').val()) || 0;
+			const regionDistribution = parseFloat($('#region_distribution').val()) || 0;
+			const storehouseDistribution = parseFloat($('#storehouse_distribution').val()) || 0;
+			const totalDistribution = stakeDistribution + regionDistribution + storehouseDistribution;
+
+			const isValid = totalDistribution === 100;
+			$('#distribution_total')
+				.val(totalDistribution)
+				.addClass(isValid ? 'is-valid' : 'is-invalid')
+				.removeClass(isValid ? 'is-invalid' : 'is-valid');
+		}
+		$('#stake_distribution, #region_distribution, #storehouse_distribution').on('input', checkDistribution);
 	})
 </script>
 {{end}}
