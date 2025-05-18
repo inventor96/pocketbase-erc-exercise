@@ -80,7 +80,7 @@ ERC Exercise Admin
 			const tbody = $('#exercise-list');
 			tbody.empty();
 
-			pb.collection('exercises').getFullList({sort: 'name', requestKey: 'exercises'}).then(exercises => {
+			pb.collection('exercises').getFullList({sort: 'start', requestKey: 'exercises'}).then(exercises => {
 				// check if the exercises array is empty
 				if (exercises.length === 0) {
 					tbody.append(`
