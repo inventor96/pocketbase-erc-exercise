@@ -34,7 +34,7 @@ ERC Exercise Admin
 					<th>Start</th>
 					<th>End</th>
 					<th>Started</th>
-					<th>Actions</th>
+					<th class="text-end">Actions</th>
 				</tr>
 			</thead>
 			<tbody id="exercise-list">
@@ -66,7 +66,7 @@ ERC Exercise Admin
 			<thead>
 				<tr>
 					<th>Name</th>
-					<th>Actions</th>
+					<th class="text-end">Actions</th>
 				</tr>
 			</thead>
 			<tbody id="region-list">
@@ -99,7 +99,7 @@ ERC Exercise Admin
 				<tr>
 					<th>Name</th>
 					<th>Region</th>
-					<th>Actions</th>
+					<th class="text-end">Actions</th>
 				</tr>
 			</thead>
 			<tbody id="stake-list">
@@ -221,7 +221,7 @@ ERC Exercise Admin
 							<td class="align-middle">${new Date(exercise.start).toLocaleString()}</td>
 							<td class="align-middle">${new Date(exercise.end).toLocaleString()}</td>
 							<td class="align-middle">${exercise.started ? '<span class="fs-6 badge text-bg-success">Started</span>' : '<span class="fs-6 badge text-bg-warning">Not Started</span>'}</td>
-							<td class="align-middle">
+							<td class="align-middle text-end">
 								${exercise.started ? 
 									`<button type="button" class="btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="exercise" data-bs-id="${exercise.id}" data-bs-name="${exercise.name}" data-bs-action="stop">Stop</button>` : 
 									`<button type="button" class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="exercise" data-bs-id="${exercise.id}" data-bs-name="${exercise.name}" data-bs-action="start">Start</button>`
@@ -274,7 +274,7 @@ ERC Exercise Admin
 					const tr = $(`
 						<tr>
 							<td class="align-middle fw-bold">${region.name}</td>
-							<td class="align-middle">
+							<td class="align-middle text-end">
 								<button type="button" class="btn btn-primary m-1" data-bs-toggle="modal" data-bs-target="#region_modal" data-bs-collection="region" data-bs-id="${region.id}" data-bs-name="${region.name}">Edit</button>
 								<button type="button" class="btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="region" data-bs-id="${region.id}" data-bs-name="${region.name}" data-bs-action="delete">Delete</button>
 							</td>
@@ -339,7 +339,7 @@ ERC Exercise Admin
 						<tr>
 							<td class="align-middle fw-bold">${stake.name}</td>
 							<td class="align-middle">${stake.expand.region.name}</td>
-							<td class="align-middle">
+							<td class="align-middle text-end">
 								<button type="button" class="btn btn-primary m-1" data-bs-toggle="modal" data-bs-target="#stake_modal" data-bs-collection="stake" data-bs-id="${stake.id}" data-bs-name="${stake.name}" data-bs-region="${stake.region}">Edit</button>
 								<button type="button" class="btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="stake" data-bs-id="${stake.id}" data-bs-name="${stake.name}" data-bs-action="delete">Delete</button>
 							</td>
