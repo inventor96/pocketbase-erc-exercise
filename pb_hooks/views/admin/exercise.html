@@ -65,6 +65,18 @@
 			pad(date.getMinutes());
 	}
 
+	function toHumanReadableDate(utcString) {
+		const date = new Date(utcString);
+		return date.toLocaleString('en-US', {
+			year: 'numeric',
+			month: '2-digit',
+			day: '2-digit',
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit'
+		});
+	}
+
 	function toUTCDateTimeString(localString) {
 		const date = new Date(localString);
 		return date.toISOString();
@@ -72,7 +84,7 @@
 
 	$(() => {
 		// handle form submission
-		$('#submit').on('click', function (e) {
+		$('#submit').on('click', async function (e) {
 			e.preventDefault();
 			$('#submit').prop('disabled', true);
 
@@ -95,6 +107,32 @@
 				return;
 			} else {
 				$('#end')[0].setCustomValidity('');
+			}
+
+			// check for overlapping exercises
+			try {
+				const id = '{{.id}}';
+				const filter = `((start <= '${toUTCDateTimeString(endVal)}') && (end >= '${toUTCDateTimeString(startVal)}') && (id != '${id}'))`;
+				const result = await pb.collection('exercises').getList(1, 100, {
+					filter: filter
+				});
+				const overlapping = result.items.filter(ex => ex.id !== id);
+				if (overlapping.length > 0) {
+					const overlapList = overlapping.map(ex => {
+						const name = ex.name || '(no name)';
+						const start = toHumanReadableDate(ex.start);
+						const end = toHumanReadableDate(ex.end);
+						return `• ${name}: ${start} to ${end}`;
+					}).join('\n');
+					alert(`This exercise overlaps with the following existing exercise(s):\n\n${overlapList}\n\nPlease adjust the start or end time to avoid conflicts.`);
+					$('#submit').prop('disabled', false);
+					return;
+				}
+			} catch (err) {
+				console.error(err);
+				alert('Error checking for overlapping exercises.');
+				$('#submit').prop('disabled', false);
+				return;
 			}
 
 			// calculate total distribution
