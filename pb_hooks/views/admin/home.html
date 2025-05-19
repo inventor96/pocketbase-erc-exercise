@@ -233,12 +233,14 @@ ERC Exercise Admin
 
 		// confirm exercise action
 		$('#confirm_modal').on('show.bs.modal', function (event) {
+			// get data from the button that triggered the modal
 			const button = $(event.relatedTarget);
 			const action = button.data('bs-action');
 			const collection = button.data('bs-collection');
 			const objectId = button.data('bs-id');
 			const objectName = button.data('bs-name');
 
+			// update the modal's content
 			const modal = $(this);
 			modal.find('#action_name').text(action);
 			modal.find('#exercise_name').text(objectName);
@@ -253,18 +255,21 @@ ERC Exercise Admin
 			const collection = $(this).data('bs-collection') + 's';
 			const action = $(this).data('bs-action');
 
+			// starting an exercise
 			if (action === 'start' && collection === 'exercises') {
 				pb.collection('exercises').update(objectId, { started: true })
 					.catch(err => {
 						console.error('Error starting exercise:', err);
 						alert(`Error starting exercise: ${err.message}`);
 					});
+			// stopping an exercise
 			} else if (action === 'stop' && collection === 'exercises') {
 				pb.collection('exercises').update(objectId, { started: false })
 					.catch(err => {
 						console.error('Error stopping exercise:', err);
 						alert(`Error stopping exercise: ${err.message}`);
 					});
+			// deleting an object
 			} else if (action === 'delete') {
 				pb.collection(collection).delete(objectId)
 					.catch(err => {
@@ -276,10 +281,12 @@ ERC Exercise Admin
 
 		// handle region modal
 		$('#region_modal').on('show.bs.modal', function (event) {
+			// get data from the button that triggered the modal
 			const button = $(event.relatedTarget);
 			const regionId = button.data('bs-id');
 			const regionName = button.data('bs-name');
 
+			// update the modal's content
 			const modal = $(this);
 			modal.find('#region_name').val(regionName);
 			modal.find('#region_confirm').data('bs-id', regionId);
@@ -288,12 +295,14 @@ ERC Exercise Admin
 			const regionId = $(this).data('bs-id');
 			const regionName = $('#region_name').val();
 
+			// update existing region
 			if (regionId) {
 				pb.collection('regions').update(regionId, { name: regionName })
 					.catch(err => {
 						console.error('Error updating region:', err);
 						alert(`Error updating region: ${err.message}`);
 					});
+			// create new region
 			} else {
 				pb.collection('regions').create({ name: regionName })
 					.catch(err => {
