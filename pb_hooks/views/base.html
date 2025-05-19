@@ -182,7 +182,7 @@
 				clearInterval(time_interval)
 				pb.collection('exercises').getFirstListItem(
 					`end >= "${new Date().toISOString().replace('T', ' ').substr(0, 19)}"`,
-					{ sort: '-start' }
+					{ sort: 'start' }
 				)
 					.then(result => {
 						$('#time_name').text(result.name)
