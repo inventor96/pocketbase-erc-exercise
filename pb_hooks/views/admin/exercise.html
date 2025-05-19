@@ -83,6 +83,20 @@
 				return;
 			}
 
+			// check that end is after start
+			const startVal = $('#start').val();
+			const endVal = $('#end').val();
+			const startDate = new Date(startVal);
+			const endDate = new Date(endVal);
+			if (!startVal || !endVal || endDate <= startDate) {
+				$('#end')[0].setCustomValidity('End time must be after start time.');
+				form[0].reportValidity();
+				$('#submit').prop('disabled', false);
+				return;
+			} else {
+				$('#end')[0].setCustomValidity('');
+			}
+
 			// calculate total distribution
 			const stakeDistribution = parseFloat($('#stake_distribution').val());
 			const regionDistribution = parseFloat($('#region_distribution').val());
@@ -155,6 +169,25 @@
 				.removeClass(isValid ? 'is-invalid' : 'is-valid');
 		}
 		$('#stake_distribution, #region_distribution, #storehouse_distribution').on('input', checkDistribution);
+
+		// live validation for end > start
+		$('#start, #end').on('change input', function() {
+			const startVal = $('#start').val();
+			const endVal = $('#end').val();
+			const startDate = new Date(startVal);
+			const endDate = new Date(endVal);
+			if (startVal && endVal && endDate <= startDate) {
+				$('#end')
+					.addClass('is-invalid')
+					.removeClass('is-valid')
+					[0].setCustomValidity('End time must be after start time.');
+			} else {
+				$('#end')
+					.addClass('is-valid')
+					.removeClass('is-invalid')
+					[0].setCustomValidity('');
+			}
+		});
 	})
 </script>
 {{end}}
