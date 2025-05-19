@@ -5,4 +5,4 @@ This project is a web application that aids in simulating an emergency response 
 - Use camelCase for variable and function names.
 - Use single quotes for strings unless the string contains a single quote, in which case use double quotes.
 - Strings with variable interpolation should use template literals (backticks).
-- Use tabs for indentation.
+- Use tabs for indentation (4 spaces) in all files.
