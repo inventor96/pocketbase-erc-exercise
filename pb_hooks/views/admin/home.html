@@ -103,7 +103,7 @@ ERC Exercise Admin
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title">Edit Region</h4>
+				<h4 class="modal-title"><span id="region_modal_title">Edit</span> Region</h4>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -290,6 +290,7 @@ ERC Exercise Admin
 			const modal = $(this);
 			modal.find('#region_name').val(regionName);
 			modal.find('#region_confirm').data('bs-id', regionId);
+			modal.find('#region_modal_title').text(regionId ? 'Edit' : 'New');
 		});
 		$('#region_confirm').on('click', function () {
 			const regionId = $(this).data('bs-id');
