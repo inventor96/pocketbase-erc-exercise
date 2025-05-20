@@ -87,12 +87,12 @@ routerAdd("GET", "/report", (c) => {
 
 	// report of users who have fulfilled more than one need
 	const top_needs_users = arrayOf(new DynamicModel({
-		"username": "",
+		"email": "",
 		"callsign": "",
 		"count": 0
 	}))
 	$app.dao().db()
-		.newQuery("SELECT users.username, users.callsign, COUNT(tasks.id) AS count\
+		.newQuery("SELECT users.email, users.callsign, COUNT(tasks.id) AS count\
 			FROM users\
 			LEFT JOIN tasks ON users.id = tasks.need_user\
 			WHERE tasks.completed != ''\
@@ -108,12 +108,12 @@ routerAdd("GET", "/report", (c) => {
 
 	// report of users who have provided more than one resource
 	const top_resource_users = arrayOf(new DynamicModel({
-		"username": "",
+		"email": "",
 		"callsign": "",
 		"count": 0
 	}))
 	$app.dao().db()
-		.newQuery("SELECT users.username, users.callsign, COUNT(tasks.id) AS count\
+		.newQuery("SELECT users.email, users.callsign, COUNT(tasks.id) AS count\
 			FROM users\
 			LEFT JOIN tasks ON users.id = tasks.resource_user\
 			WHERE tasks.completed != ''\

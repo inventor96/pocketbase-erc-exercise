@@ -55,15 +55,10 @@
 		$(() => {
 			// update user info
 			if (pb.authStore.isValid) {
-				if (pb.authStore.isAdmin) {
-					$('.user-disp').text(pb.authStore.model.email)
-					$('#username').val(pb.authStore.model.email)
-					$('.callsign-disp').text('admin')
-				} else {
-					$('.user-disp').text(pb.authStore.model.username)
-					$('#username').val(pb.authStore.model.username)
-					$('.callsign-disp').text(pb.authStore.model.callsign)
-				}
+				$('.user-disp').text(pb.authStore.model.email)
+				$('.name-disp').text(pb.authStore.model.name)
+				$('#email').val(pb.authStore.model.email)
+				$('.callsign-disp').text(pb.authStore.isAdmin ? 'admin' : pb.authStore.model.callsign)
 			}
 
 			// handle logout
@@ -146,9 +141,9 @@
 				})
 					.then(() => {
 						// refresh log in
-						const username = pb.authStore.model.username
+						const email = pb.authStore.model.email
 						pb.authStore.clear()
-						pb.collection('users').authWithPassword(username, $('#password').val())
+						pb.collection('users').authWithPassword(email, $('#password').val())
 							.then(() => {
 								if (pb.authStore.isValid) {
 									window.location.reload()
@@ -276,7 +271,7 @@
 				</div>
 				<div class="modal-body">
 					<form>
-						<input type="text" id="username" name="username" autocomplete="username" class="d-none" disabled readonly>
+						<input type="email" id="email" name="email" autocomplete="email" class="d-none" disabled readonly>
 						<p>If you would like to change you pin code, please enter your new pin code below, and click the "Save New Pin Code" button.</p>
 						<label for="old_password" class="form-label fs-5 fw-bold">Old Pin Code</label>
 						<input type="password" class="form-control" id="old_password" name="old_password" required autocomplete="current-password">

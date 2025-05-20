@@ -7,8 +7,13 @@ ERC Exercise Signup
 <p>Already have an account? <a href="/login">Head over to the login page</a>.</p>
 <form id="signup_form">
 	<div class="mb-4">
-		<label for="username" class="form-label fs-5 fw-bold">Username</label>
-		<input type="text" class="form-control" id="username" name="username" required minlength="3">
+		<label for="name" class="form-label fs-5 fw-bold">Name</label>
+		<input type="text" class="form-control" id="name" name="name" required minlength="3">
+	</div>
+	<div class="mb-4">
+		<label for="email" class="form-label fs-5 fw-bold">Email</label>
+		<div class="mb-1"><i class="bi bi-info-circle-fill text-primary"></i> Your email will only be used for transactional topics (e.g. enabling you to reset your password).</div>
+		<input type="email" class="form-control" id="email" name="email" required minlength="3">
 	</div>
 	<div class="mb-4">
 		<label for="password" class="form-label fs-5 fw-bold">Pin Code</label>
@@ -87,7 +92,8 @@ ERC Exercise Signup
 		// create a new user with their stake
 		function createUser() {
 			const user_data = {
-				"username": $('#username').val(),
+				"name": $('#name').val(),
+				"email": $('#email').val(),
 				"password": $('#password').val(),
 				"passwordConfirm": $('#password').val(),
 				"stake": $('#stake').val(),
@@ -98,7 +104,7 @@ ERC Exercise Signup
 			pb.collection('users').create(user_data)
 				.then(() => {
 					// log in
-					pb.collection('users').authWithPassword($('#username').val(), $('#password').val())
+					pb.collection('users').authWithPassword($('#email').val(), $('#password').val())
 						.then(() => {
 							if (pb.authStore.isValid) {
 								window.location.href = "/"
@@ -110,7 +116,7 @@ ERC Exercise Signup
 						})
 				})
 				.catch(error => {
-					alert(`There was an error while creating your account: ${error}\n\nMaybe that username or callsign is already in use?`)
+					alert(`There was an error while creating your account: ${error}\n\nMaybe that email or callsign is already in use?`)
 					$submit.prop('disabled', false)
 				})
 		}

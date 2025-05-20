@@ -6,8 +6,8 @@ ERC Exercise Admin Login
 <h1>ERC Exercise Admin Login</h1>
 <form id="login_form">
 	<div class="mb-4">
-		<label for="username" class="form-label fs-5 fw-bold">Username</label>
-		<input type="email" class="form-control" id="username" name="username" required>
+		<label for="email" class="form-label fs-5 fw-bold">Email</label>
+		<input type="email" class="form-control" id="email" name="email" required>
 	</div>
 	<div class="mb-4">
 		<label for="password" class="form-label fs-5 fw-bold">Password</label>
@@ -29,7 +29,7 @@ ERC Exercise Admin Login
 			$submit.prop('disabled', true)
 
 			// log in
-			pb.admins.authWithPassword($('#username').val(), $('#password').val())
+			pb.admins.authWithPassword($('#email').val(), $('#password').val())
 				.then(() => {
 					if (pb.authStore.isValid) {
 						window.location.href = "/admin"
