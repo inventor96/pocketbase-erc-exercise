@@ -55,6 +55,26 @@ routerAdd("GET", "/monitordata", function (c) {
 		.all(participant_data)
 	const total_participants = participant_data.reduce((acc, region) => acc + region.participants, 0)
 
+	// get number of users per communication type
+	const commTypeCounts = arrayOf(new DynamicModel({
+		"name": "",
+		"count": 0,
+	}))
+	$app.dao().db()
+		.newQuery("SELECT users.comm_type AS name, COUNT(DISTINCT users.id) AS count\
+			FROM tasks\
+			LEFT JOIN users ON tasks.resource_user = users.id\
+			LEFT JOIN stakes ON users.stake = stakes.id\
+			LEFT JOIN regions ON stakes.region = regions.id\
+			WHERE tasks.created BETWEEN {:start} AND {:end}\
+			GROUP BY comm_type\
+			ORDER BY count DESC, name")
+		.bind({
+			"start": reporting_exercise.start,
+			"end": reporting_exercise.end
+		})
+		.all(commTypeCounts)
+
 	// count of open tasks with the need and resource being in the same stake
 	const stake_tasks_open = new DynamicModel({ "count": 0 })
 	$app.dao().db()
@@ -420,6 +440,7 @@ routerAdd("GET", "/monitordata", function (c) {
 	c.json(200, {
 		"participants": {
 			"by_region": participant_data,
+			"by_service": commTypeCounts,
 			"total": total_participants,
 		},
 		"tasks": {
