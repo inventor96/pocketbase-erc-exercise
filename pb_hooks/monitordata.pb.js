@@ -436,12 +436,21 @@ routerAdd("GET", "/monitordata", function (c) {
 	const storehouse_tasks_time_avg = storehouse_tasks_time.length > 0 ? storehouse_tasks_time_sum / storehouse_tasks_time.length : 0
 	const storehouse_tasks_time_avg_formatted = storehouse_tasks_time.length > 0 ? new Date(storehouse_tasks_time_avg).toISOString().substr(11, 8) : '--'
 
+	// total number of registered users
+	const registered_users = new DynamicModel({
+		"count": 0,
+	})
+	$app.dao().db()
+		.newQuery("SELECT COUNT(id) as count FROM users")
+		.one(registered_users)
+
 	// output
 	c.json(200, {
 		"participants": {
 			"by_region": participant_data,
 			"by_service": commTypeCounts,
 			"total": total_participants,
+			"registered": registered_users.count,
 		},
 		"tasks": {
 			"scope": {
