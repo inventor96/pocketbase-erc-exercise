@@ -62,19 +62,25 @@
 						<h3 class="card-title">Avg Fulfillment Time</h3>
 					</div>
 					<div class="card-body">
-						<table class="table table-striped table-hover mb-0">
-							<tbody id="fulfillment_time">
+						<table class="table table-striped table-hover mb-0 fs-5">
+							<thead>
 								<tr>
-									<th class="fs-4">Storehouse</th>
-									<td class="fs-4" id="fulfillment_time_storehouse">--</td>
+									<th scope="col">Scope</th>
+									<th scope="col">Time</th>
+								</tr>
+							</thead>
+							<tbody class="table-group-divider" id="fulfillment_time">
+								<tr>
+									<td>Storehouse</td>
+									<td id="fulfillment_time_storehouse">--</td>
 								</tr>
 								<tr>
-									<th class="fs-4">Region</th>
-									<td class="fs-4" id="fulfillment_time_region">--</td>
+									<td>Region</td>
+									<td id="fulfillment_time_region">--</td>
 								</tr>
 								<tr>
-									<th class="fs-4">Stake</th>
-									<td class="fs-4" id="fulfillment_time_stake">--</td>
+									<td>Stake</td>
+									<td id="fulfillment_time_stake">--</td>
 								</tr>
 							</tbody>
 						</table>
@@ -87,33 +93,33 @@
 						<h3 class="card-title">Needs by Scope</h3>
 					</div>
 					<div class="card-body">
-						<table class="table table-striped table-hover mb-0">
+						<table class="table table-striped table-hover mb-0 fs-5">
 							<thead>
 								<tr>
-									<th class="fs-4" scope="col">Scope</th>
-									<th class="fs-4" scope="col">Open</th>
-									<th class="fs-4" scope="col">Fulfilled</th>
-									<th class="fs-4" scope="col">Skipped</th>
+									<th scope="col">Scope</th>
+									<th scope="col">Open</th>
+									<th scope="col">Fulfilled</th>
+									<th scope="col">Skipped</th>
 								</tr>
 							</thead>
-							<tbody id="scope_needs">
+							<tbody class="table-group-divider" id="scope_needs">
 								<tr>
-									<td class="fs-4">Storehouse</td>
-									<td class="fs-4" id="scope_needs_storehouse_open">0</td>
-									<td class="fs-4" id="scope_needs_storehouse_fulfilled">0</td>
-									<td class="fs-4" id="scope_needs_storehouse_skipped">0</td>
+									<td>Storehouse</td>
+									<td id="scope_needs_storehouse_open">0</td>
+									<td id="scope_needs_storehouse_fulfilled">0</td>
+									<td id="scope_needs_storehouse_skipped">0</td>
 								</tr>
 								<tr>
-									<td class="fs-4">Region</td>
-									<td class="fs-4" id="scope_needs_region_open">0</td>
-									<td class="fs-4" id="scope_needs_region_fulfilled">0</td>
-									<td class="fs-4" id="scope_needs_region_skipped">0</td>
+									<td>Region</td>
+									<td id="scope_needs_region_open">0</td>
+									<td id="scope_needs_region_fulfilled">0</td>
+									<td id="scope_needs_region_skipped">0</td>
 								</tr>
 								<tr>
-									<td class="fs-4">Stake</td>
-									<td class="fs-4" id="scope_needs_stake_open">0</td>
-									<td class="fs-4" id="scope_needs_stake_fulfilled">0</td>
-									<td class="fs-4" id="scope_needs_stake_skipped">0</td>
+									<td>Stake</td>
+									<td id="scope_needs_stake_open">0</td>
+									<td id="scope_needs_stake_fulfilled">0</td>
+									<td id="scope_needs_stake_skipped">0</td>
 								</tr>
 							</tbody>
 						</table>
@@ -128,14 +134,14 @@
 						<h3 class="card-title">Participants by Region</h3>
 					</div>
 					<div class="card-body">
-						<table class="table table-striped table-hover mb-0">
+						<table class="table table-striped table-hover mb-0 fs-5">
 							<thead>
 								<tr>
 									<th scope="col">Region</th>
 									<th scope="col">Participants</th>
 								</tr>
 							</thead>
-							<tbody id="region_participants">
+							<tbody class="table-group-divider" id="region_participants">
 								<tr>
 									<td colspan="2" class="text-center">
 										<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -153,14 +159,14 @@
 						<h3 class="card-title">Participants by Service</h3>
 					</div>
 					<div class="card-body">
-						<table class="table table-striped table-hover mb-0">
+						<table class="table table-striped table-hover mb-0 fs-5">
 							<thead>
 								<tr>
 									<th scope="col">Service</th>
 									<th scope="col">Participants</th>
 								</tr>
 							</thead>
-							<tbody id="service_participants">
+							<tbody class="table-group-divider" id="service_participants">
 								<tr>
 									<td colspan="2" class="text-center">
 										<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -178,7 +184,7 @@
 						<h3 class="card-title">Needs by Region</h3>
 					</div>
 					<div class="card-body">
-						<table class="table table-striped table-hover mb-0">
+						<table class="table table-striped table-hover mb-0 fs-5">
 							<thead>
 								<tr>
 									<th scope="col">Region</th>
@@ -187,7 +193,7 @@
 									<th scope="col">Skipped</th>
 								</tr>
 							</thead>
-							<tbody id="region_needs">
+							<tbody class="table-group-divider" id="region_needs">
 								<tr>
 									<td colspan="4" class="text-center">
 										<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
