@@ -57,7 +57,7 @@
 			if (pb.authStore.isValid) {
 				$('.user-disp').text(pb.authStore.model.email)
 				$('.name-disp').text(pb.authStore.model.name)
-				$('#email').val(pb.authStore.model.email)
+				$('#current_email').val(pb.authStore.model.email)
 				$('.callsign-disp').text(pb.authStore.isAdmin ? 'admin' : pb.authStore.model.callsign)
 			}
 
@@ -271,7 +271,7 @@
 				</div>
 				<div class="modal-body">
 					<form>
-						<input type="email" id="email" name="email" autocomplete="email" class="d-none" disabled readonly>
+						<input type="email" id="current_email" name="email" autocomplete="email" class="d-none" disabled readonly>
 						<p>If you would like to change you pin code, please enter your new pin code below, and click the "Save New Pin Code" button.</p>
 						<label for="old_password" class="form-label fs-5 fw-bold">Old Pin Code</label>
 						<input type="password" class="form-control" id="old_password" name="old_password" required autocomplete="current-password">
