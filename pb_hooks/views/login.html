@@ -14,6 +14,9 @@ ERC Exercise Login
 		<label for="password" class="form-label fs-5 fw-bold">Pin Code</label>
 		<input type="password" class="form-control" id="password" name="password" required minlength="6">
 	</div>
+	{{if .smtpEnabled}}
+	<p>Forgot your password? <a href="/forgot">Click here to reset it</a>.</p>
+	{{end}}
 	<button id="submit" class="btn btn-primary" type="submit">
 		<span class="spinner-grow spinner-grow-sm"></span>
 		Log in to your ERC Exercise account

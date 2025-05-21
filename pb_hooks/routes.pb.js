@@ -169,6 +169,7 @@ routerAdd("GET", "/login", (c) => {
 		`${__hooks}/views/login.html`,
 	).render({
 		"appUrl": $app.settings().meta.appUrl,
+		"smtpEnabled": $app.settings().smtp.enabled,
 	})
 
 	return c.html(200, html)
@@ -178,6 +179,24 @@ routerAdd("GET", "/login", (c) => {
 routerAdd("GET", "/monitor", (c) => {
 	const html = $template.loadFiles(
 		`${__hooks}/views/monitor.html`,
+	).render({
+		"appUrl": $app.settings().meta.appUrl,
+	})
+
+	return c.html(200, html)
+})
+
+// render the forgot password page
+routerAdd("GET", "/forgot", (c) => {
+	// redirect to home if already logged in
+	if (c.get('authRecord') || !$app.settings().smtp.enabled) {
+		return c.redirect(302, "/")
+	}
+
+	// render the forgot password page
+	const html = $template.loadFiles(
+		`${__hooks}/views/base.html`,
+		`${__hooks}/views/forgot.html`,
 	).render({
 		"appUrl": $app.settings().meta.appUrl,
 	})

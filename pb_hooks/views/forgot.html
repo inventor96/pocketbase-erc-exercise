@@ -1,0 +1,39 @@
+{{define "title"}}
+Forgot Password
+{{end}}
+
+{{define "container"}}
+<h1>Forgot Password</h1>
+<p>Please enter your email address and we'll send you a link to reset your password if you have an account with us.</p>
+<form id="forgot_form">
+	<div class="mb-4">
+		<label for="email" class="form-label fs-5 fw-bold">Email</label>
+		<input type="email" class="form-control" id="email" name="email" required minlength="3">
+	</div>
+	<button id="submit" class="btn btn-primary mt-3" type="submit">
+		<span class="spinner-grow spinner-grow-sm"></span>
+		Request Password Reset
+	</button>
+</form>
+{{end}}
+
+{{define "script"}}
+<script type="text/javascript">
+	$(() => {
+		// handle submit
+		const $submit = $('#submit')
+		$('#forgot_form').on('submit', () => {
+			$submit.prop('disabled', true)
+			pb.collection('users').requestPasswordReset($('#email').val())
+				.then(() => {
+					alert('Check your email for a link to reset your password. If you don\'t see it, check your spam folder. If you still don\'t see it, please contact us.')
+					window.location.href = "/login"
+				})
+				.catch(error => {
+					alert(`There was an error while sending the password reset email: ${error}`)
+					$submit.prop('disabled', false)
+				});
+		})
+	})
+</script>
+{{end}}

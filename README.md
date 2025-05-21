@@ -25,6 +25,7 @@ Note that these setup instructions are for Linux hosts. You'll have to adjust an
 1. Update the `csv_uploader.sh` bash script with your admin token, as well as the domain part of the 3 URLs.
 1. Ensure you have the `jq` package installed on your host.
 1. Run the script (e.g. `./csv_uploader.sh`) to upload the items, regions, and stakes.
+1. If you want to enable password reset emails, you'll need to set up the SMTP settings in the admin UI.
 
 Congrats! The application is functional!
 
