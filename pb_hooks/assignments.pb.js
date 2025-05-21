@@ -21,7 +21,7 @@ onModelBeforeUpdate((e) => {
 		try {
 			exercise_record = $app.dao().findFirstRecordByFilter(
 				"exercises",
-				"started = true && end > {:now}",
+				"started = true && end > {:now}", // omiting the start so admins can start early if desired
 				{ now: new Date().toISOString().replace('T', ' ').substr(0, 19) }
 			)
 		} catch (error) { /* no active exercises */}
@@ -61,7 +61,7 @@ onModelBeforeUpdate((e) => {
 		try {
 			exercise_record = $app.dao().findFirstRecordByFilter(
 				"exercises",
-				"started = true && end > {:now}",
+				"started = true && end > {:now}", // omiting the start so admins can start early if desired
 				{ now: new Date().toISOString().replace('T', ' ').substr(0, 19) }
 			)
 		} catch (error) { /* no active exercises */}
@@ -90,6 +90,8 @@ onModelBeforeUpdate((e) => {
 	const region_weight = exercise_record.get('region_distribution')
 	const storehouse_weight = exercise_record.get('storehouse_distribution')
 	const scope_total = stake_weight + region_weight + storehouse_weight
+	const initial_assignments = exercise_record.get('initial_assignments')
+	const subsequent_assignments = exercise_record.get('subsequent_assignments')
 
 	function chooseUser(user_id) {
 		const resource_user = new DynamicModel({ "id": "" })
@@ -200,14 +202,20 @@ onModelBeforeUpdate((e) => {
 			// check users existing tasks
 			var tasks = new DynamicModel({ "count": 0 })
 			$app.dao().db()
-				.newQuery("SELECT COUNT(id) AS count FROM tasks WHERE need_user = {:need_user};")
+				.newQuery("SELECT COUNT(id) AS count\
+					FROM tasks\
+					WHERE need_user = {:need_user}\
+						AND created > {:start}\
+						AND created < {:end}")
 				.bind({
-					"need_user": user_id
+					"need_user": user_id,
+					"start": exercise_record.get('start'),
+					"end": exercise_record.get('end')
 				})
 				.one(tasks)
 
 			// create multiple tasks based on previous task count
-			var new_task_count = tasks.count > 0 ? 1 : 3
+			var new_task_count = tasks.count > 0 ? initial_assignments : subsequent_assignments
 			for (let j = 0; j < new_task_count; j++) {
 				// pick a random task
 				var task = new DynamicModel({ "id": "" })

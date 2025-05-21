@@ -46,6 +46,16 @@
 		</div>
 		<div class="form-text">Total distribution must be 100%</div>
 	</div>
+	<div class="mb-4">
+		<label for="initial_assignments" class="form-label fs-5 fw-bold">Initial Assignments</label>
+		<input type="number" class="form-control" id="initial_assignments" name="initial_assignments" required min="1" value="3">
+		<div class="form-text">The number of "need" assignments to be created for a user when they're first ready in the exercise.</div>
+	</div>
+	<div class="mb-4">
+		<label for="subsequent_assignments" class="form-label fs-5 fw-bold">Subsequent Assignments</label>
+		<input type="number" class="form-control" id="subsequent_assignments" name="subsequent_assignments" required min="1" value="1">
+		<div class="form-text">The number of "need" assignments to be created for a user when they want more after their first assignment(s).</div>
+	</div>
 	<button id="submit" class="btn btn-primary" type="submit">
 		<span class="spinner-grow spinner-grow-sm"></span>
 		Save
@@ -155,6 +165,8 @@
 				stake_distribution: stakeDistribution / 100,
 				region_distribution: regionDistribution / 100,
 				storehouse_distribution: storehouseDistribution / 100,
+				initial_assignments: parseInt($('#initial_assignments').val(), 10),
+				subsequent_assignments: parseInt($('#subsequent_assignments').val(), 10),
 			};
 
 			// create or update exercise
@@ -186,6 +198,8 @@
 				$('#stake_distribution').val(exercise.stake_distribution * 100);
 				$('#region_distribution').val(exercise.region_distribution * 100);
 				$('#storehouse_distribution').val(exercise.storehouse_distribution * 100);
+				$('#initial_assignments').val(exercise.initial_assignments);
+				$('#subsequent_assignments').val(exercise.subsequent_assignments);
 				checkDistribution();
 			}).catch(err => {
 				console.error(err);
