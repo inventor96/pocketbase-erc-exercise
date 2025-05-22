@@ -21,7 +21,7 @@ Note that these setup instructions are for Linux hosts. You'll have to adjust an
 	- `regions.csv`: id (integer), name (text)
 	- `stakes.csv`: id (integer), name (text), region id (integer)
 1. Get your admin auth token.
-	- You can do this by inspecting the network traffic for the admin UI (the requests for "records" is a good choice), and copying the contents of the "Authorization" header.
+	- You can do this by logging into the ERC Admin UI, and copying the Auth Token value at the bottom of the page.
 1. Update the `csv_uploader.sh` bash script with your admin token, as well as the domain part of the 3 URLs.
 1. Ensure you have the `jq` package installed on your host.
 1. Run the script (e.g. `./csv_uploader.sh`) to upload the items, regions, and stakes.
