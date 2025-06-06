@@ -33,6 +33,8 @@ Forgot Password
 					alert(`There was an error while sending the password reset email: ${error}`)
 					$submit.prop('disabled', false)
 				});
+
+			return false;
 		})
 	})
 </script>
