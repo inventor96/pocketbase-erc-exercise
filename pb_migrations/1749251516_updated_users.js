@@ -1,7 +1,7 @@
 /// <reference path="../pb_data/types.d.ts" />
 migrate((db) => {
   const dao = new Dao(db)
-  const collection = dao.findCollectionByNameOrId("_pb_users_auth_")
+  const collection = dao.findCollectionByNameOrId("users")
 
   // update
   collection.schema.addField(new SchemaField({
