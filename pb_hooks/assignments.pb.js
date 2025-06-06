@@ -9,6 +9,17 @@ onModelBeforeUpdate((e) => {
 
 	// setup based on table
 	if (table == 'users') {
+		// clear pending tasks if the user is being set from ready:true to ready:false
+		if (current_model.get('ready') != true || e.model.get('ready') != false) {
+			// clear pending tasks
+			const pending_tasks = $app.dao().findRecordsByExpr("tasks", $dbx.hashExp({need_user: e.model.id, resource_rejected: false, resource_confirmed: false}))
+			pending_tasks.forEach(task => {
+				// remove the task
+				$app.dao().deleteRecord(task)
+			})
+			return
+		}
+
 		// only go through this process if the user is being updated from ready:false to ready:true
 		if (current_model.get('ready') != false || e.model.get('ready') != true) {
 			return

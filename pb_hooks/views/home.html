@@ -142,6 +142,14 @@
 	var interaction_timeout
 
 	function showResourcePrompt() {
+		// hide the prompt and try the next one if the modal is shown for an id that is no longer in the queue
+		const curent_id = $('.resource-action').data('id');
+		if (curent_id && !resource_prompt_queue.some(task => task.id == curent_id)) {
+			clearInterval(interaction_timeout)
+			resource_prompt_modal.hide()
+			setTimeout(showResourcePrompt, 100)
+		}
+
 		// skip if it's already shown or transitioning
 		if (resource_prompt_modal._isShown || resource_prompt_modal._isTransitioning || resource_prompt_queue.length == 0) {
 			return
