@@ -1,7 +1,7 @@
 /// <reference path="../pb_data/types.d.ts" />
 migrate((db) => {
   const dao = new Dao(db)
-  const collection = dao.findCollectionByNameOrId("9k67dzf3isudpv3")
+  const collection = dao.findCollectionByNameOrId("exercises")
 
   // add
   collection.schema.addField(new SchemaField({
