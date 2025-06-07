@@ -249,11 +249,6 @@
 			})
 				.then(needs_list => {
 					if (needs_list.length > 0) {
-						// user has open needs
-						$ready_btn.prop('disabled', true)
-						$ready_btn_spinner.addClass('d-none')
-						$ready_btn_text.text("Woohoo! Go find the resources for your needs!")
-
 						// remove existing needs not in the list
 						$needs_list.find('li.list-group-item').each((_, el) => {
 							if (!needs_list.some(need => need.id == $(el).data('id'))) {
@@ -263,6 +258,7 @@
 
 						// add missing needs
 						var i = $needs_list.find('li.list-group-item').length;
+						var added = false;
 						needs_list.forEach(need => {
 							// skip if already in the list
 							if ($needs_list.find(`li.list-group-item[data-id="${need.id}"]`).length > 0) {
@@ -304,7 +300,49 @@
 										</div>\
 									</div>\
 								</li>`)
+							added = true
 						})
+
+						if (added) {
+							// user has open needs
+							$ready_btn.prop('disabled', true)
+							$ready_btn_spinner.addClass('d-none')
+							$ready_btn_text.text("Woohoo! Go find the resources for your needs!")
+						}
+
+						// after a while, let the user request more needs as long as none are pending confirmation by the resource user
+						setTimeout(() => {
+							pb.collection('tasks').getFullList({
+								filter: `need_user = "${pb.authStore.model.id}" && completed = "" && cancelled = "" && resource_rejected = false && resource_confirmed = false`,
+								requestKey: 'pending_needs'
+							})
+								.then(pending_needs_list => {
+									if (pending_needs_list.length > 0 || pb.authStore.model.ready) {
+										$ready_btn.prop('disabled', true)
+										$ready_btn_spinner.removeClass('d-none')
+										$ready_btn_text.text("More needs incoming...")
+
+										// show not ready button
+										$not_ready_btn
+											.removeClass('d-none')
+											.prop('disabled', false)
+									} else {
+										$ready_btn.prop('disabled', false)
+										$ready_btn_spinner.removeClass('d-none')
+										$ready_btn_text.text("I'm ready to be assigned more needs!")
+
+										// hide not ready button
+										$not_ready_btn
+											.addClass('d-none')
+											.prop('disabled', true)
+									}
+								})
+								.catch(error => {
+									if (!error.message.match('request was autocancelled')) {
+										alert(`There was an error while checking for pending needs:\n${error}\nPlease refresh the page.`)
+									}
+								})
+						}, 5000)
 					} else {
 						// no needs
 						$needs_list.empty()
@@ -464,7 +502,7 @@
 					alert(`There was an error while marking you as not ready:\n${error}\nPlease refresh the page.`)
 					$not_ready_btn.prop('disabled', false)
 				}
-				})
+			})
 		})
 
 		// capitalize callsign, require alphanumeric
