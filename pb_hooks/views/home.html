@@ -2,6 +2,7 @@
 <h1>Hi <span class="name-disp"><span class="placeholder-glow"><span class="placeholder col-1"></span></span></span>!</h1>
 <h3 class="mb-4">Your callsign is <span class="fw-bold callsign-disp text-success"><span class="placeholder-glow"><span class="placeholder col-1"></span></span></span>.</h3>
 
+<!-- needs list -->
 <div class="card mb-5">
 	<div class="card-body">
 		<div class="row">
@@ -27,16 +28,19 @@
 	</div>
 </div>
 
+<!-- resources list -->
 <div class="card mb-5">
 	<div class="card-body">
 		<h4 class="card-title">Resources</h4>
 		<p class="card-subtitle mb-3"><i class="bi bi-info-circle-fill text-primary"></i> You will be prompted to accept more resources when someone is ready for more needs assignments.</p>
-		<ul id="resources_list" class="list-group">
+		<ul id="resources_list" class="list-group mb-4">
 			<li class="list-group-item"><span class="placeholder-glow"><span class="placeholder col-4"></span></span></li>
 		</ul>
+		<button type="button" id="leave_exercise_btn" class="btn btn-warning d-none" data-bs-toggle="modal" data-bs-target="#leave_exercise_modal">Leave Exercise...</button>
 	</div>
 </div>
 
+<!-- statistics -->
 <div class="card mb-5">
 	<div class="card-body">
 		<div class="row">
@@ -73,6 +77,7 @@
 	</div>
 </div>
 
+<!-- confirm need cancellation -->
 <div class="modal fade" id="cancel_confirm_modal" tabindex="-1">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -95,6 +100,7 @@
 	</div>
 </div>
 
+<!-- success modal -->
 <div class="modal fade" id="success_modal" tabindex="-1">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
@@ -108,6 +114,7 @@
 	</div>
 </div>
 
+<!-- resource prompt modal -->
 <div class="modal fade" id="resource_prompt_modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -125,6 +132,30 @@
 				<button type="button" id="resource_accept" class="btn btn-primary resource-action" data-id="" data-action="accept">
 					<span class="spinner-grow spinner-grow-sm"></span>
 					Sure, I can be the resource!
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- leave exercise modal -->
+<div class="modal fade" id="leave_exercise_modal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Leave Exercise?</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure you want to leave the exercise? This will rid you of all resources, which may cause hiccups for the operators with the matching needs.</p>
+				<p>If you have already shared one or more of your resources, and you're just waiting for the "need" operator to enter it on their end, it would be preferrable for you to wait until they do so. If you leave before they enter it, it will be removed from their list and they won't be able to mark it as fulfilled.</p>
+				<p class="mb-0">Ideally you can stick around until you're able to share <i>all</i> of your resources (you're always welcome to decline additional resources), but we understand if you need to go.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				<button type="button" id="leave_confirm" class="btn btn-danger">
+					<span id="not_ready_btn_spinner" class="spinner-grow spinner-grow-sm"></span>
+					Yes, leave exercise
 				</button>
 			</div>
 		</div>
@@ -194,6 +225,7 @@
 		const $not_ready_btn = $('#not_ready_btn')
 		const $needs_list = $('#needs_list')
 		const $resources_list = $('#resources_list')
+		const $leave_exercise_btn = $('#leave_exercise_btn')
 
 		// refresh user details
 		pb.collection('users').authRefresh().then(() => {
@@ -254,7 +286,7 @@
 												</div>\
 												<button type="button" class="btn btn-warning mt-2" data-bs-id="${need.id}" data-bs-toggle="modal" data-bs-target="#cancel_confirm_modal">\
 													<span class="spinner-grow spinner-grow-sm"></span>\
-													I Can't Find It\
+													I Can't Find It...\
 												</button>\
 											</form>\
 										</div>\
@@ -287,7 +319,7 @@
 
 			// check if there's open resources
 			pb.collection('tasks').getFullList({
-				filter: `resource_user = "${pb.authStore.model.id}" && completed = "" && cancelled = "" && resource_confirmed = true`,
+				filter: `resource_user = "${pb.authStore.model.id}" && completed = "" && cancelled = "" && resource_confirmed = true && resource_rejected = false`,
 				sort: 'created',
 				expand: 'item',
 				requestKey: 'resources'
@@ -295,14 +327,18 @@
 				.then(resource_list => {
 					$resources_list.empty()
 					if (resource_list.length > 0) {
+						// user has open resources
+						$leave_exercise_btn.removeClass('d-none')
 						var i = 0
 						resource_list.forEach(resource => {
-							$resources_list.append(`<li class="list-group-item ${++i % 2 ? 'list-group-item-secondary' : ''}">\
+							$resources_list.append(`<li class="list-group-item ${++i % 2 ? 'list-group-item-secondary' : ''}" data-id="${resource.id}">\
 									<span class="fw-bold">${resource.expand.item.description}</span>\
 									(${resource.expand.item.quantity})\
 								</li>`)
 						});
 					} else {
+						// no resources
+						$leave_exercise_btn.addClass('d-none')
 						$resources_list.append('<li class="list-group-item"><span class="placeholder-glow"><span class="placeholder col-4"></span></span></li>')
 					}
 				})
@@ -492,6 +528,30 @@
 					$action_button.prop('disabled', false)
 				})
 		})
+
+		// handle leave exercise
+		function rejectNextResource() {
+			const next_id = $('#resources_list').find('li.list-group-item').first().data('id')
+			if (next_id) {
+				pb.collection('tasks').update(next_id, { resource_rejected: true })
+					.then(() => {
+						// recursively reject next resource
+						setTimeout(rejectNextResource, 500)
+					})
+					.catch(error => {
+						alert(`There was an error while leaving the exercise:\n${error}\nPlease refresh the page.`)
+					})
+			} else {
+				// no more resources to reject, enable button, close modal
+				$('#leave_confirm').prop('disabled', false)
+				$('#leave_exercise_modal').modal('hide')
+			}
+		}
+		$('#leave_confirm').on('click', () => {
+			$('#leave_confirm').prop('disabled', true)
+			rejectNextResource()
+		})
+
 
 		// update status view
 		checkUpdateStatusView()
