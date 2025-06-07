@@ -105,6 +105,33 @@ routerAdd("POST", "/fulfill-need", (c) => {
 	return c.json(200, {"success": result})
 }, $apis.requireRecordAuth())
 
+// handle clearing pending needs
+routerAdd("POST", "/not-ready", (c) => {
+	// get data
+	const user = c.get('authRecord')
+	console.log(`Clearing pending tasks for user ${user.id}...`)
+
+	// get all pending tasks for the user
+	const pending_tasks = $app.dao().findRecordsByExpr("tasks",
+		$dbx.hashExp({
+			need_user: user.id,
+			resource_rejected: false,
+			resource_confirmed: false
+		})
+	)
+
+	// remove the tasks
+	pending_tasks.forEach(task => {
+		$app.dao().deleteRecord(task)
+	})
+
+	// set the user to not ready
+	user.set('ready', false)
+	$app.dao().saveRecord(user)
+
+	return c.json(200, {"success": true})
+}, $apis.requireRecordAuth())
+
 // render the signup page
 routerAdd("GET", "/signup", (c) => {
 	// redirect to home if already logged in

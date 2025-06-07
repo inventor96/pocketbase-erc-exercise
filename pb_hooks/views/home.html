@@ -154,7 +154,7 @@
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 				<button type="button" id="leave_confirm" class="btn btn-danger">
-					<span id="not_ready_btn_spinner" class="spinner-grow spinner-grow-sm"></span>
+					<span id="leave_exercise_btn_spinner" class="spinner-grow spinner-grow-sm"></span>
 					Yes, leave exercise
 				</button>
 			</div>
@@ -455,10 +455,15 @@
 		$not_ready_btn.on('click', () => {
 			$not_ready_btn.prop('disabled', true)
 
-			// update the user
-			pb.collection('users').update(pb.authStore.model.id, { ready: false })
-				.catch(error => {
+			// trigger the status update
+			$.ajax({
+				url: '/not-ready',
+				type: 'POST',
+				success: () => $not_ready_btn.prop('disabled', false),
+				error: (xhr, status, error) => {
 					alert(`There was an error while marking you as not ready:\n${error}\nPlease refresh the page.`)
+					$not_ready_btn.prop('disabled', false)
+				}
 				})
 		})
 
