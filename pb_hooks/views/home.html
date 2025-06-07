@@ -589,7 +589,7 @@
 		function rejectNextResource() {
 			const next_id = $('#resources_list').find('li.list-group-item').first().data('id')
 			if (next_id) {
-				pb.collection('tasks').update(next_id, { resource_rejected: true })
+				pb.collection('tasks').update(next_id, { resource_rejected: true, resource_confirmed: false })
 					.then(() => {
 						// recursively reject next resource
 						setTimeout(rejectNextResource, 500)
