@@ -10,8 +10,9 @@ onModelBeforeUpdate((e) => {
 	// setup based on table
 	if (table == 'users') {
 		// clear pending tasks if the user is being set from ready:true to ready:false
-		if (current_model.get('ready') != true || e.model.get('ready') != false) {
+		if (current_model.get('ready') == true || e.model.get('ready') == false) {
 			// clear pending tasks
+			console.log(`Clearing pending tasks for user ${e.model.id}...`)
 			const pending_tasks = $app.dao().findRecordsByExpr("tasks", $dbx.hashExp({need_user: e.model.id, resource_rejected: false, resource_confirmed: false}))
 			pending_tasks.forEach(task => {
 				// remove the task
@@ -21,12 +22,9 @@ onModelBeforeUpdate((e) => {
 		}
 
 		// only go through this process if the user is being updated from ready:false to ready:true
-		if (current_model.get('ready') != false || e.model.get('ready') != true) {
+		if (current_model.get('ready') == true || e.model.get('ready') == false) {
 			return
 		}
-
-		// reset user rejection count if they confirm the resource
-		e.model.set('rejected', 0)
 
 		// check if there's an active exercise
 		try {
@@ -64,7 +62,7 @@ onModelBeforeUpdate((e) => {
 		}
 
 		// only go through this process if the task is being updated from resource_rejected:false to resource_rejected:true
-		if (current_model.get('resource_rejected') != false || e.model.get('resource_rejected') != true) {
+		if (current_model.get('resource_rejected') == true || e.model.get('resource_rejected') == false) {
 			return
 		}
 
