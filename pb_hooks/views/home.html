@@ -253,10 +253,22 @@
 						$ready_btn.prop('disabled', true)
 						$ready_btn_spinner.addClass('d-none')
 						$ready_btn_text.text("Woohoo! Go find the resources for your needs!")
-						// TODO: might need to refactor this so we don't delete and recreate elements
-						$needs_list.empty()
-						var i = 0
+
+						// remove existing needs not in the list
+						$needs_list.find('li.list-group-item').each((_, el) => {
+							if (!needs_list.some(need => need.id == $(el).data('id'))) {
+								$(el).remove()
+							}
+						})
+
+						// add missing needs
+						var i = $needs_list.find('li.list-group-item').length;
 						needs_list.forEach(need => {
+							// skip if already in the list
+							if ($needs_list.find(`li.list-group-item[data-id="${need.id}"]`).length > 0) {
+								return
+							}
+
 							// determine priority badge color
 							var badge_type;
 							switch (need.expand.item.priority) {
@@ -268,7 +280,7 @@
 							}
 
 							// add row
-							$needs_list.append(`<li class="list-group-item ${++i % 2 ? 'list-group-item-secondary' : ''}">\
+							$needs_list.append(`<li class="list-group-item ${++i % 2 ? 'list-group-item-secondary' : ''}" data-id="${need.id}">\
 									<div class="row row-cols-1 row-cols-md-2 gy-2 align-items-center">\
 										<div class="col">\
 											<span class="badge text-bg-${badge_type}">${need.expand.item.priority}</span>\
@@ -479,6 +491,7 @@
 							alert("Hmm... That doesn't look like the callsign of the person who has the resource. Keep trying! Feel free to ask exercise administrators for help if needed.")
 							$form_btn.prop('disabled', false)
 							$form_input.prop('disabled', false)
+							$form_input.focus()
 						}
 					})
 					.catch(error => {
