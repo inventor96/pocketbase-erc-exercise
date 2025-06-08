@@ -79,7 +79,7 @@ Users can signup at any time at the `/signup` URL. They log in at the `/login` U
 
 ### Exercises
 
-For the real magic to happen, you'll need to create an exercises in the admin portal (at `/admin`). Once this is created, and as long as it's in the future, the countdown timer will start. The `start` timestamp is only for informational purposes; the exercise will not automatically start at that time. When you're ready to actually start the exercise, use the respective button for the exercise on the admin portal. Because the `start` timestamp does not really affect anything, if you decide to start early, the application will go for it.
+For the real magic to happen, you'll need to create an exercises in the admin portal (at `/admin`). Once this is created, and as long as it's in the future, the countdown timer will start. The `start` timestamp is only for informational purposes; the exercise will not automatically start at that time. When you're ready to actually start the exercise, use the respective button for the exercise on the admin portal. Because the `start` timestamp does not really affect anything, if you decide to start early, the application will go for it. However, the [monitoring](#monitoring) and [reporting](#reporting) will only show stats for the time between the `start` and `end` timestamps of the exercise.
 
 When an exercise is changed from **not started** to **started**, the application will find all users who currently have their `ready` status set to `true`, and will start working on their needs assignments. If users indicate they're ready _after_ the exercise is started, the application will immediately start working on their needs assignments.
 
@@ -87,13 +87,17 @@ As soon as the `end` timestamp is reached for an exercise, the countdown timer w
 
 ### Need and Resource Assignments
 
-For each needs assignment, a random task is selected, and then a random scope will be chosen (based on the weights/distributions defined for the exercise) to determine the pool of users to select from as the resource. Once the scope is chosen, a random user from that scope will be selected as the resource. The record is created, and then the application waits between 120 and 130 seconds for the resource user to accept the resource assignment. If the user does not accept (either by lack of response, or by explicitly rejecting the assignment), then the process repeats for selecting another user as the resource. Once a resource user accepts the assignment, then the task shows up for both the need user and the resource user.
+For each needs assignment (or task), a random item is selected (priorizing the least used items first), then a random scope (stake, region, storehouse) will be chosen based on the weights/distributions defined for the exercise, and finally a user from the scope's pool is selected as the resource user. The record is created, and then the application waits between 120 and 130 seconds for the resource user to accept the resource assignment. If the user does not accept (either by lack of response, or by explicitly rejecting the assignment), then the process repeats for selecting another user as the resource. Once a resource user accepts the assignment, then the task shows up for both the need user and the resource user.
 
 ### Fulfilling and Cancelling a Need
 
-Once the need user finds the resource user and has received their callsign, the need user can then enter the callsign in the respective field in the web app and submit it. If the callsign is correct, the need user gets a visual confirmation, and then the need and resource are hidden from the respective users. If it's incorrect, they are informed and allowed to retry as many times as they want until it's correct.
+Once the need user finds the resource user and has received their callsign, the need user can then enter the callsign in the respective field in the web app and submit it. If the callsign is correct, the need user gets a visual confirmation, and then the need/resource is moved into the respective statistics column for each user. If it's incorrect, they are informed and allowed to retry as many times as they want until it's correct.
 
 If the user decides they are unable to find the resource user, they can click the respective button for the need assignment, and then it will be cancelled after confirmation. It is then hidden from both the need and resource users.
+
+### Monitoring
+
+The application has a monitoring page at `/monitor` that shows information about the current exercise, including various details about the participating users and needs/resource assignments. This page is accessible publicly. Optionally, you can query for a specific exercise by adding the `exercise_id` query parameter to the URL. e.g. `/monitor?exercise_id=ID_FROM_THE_COLLECTION`.
 
 ### Reporting
 
