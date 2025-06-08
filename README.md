@@ -75,11 +75,11 @@ Good question!
 
 ### Signup and Login
 
-Users can signup at any time at the `/signup` URL, as well as log in at the `/login` URL. They can also click the button to indicate they're ready for needs assignments, but nothing much will happen there until you take the next steps to setup the exercise.
+Users can signup at any time at the `/signup` URL. They log in at the `/login` URL. They can also click the button to indicate they're ready for needs assignments, but nothing much will happen there until you take the next steps to setup the exercise.
 
 ### Exercises
 
-For the real magic to happen, you'll need to create a record in the `exercises` collection. Once this is created, and as long as it's in the future, the countdown timer will start. The `start` field is only for informational purposes; the exercise will not automatically start at that time. The `started` field will need to manually be set to `true` once the exercise is officially underway. Note also that the `started` field and respective functionality is not affected by the `start` timestamp; if you decide to start early, the application will go for it.
+For the real magic to happen, you'll need to create an exercises in the admin portal (at `/admin`). Once this is created, and as long as it's in the future, the countdown timer will start. The `start` timestamp is only for informational purposes; the exercise will not automatically start at that time. When you're ready to actually start the exercise, use the respective button for the exercise on the admin portal. Because the `start` timestamp does not really affect anything, if you decide to start early, the application will go for it.
 
 When an exercise is changed from **not started** to **started**, the application will find all users who currently have their `ready` status set to `true`, and will start working on their needs assignments. If users indicate they're ready _after_ the exercise is started, the application will immediately start working on their needs assignments.
 
