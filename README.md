@@ -24,9 +24,9 @@ To import from CSV files:
 	- `regions` and `stakes`: Regions are groups of Stakes, and users indicate which Stake they're participating from/in.
 	- `items`: Contains the items that can be used in assignments during the exercise.
 1. Edit the CSV files as necessary, or create your own. The file should include headers (i.e. the first row being the column names). The headers are **case-sensitive**, but they can be in any order. The column names depend on the category:
-	- `regions.csv`:
+	- `regions`:
 		- Name
-	- `stakes.csv`:
+	- `stakes`:
 		- Name
 		- Region (the name of an existing Region)
 	- `items`:
