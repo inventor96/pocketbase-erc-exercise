@@ -130,7 +130,7 @@ ERC Exercise Admin
 				<h4 class="card-title">Items</h4>
 			</div>
 			<div class="col text-end">
-				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csv_modal" data-bs-type="item" data-bs-columns="Description|Quantity (can be more than just a number, e.g. 'pack of 80')|Priority (one of: Emergency, Priority, Welfare, Routine)">Upload CSV</button>
+				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csv_modal" data-bs-type="item" data-bs-columns='Description|Quantity (can be more than just a number, e.g. "pack of 80")|Priority (one of: Emergency, Priority, Welfare, Routine)'>Upload CSV</button>
 				<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#item_modal" data-bs-name="" data-bs-id="" data-bs-quantity="" data-bs-priority="">New Item</button>
 			</div>
 		</div>
@@ -279,6 +279,7 @@ ERC Exercise Admin
 					<div class="mb-4">
 						<label for="item_quantity" class="form-label fs-5 fw-bold">Quantity</label>
 						<input type="text" class="form-control" id="item_quantity" name="item_quantity" required minlength="1">
+						<div class="form-text"><i class="bi bi-info-circle-fill text-primary"></i> Can be more than just a number, e.g. "pack of 80"</div>
 					</div>
 					<div class="mb-4">
 						<label for="item_priority" class="form-label fs-5 fw-bold">Priority</label>
