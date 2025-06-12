@@ -884,6 +884,15 @@ ERC Exercise Admin
 									// add item if it doesn't exist
 									const itemResult = await pb.collection('items').getList(1, 1, {filter: `description = "${data['Description']}" && quantity = "${data['Quantity']}" && priority = "${data['Priority']}"`, requestKey: null});
 									if (!itemResult.totalItems) {
+										// check if priority is valid
+										const validPriorities = ['Emergency', 'Priority', 'Welfare', 'Routine'];
+										if (!validPriorities.includes(data['Priority'])) {
+											alert(`Invalid priority "${data['Priority']}" on line ${rowCount + 1}. Valid priorities are: ${validPriorities.join(', ')}.`);
+											errorCount++;
+											return;
+										}
+
+										// create the item
 										await pb.collection('items').create({ description: data['Description'], quantity: data['Quantity'], priority: data['Priority'] });
 										addedCount++;
 									} else {
