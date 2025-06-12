@@ -20,7 +20,7 @@ Congrats! The application is functional!
 In the Exercise Admin UI (at `/admin`, this is different than the PocketBase Admin UI at `/_`), you can manage individual Exercises, Regions, Stakes, and Items. You can also upload Regions, Stakes, and Items from CSV files to bulk-add them. The CSV uploading is especially helpful when getting started.
 
 To import from CSV files:
-1. Review the CSV files in the [`csv_data`](csv_data) directory. There are three categories:
+1. Review the CSV files in the [`csv_examples`](csv_examples) directory. There are three categories:
 	- `regions` and `stakes`: Regions are groups of Stakes, and users indicate which Stake they're participating from/in.
 	- `items`: Contains the items that can be used in assignments during the exercise.
 1. Edit the CSV files as necessary, or create your own. The file should include headers (i.e. the first row being the column names). The headers are **case-sensitive**, but they can be in any order. The column names depend on the category:
