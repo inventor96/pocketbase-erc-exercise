@@ -63,6 +63,7 @@ ERC Exercise Admin
 				<h4 class="card-title">Regions</h4>
 			</div>
 			<div class="col text-end">
+				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csv_modal" data-bs-type="region" data-bs-columns="Name">Upload CSV</button>
 				<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#region_modal" data-bs-name="" data-bs-id="">New Region</button>
 			</div>
 		</div>
@@ -95,6 +96,7 @@ ERC Exercise Admin
 				<h4 class="card-title">Stakes</h4>
 			</div>
 			<div class="col text-end">
+				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csv_modal" data-bs-type="stake" data-bs-columns="Name|Region (the name of an existing Region)">Upload CSV</button>
 				<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#stake_modal" data-bs-name="" data-bs-id="" data-bs-region="">New Stake</button>
 			</div>
 		</div>
@@ -128,6 +130,7 @@ ERC Exercise Admin
 				<h4 class="card-title">Items</h4>
 			</div>
 			<div class="col text-end">
+				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csv_modal" data-bs-type="item" data-bs-columns="Description|Quantity (can be more than just a number, e.g. 'pack of 80')|Priority (one of: Emergency, Priority, Welfare, Routine)">Upload CSV</button>
 				<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#item_modal" data-bs-name="" data-bs-id="" data-bs-quantity="" data-bs-priority="">New Item</button>
 			</div>
 		</div>
@@ -195,7 +198,7 @@ ERC Exercise Admin
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<p>Are you sure you want to <span id="action_name"></span> the "<span id="exercise_name"></span>" <span id="collection_name"></span>?</p>
+				<p>Are you sure you want to <span id="action_name"></span> the "<span id="item_name"></span>" <span id="collection_name"></span>?</p>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -315,9 +318,42 @@ ERC Exercise Admin
 		</div>
 	</div>
 </div>
+
+<!-- csv upload modal -->
+<div class="modal fade" id="csv_modal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Upload CSV</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>
+					Let's get started on this upload! To upload <span class="upload-type"></span>s, you need a CSV file with the following columns:
+					<ul id="upload_columns"></ul>
+				</p>
+				<p>
+					The file should include headers (i.e. the first row being the column names). The headers are <b>case-sensitive</b>, but they can be in any order.
+				</p>
+				<p>
+					If there is an existing <span class="upload-type"></span> with the same details as a row in the CSV file, that row will be skipped. Otherwise, a new one will be created.
+				</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				<label for="imported_file" role="button" id="import_confirm" class="btn btn-primary">
+					<span class="spinner-grow spinner-grow-sm"></span>
+					<span id="import_confirm_label">Select File...</span>
+					<input type="file" id="imported_file" accept=".csv" class="d-none" data-type="">
+				</label>
+			</div>
+		</div>
+	</div>
+</div>
 {{end}}
 
 {{define "script"}}
+<script src="/papaparse.min.js"></script>
 <script type="text/javascript">
 	$(() => {
 		// set auth token
@@ -573,7 +609,7 @@ ERC Exercise Admin
 			// update the modal's content
 			const modal = $(this);
 			modal.find('#action_name').text(action);
-			modal.find('#exercise_name').text(objectName);
+			modal.find('#item_name').text(objectName);
 			modal.find('#collection_name').text(collection);
 			modal.find('#action_confirm')
 				.data('bs-id', objectId)
@@ -724,6 +760,163 @@ ERC Exercise Admin
 		$('#load_items_confirm').on('click', function () {
 			updateItems();
 			pb.collection('items').subscribe('*', updateItems);
+		});
+
+		// handle csv upload modal
+		$('#csv_modal').on('show.bs.modal', function (event) {
+			// get data from the triggering button
+			const button = $(event.relatedTarget);
+			const type = button.data('bs-type');
+			const columns = button.data('bs-columns').split('|');
+
+			// update the modal's content
+			const modal = $(this);
+			modal.find('.upload-type').text(type.charAt(0).toUpperCase() + type.slice(1));
+			const uploadColumns = modal.find('#upload_columns');
+			uploadColumns.empty();
+			columns.forEach(column => {
+				uploadColumns.append(`<li>${column.trim()}</li>`);
+			});
+
+			// set the file input type
+			modal.find('#imported_file').data('type', type);
+		});
+
+		// handle file selection and parsing
+		$('#imported_file').on('change', function () {
+			$('#import_confirm').addClass('disabled');
+			$('#import_confirm_label').text('Processing...');
+
+			// set the columns based on the type
+			const type = $(this).data('type');
+			const columns = {
+				region: ['Name'],
+				stake: ['Name', 'Region'],
+				item: ['Description', 'Quantity', 'Priority'],
+			}[type] || [];
+
+			// sanity check: validate columns
+			if (!columns.length) {
+				alert(`Programming error: Invalid type: ${type}.`);
+				$('#import_confirm').removeClass('disabled');
+				$('#import_confirm_label').text('Select File...');
+				$('#imported_file').val('');
+				return;
+			}
+
+			// validate the file
+			const file = this.files[0];
+			if (!file) {
+				alert('No file selected. Please select a CSV file.');
+				$('#import_confirm').removeClass('disabled');
+				$('#import_confirm_label').text('Select File...');
+				$('#imported_file').val('');
+				return;
+			}
+			if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
+				alert('Invalid file type. Please select a CSV file.');
+				$('#import_confirm').removeClass('disabled');
+				$('#import_confirm_label').text('Select File...');
+				$('#imported_file').val('');
+				return;
+			}
+
+			// csv parsing setup
+			let queue = Promise.resolve();
+			let rowCount = 0;
+			let addedCount = 0;
+			let skippedCount = 0;
+			let errorCount = 0;
+
+			// parse the csv file
+			Papa.parse(file, {
+				worker: true,
+				header: true,
+				skipEmptyLines: true,
+				step: function (row, parser) {
+					// process each row synchronously to avoid overwhelming the server
+					queue = queue.then(async () => {
+						// validate the row
+						for (const column of columns) {
+							if (!row.data[column]) {
+								alert(`Missing required column "${column}" on line ${rowCount + 1}. Please check your CSV file.`);
+								rowCount++;
+								errorCount++;
+								return;
+							}
+						}
+
+						const data = row.data;
+						try {
+							switch (type) {
+								case 'region': {
+									// add region if it doesn't exist
+									const result = await pb.collection('regions').getList(1, 1, {filter: `name = "${data['Name']}"`, requestKey: null});
+									if (!result.totalItems) {
+										await pb.collection('regions').create({ name: data['Name'] });
+										addedCount++;
+									} else {
+										skippedCount++;
+									}
+									break;
+								}
+								case 'stake': {
+									// find region by name to get its id
+									const regionResult = await pb.collection('regions').getList(1, 1, {filter: `name = "${data['Region']}"`, requestKey: null});
+									if (!regionResult.totalItems) {
+										console.warn(`Region "${data['Region']}" not found for Stake "${data['Name']}". Skipping.`);
+										errorCount++;
+										break;
+									}
+									const regionId = regionResult.items[0].id;
+
+									// add stake if it doesn't exist
+									const stakeResult = await pb.collection('stakes').getList(1, 1, {filter: `name = "${data['Name']}" && region = "${regionId}"`, requestKey: null});
+									if (!stakeResult.totalItems) {
+										await pb.collection('stakes').create({ name: data['Name'], region: regionId });
+										addedCount++;
+									} else {
+										skippedCount++;
+									}
+									break;
+								}
+								case 'item': {
+									// add item if it doesn't exist
+									const itemResult = await pb.collection('items').getList(1, 1, {filter: `description = "${data['Description']}" && quantity = "${data['Quantity']}" && priority = "${data['Priority']}"`, requestKey: null});
+									if (!itemResult.totalItems) {
+										await pb.collection('items').create({ description: data['Description'], quantity: data['Quantity'], priority: data['Priority'] });
+										addedCount++;
+									} else {
+										skippedCount++;
+									}
+									break;
+								}
+								default:
+									console.warn(`Unknown type: ${type}`);
+							}
+							rowCount++;
+						} catch (err) {
+							console.error(`Error processing ${type}:`, err);
+							errorCount++;
+						}
+					});
+				},
+				complete: function () {
+					queue.then(() => {
+						alert(`Import complete! Processed: ${rowCount}, Added: ${addedCount}, Skipped: ${skippedCount}, Errors: ${errorCount}`);
+						$('#import_confirm').removeClass('disabled');
+						$('#import_confirm_label').text('Select File...');
+						$('#imported_file').val('');
+						$('#csv_modal').modal('hide');
+					});
+				},
+				error: function (error) {
+					alert(`Error processing CSV file: ${error.message}`);
+					$('#import_confirm').removeClass('disabled');
+					$('#import_confirm_label').text('Select File...');
+					$('#imported_file').val('');
+				}
+			});
 		});
 	})
 </script>
