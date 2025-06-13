@@ -2,8 +2,9 @@
 
 // set cookie on successful auth request
 onRecordAuthRequest((e) => {
-	e.httpContext.response().header().set('Set-Cookie', `token=${e.token}; Path=/; HttpOnly; SameSite=Lax; ${e.httpContext.scheme() === 'https' ? 'Secure' : ''}`)
-}, "users")
+	e.requestEvent.response.header().set('Set-Cookie', `token=${e.token}; Path=/; HttpOnly; SameSite=Lax; ${e.requestEvent.request.url.scheme === 'https' ? 'Secure' : ''}`)
+	e.next()
+})
 
 // clear cookie on logout
 routerAdd("GET", "/logout", (c) => {
@@ -12,52 +13,49 @@ routerAdd("GET", "/logout", (c) => {
 })
 
 // cookie authentication middleware
-function cookieAuth(next) {
-	return (c) => {
-		// skip cookie processing if already authenticated
-		if (c.get('authRecord')) {
-			return next(c)
-		}
-
-		// get the auth token from the cookie
-		const header = c.request().header.get('Cookie')
-		if (!header) {
-			// no record
-			return next(c)
-		}
-		const cookies = header.split('; ')
-		const token = cookies.find(cookie => cookie.startsWith('token='))
-		if (!token) {
-			// no record
-			return next(c)
-		}
-		const tokenValue = token.split('=')[1]
-		if (!tokenValue) {
-			// no record
-			return next(c)
-		}
-
-		// set the auth record in the context
-		let user = null
-		try {
-			user = $app.dao().findAuthRecordByToken(tokenValue, $app.settings().recordAuthToken.secret)
-			if (user) {
-				c.set('authRecord', user)
-			}
-		} catch (err) {
-			// check for admin
-			try {
-				user = $app.dao().findAdminByToken(tokenValue, $app.settings().adminAuthToken.secret)
-				if (user) {
-					c.set('admin', user)
-				}
-			} catch (err) { /* no user or admin */}
-		}
-
-		return next(c)
+routerUse(new Middleware((e) => {
+	// skip cookie processing if already authenticated
+	if (e.get('authRecord')) {
+		return e.next()
 	}
-}
-routerUse(cookieAuth)
+
+	// get the auth token from the cookie
+	const header = e.request.header.get('Cookie')
+	if (!header) {
+		// no record
+		return e.next()
+	}
+	const cookies = header.split('; ')
+	const token = cookies.find(cookie => cookie.startsWith('token='))
+	if (!token) {
+		// no record
+		return e.next()
+	}
+	const tokenValue = token.split('=')[1]
+	if (!tokenValue) {
+		// no record
+		return e.next()
+	}
+
+	// set the auth record in the context
+	let user = null
+	try {
+		user = $app.dao().findAuthRecordByToken(tokenValue, $app.settings().recordAuthToken.secret)
+		if (user) {
+			e.set('authRecord', user)
+		}
+	} catch (err) {
+		// check for admin
+		try {
+			user = $app.dao().findAdminByToken(tokenValue, $app.settings().adminAuthToken.secret)
+			if (user) {
+				e.set('admin', user)
+			}
+		} catch (err) { /* no user or admin */}
+	}
+
+	return e.next()
+}, -1050))
 
 // render home page
 routerAdd("GET", "/", (c) => {

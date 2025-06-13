@@ -1,11 +1,5 @@
 /// <reference path="../pb_data/types.d.ts" />
 
-// set cookie on successful auth request
-onRecordAuthRequest((e) => {
-	e.httpContext.response().header().set('Set-Cookie', `token=${e.token}; Path=/; HttpOnly; SameSite=Lax; ${e.httpContext.scheme() === 'https' ? 'Secure' : ''}`)
-	e.next()
-}, "_superusers")
-
 // admin page
 routerAdd("GET", "/admin", (c) => {
 	// check if the user is logged in
