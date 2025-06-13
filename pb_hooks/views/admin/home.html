@@ -8,11 +8,15 @@ ERC Exercise Admin
 		<h1>ERC Exercise Admin</h1>
 	</div>
 	<div class="col-auto text-end">
-		<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#pb_admin_modal">
+		<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#pb_admin_modal" data-bs-title="With great power comes great responsibility.">
 			PocketBase Admin
 			<i class="ms-1 bi bi-box-arrow-up-right"></i>
 		</button>
-		<a href="/monitor" target="_blank" class="btn btn-primary">
+		<a href="/item-pool" target="_blank" class="btn btn-secondary" data-bs-title="A JSON report to display the items eligible for assignments.">
+			Item Pool
+			<i class="ms-1 bi bi-box-arrow-up-right"></i>
+		</a>
+		<a href="/monitor" target="_blank" class="btn btn-primary" data-bs-title="A live view of the current exercise, participants and assignments.">
 			Monitor
 			<i class="ms-1 bi bi-box-arrow-up-right"></i>
 		</a>
@@ -357,6 +361,9 @@ ERC Exercise Admin
 <script src="/papaparse.min.js"></script>
 <script type="text/javascript">
 	$(() => {
+		// tooltips
+		[...$('[data-bs-title]')].map(el => new bootstrap.Tooltip(el));
+
 		// open pb admin in new tab and dismiss modal
 		$('#open_pb_admin').on('click', function () {
 			window.open('/_', '_blank');
