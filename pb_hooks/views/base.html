@@ -62,7 +62,7 @@
 				$('.user-disp').text(pb.authStore.model.email)
 				$('.name-disp').text(pb.authStore.model.name)
 				$('#current_email').val(pb.authStore.model.email)
-				$('.callsign-disp').text(pb.authStore.isAdmin ? 'admin' : pb.authStore.model.callsign)
+				$('.callsign-disp').text(pb.authStore.isSuperuser ? 'admin' : pb.authStore.model.callsign)
 			}
 
 			// handle logout
