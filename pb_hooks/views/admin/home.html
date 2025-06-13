@@ -785,6 +785,7 @@ ERC Exercise Admin
 				stake: ['Name', 'Region'],
 				item: ['Description', 'Quantity', 'Priority'],
 			}[type] || [];
+			const validPriorities = ['Emergency', 'Priority', 'Welfare', 'Routine'];
 
 			// sanity check: validate columns
 			if (!columns.length) {
@@ -876,7 +877,6 @@ ERC Exercise Admin
 									const itemResult = await pb.collection('items').getList(1, 1, {filter: `description = "${data['Description']}" && quantity = "${data['Quantity']}" && priority = "${data['Priority']}"`, requestKey: null});
 									if (!itemResult.totalItems) {
 										// check if priority is valid
-										const validPriorities = ['Emergency', 'Priority', 'Welfare', 'Routine'];
 										if (!validPriorities.includes(data['Priority'])) {
 											alert(`Invalid priority "${data['Priority']}" on line ${rowCount + 1}. Valid priorities are: ${validPriorities.join(', ')}.`);
 											errorCount++;
