@@ -135,7 +135,7 @@ ERC Exercise Admin
 			<div class="col text-end">
 				<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="item" data-bs-action="delete all">Delete All</button>
 				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csv_modal" data-bs-type="item" data-bs-columns='Description|Quantity (can be more than just a number, e.g. "pack of 80")|Priority (one of: Emergency, Priority, Welfare, Routine)'>Upload CSV</button>
-				<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#item_modal" data-bs-name="" data-bs-id="" data-bs-quantity="" data-bs-priority="">New Item</button>
+				<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#item_modal" data-bs-description="" data-bs-id="" data-bs-quantity="" data-bs-priority="">New Item</button>
 			</div>
 		</div>
 		
@@ -273,8 +273,8 @@ ERC Exercise Admin
 			<div class="modal-body">
 				<form id="item_form">
 					<div class="mb-4">
-						<label for="item_name" class="form-label fs-5 fw-bold">Description</label>
-						<input type="text" class="form-control" id="item_name" name="item_name" required minlength="3">
+						<label for="item_description" class="form-label fs-5 fw-bold">Description</label>
+						<input type="text" class="form-control" id="item_description" name="item_description" required minlength="3">
 					</div>
 					<div class="mb-4">
 						<label for="item_quantity" class="form-label fs-5 fw-bold">Quantity</label>
@@ -574,8 +574,8 @@ ERC Exercise Admin
 							<td class="align-middle">${item.quantity}</td>
 							<td class="align-middle"><span class="fs-6 badge text-bg-${badge_type}">${item.priority}</span></td>
 							<td class="align-middle text-end">
-								<button type="button" class="btn btn-primary m-1" data-bs-toggle="modal" data-bs-target="#item_modal" data-bs-collection="item" data-bs-id="${item.id}" data-bs-name="${item.description}" data-bs-quantity="${item.quantity}" data-bs-priority="${item.priority}">Edit</button>
-								<button type="button" class="btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="item" data-bs-id="${item.id}" data-bs-name="${item.description}" data-bs-action="delete">Delete</button>
+								<button type="button" class="btn btn-primary m-1" data-bs-toggle="modal" data-bs-target="#item_modal" data-bs-collection="item" data-bs-id="${item.id}" data-bs-description="${item.description}" data-bs-quantity="${item.quantity}" data-bs-priority="${item.priority}">Edit</button>
+								<button type="button" class="btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="item" data-bs-id="${item.id}" data-bs-description="${item.description}" data-bs-action="delete">Delete</button>
 							</td>
 						</tr>
 					`);
@@ -769,13 +769,13 @@ ERC Exercise Admin
 			// get data from the button that triggered the modal
 			const button = $(event.relatedTarget);
 			const itemId = button.data('bs-id');
-			const itemName = button.data('bs-name');
+			const itemDescription = button.data('bs-description');
 			const itemQuantity = button.data('bs-quantity');
 			const itemPriority = button.data('bs-priority');
 
 			// update the modal's content
 			const modal = $(this);
-			modal.find('#item_name').val(itemName);
+			modal.find('#item_description').val(itemDescription);
 			modal.find('#item_quantity').val(itemQuantity);
 			modal.find('#item_priority').val(itemPriority);
 			modal.find('#item_confirm').data('bs-id', itemId);
@@ -783,20 +783,20 @@ ERC Exercise Admin
 		});
 		$('#item_confirm').on('click', function () {
 			const itemId = $(this).data('bs-id');
-			const itemName = $('#item_name').val();
+			const itemDescription = $('#item_description').val();
 			const itemQuantity = $('#item_quantity').val();
 			const itemPriority = $('#item_priority').val();
 
 			// update existing item
 			if (itemId) {
-				pb.collection('items').update(itemId, { description: itemName, quantity: itemQuantity, priority: itemPriority })
+				pb.collection('items').update(itemId, { description: itemDescription, quantity: itemQuantity, priority: itemPriority })
 					.catch(err => {
 						console.error('Error updating item:', err);
 						alert(`Error updating item: ${err.message}`);
 					});
 			// create new item
 			} else {
-				pb.collection('items').create({ description: itemName, quantity: itemQuantity, priority: itemPriority })
+				pb.collection('items').create({ description: itemDescription, quantity: itemQuantity, priority: itemPriority })
 					.catch(err => {
 						console.error('Error creating item:', err);
 						alert(`Error creating item: ${err.message}`);
