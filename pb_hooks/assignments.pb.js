@@ -217,12 +217,18 @@ onModelBeforeUpdate((e) => {
 				// pick a random task
 				var task = new DynamicModel({ "id": "" })
 				$app.dao().db()
-					.newQuery('SELECT items.id, COUNT(tasks.id) AS used\
-						FROM items\
-						LEFT JOIN tasks ON tasks.item = items.id\
-						GROUP BY items.id\
-						ORDER BY used ASC, RANDOM()\
-						LIMIT 1')
+					.newQuery(`SELECT items.id, COUNT(tasks.id) AS used
+						FROM items
+						LEFT JOIN tasks ON tasks.item = items.id
+						WHERE NOT EXISTS (
+							SELECT 1 FROM tasks t2
+							WHERE t2.item = items.id
+								AND (t2.completed = '' OR t2.completed IS NULL)
+								AND (t2.cancelled = '' OR t2.cancelled IS NULL)
+						)
+						GROUP BY items.id
+						ORDER BY used ASC, RANDOM()
+						LIMIT 1`)
 					.one(task)
 
 				// pick resource user
