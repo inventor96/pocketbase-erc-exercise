@@ -1,6 +1,6 @@
 /// <reference path="../pb_data/types.d.ts" />
 
-onModelBeforeUpdate((e) => {
+onRecordUpdateExecute((e) => {
 	const table = e.model.tableName()
 	const current_model = $app.dao().findRecordById(table, e.model.id)
 	var user_ids = []
@@ -255,14 +255,20 @@ onModelBeforeUpdate((e) => {
 			throw new ApiError(500, "Unhandled table")
 		}
 	})
+
+	e.next()
 }, 'users', 'tasks', 'exercises')
 
-onModelBeforeCreate((e) => {
+onRecordCreateExecute((e) => {
 	// prevent new exercises from being created as already started
 	e.model.set('started', false)
+
+	e.next()
 }, 'exercises')
 
-onModelAfterUpdate((e) => {
+onRecordUpdateExecute((e) => {
+	e.next()
+
 	// update needs user when a task resource has been confirmed
 	if (e.model.get('resource_confirmed') == true) {
 		const need_user = $app.dao().findRecordById("users", e.model.get('need_user'))
@@ -271,7 +277,9 @@ onModelAfterUpdate((e) => {
 	}
 }, 'tasks')
 
-onModelAfterCreate((e) => {
+onRecordCreateExecute((e) => {
+	e.next()
+
 	// update needs user when a task resource has been created as confirmed
 	if (e.model.get('resource_confirmed') == true) {
 		const need_user = $app.dao().findRecordById("users", e.model.get('need_user'))
