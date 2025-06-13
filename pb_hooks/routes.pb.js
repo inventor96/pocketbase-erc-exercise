@@ -6,7 +6,7 @@ routerUse($apis.activityLogger($app))
 // set cookie on successful auth request
 onRecordAuthRequest((e) => {
 	e.httpContext.response().header().set('Set-Cookie', `token=${e.token}; Path=/; HttpOnly; SameSite=Lax; ${e.httpContext.scheme() === 'https' ? 'Secure' : ''}`)
-})
+}, "users")
 
 // clear cookie on logout
 routerAdd("GET", "/logout", (c) => {
