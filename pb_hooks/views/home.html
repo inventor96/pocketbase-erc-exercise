@@ -199,7 +199,7 @@
 
 		// show the prompt
 		$('.resource-action').data('id', resource_prompt_queue[i].id)
-		$('#resource_name').text(resource_prompt_queue[i].expand.item.description)
+		$('#resource_name').text(resource_prompt_queue[i].expand?.item?.description || '(deleted)')
 		resource_prompt_modal.show()
 		notification.play()
 		notified_resources.push(resource_prompt_queue[i].id)
@@ -267,7 +267,7 @@
 
 							// determine priority badge color
 							var badge_type;
-							switch (need.expand.item.priority) {
+							switch (need.expand?.item?.priority || '(deleted)') {
 								case 'Emergency': badge_type = 'danger'; break;
 								case 'Priority': badge_type = 'warning'; break;
 								case 'Welfare': badge_type = 'primary'; break;
@@ -279,9 +279,9 @@
 							$needs_list.append(`<li class="list-group-item ${++i % 2 ? 'list-group-item-secondary' : ''}" data-id="${need.id}">\
 									<div class="row row-cols-1 row-cols-md-2 gy-2 align-items-center">\
 										<div class="col">\
-											<span class="badge text-bg-${badge_type}">${need.expand.item.priority}</span>\
-											<span class="fw-bold">${need.expand.item.description}</span>\
-											(${need.expand.item.quantity})\
+											<h5><span class="badge text-bg-${badge_type}">${need.expand?.item?.priority || ''}</span></h5>\
+											<span class="fw-bold">${need.expand?.item?.description || '(deleted)'}</span>\
+											(${need.expand?.item?.quantity || '(deleted)'})\
 										</div>\
 										<div class="col">\
 											<form class="need-check" id="${need.id}">\
@@ -382,8 +382,8 @@
 						var i = 0
 						resource_list.forEach(resource => {
 							$resources_list.append(`<li class="list-group-item ${++i % 2 ? 'list-group-item-secondary' : ''}" data-id="${resource.id}">\
-									<span class="fw-bold">${resource.expand.item.description}</span>\
-									(${resource.expand.item.quantity})\
+									<span class="fw-bold">${resource.expand?.item?.description || '(deleted)'}</span>\
+									(${resource.expand?.item?.quantity || '(deleted)'})\
 								</li>`)
 						});
 					} else {
@@ -425,7 +425,7 @@
 						var i = 0
 						fulfilled_needs_list.forEach(need => {
 							$needs_fulfilled_list.append(`<tr>\
-									<td>${need.expand.item.description}</td>\
+									<td>${need.expand?.item?.description || '(deleted)'}</td>\
 									<td>${need.expand.resource_user.callsign}</td>\
 								</tr>`)
 						})
@@ -454,7 +454,7 @@
 						var i = 0
 						fulfilled_resources_list.forEach(resource => {
 							$resources_fulfilled_list.append(`<tr>\
-									<td>${resource.expand.item.description}</td>\
+									<td>${resource.expand?.item?.description || '(deleted)'}</td>\
 									<td>${resource.expand.need_user.callsign}</td>\
 								</tr>`)
 						})
