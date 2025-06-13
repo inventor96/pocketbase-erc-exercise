@@ -841,9 +841,13 @@ ERC Exercise Admin
 						const data = row.data;
 						try {
 							switch (type) {
+								// region import
 								case 'region': {
-									// add region if it doesn't exist
-									const result = await pb.collection('regions').getList(1, 1, {filter: `name = "${data['Name']}"`, requestKey: null});
+									// escape double quotes in region name
+									const regionName = data['Name'].replace(/"/g, '\\"');
+
+									// add the region if it doesn't already exist
+									const result = await pb.collection('regions').getList(1, 1, {filter: `name = "${regionName}"`, requestKey: null});
 									if (!result.totalItems) {
 										await pb.collection('regions').create({ name: data['Name'] });
 										addedCount++;
@@ -852,9 +856,14 @@ ERC Exercise Admin
 									}
 									break;
 								}
+								// stake import
 								case 'stake': {
-									// find region by name to get its id
-									const regionResult = await pb.collection('regions').getList(1, 1, {filter: `name = "${data['Region']}"`, requestKey: null});
+									// escape double quotes in stake and region names
+									const stakeName = data['Name'].replace(/"/g, '\\"');
+									const regionName = data['Region'].replace(/"/g, '\\"');
+
+									// check if the region exists
+									const regionResult = await pb.collection('regions').getList(1, 1, {filter: `name = "${regionName}"`, requestKey: null});
 									if (!regionResult.totalItems) {
 										console.warn(`Region "${data['Region']}" not found for Stake "${data['Name']}". Skipping.`);
 										errorCount++;
@@ -862,8 +871,8 @@ ERC Exercise Admin
 									}
 									const regionId = regionResult.items[0].id;
 
-									// add stake if it doesn't exist
-									const stakeResult = await pb.collection('stakes').getList(1, 1, {filter: `name = "${data['Name']}" && region = "${regionId}"`, requestKey: null});
+									// add the stake if it doesn't already exist
+									const stakeResult = await pb.collection('stakes').getList(1, 1, {filter: `name = "${stakeName}" && region = "${regionId}"`, requestKey: null});
 									if (!stakeResult.totalItems) {
 										await pb.collection('stakes').create({ name: data['Name'], region: regionId });
 										addedCount++;
@@ -872,9 +881,15 @@ ERC Exercise Admin
 									}
 									break;
 								}
+								// item import
 								case 'item': {
-									// add item if it doesn't exist
-									const itemResult = await pb.collection('items').getList(1, 1, {filter: `description = "${data['Description']}" && quantity = "${data['Quantity']}" && priority = "${data['Priority']}"`, requestKey: null});
+									// escape double quotes in description, quantity, and priority
+									const description = data['Description'].replace(/"/g, '\\"');
+									const quantity = data['Quantity'].replace(/"/g, '\\"');
+									const priority = data['Priority'].replace(/"/g, '\\"');
+
+									// add the item if it doesn't already exist
+									const itemResult = await pb.collection('items').getList(1, 1, {filter: `description = "${description}" && quantity = "${quantity}" && priority = "${priority}"`, requestKey: null});
 									if (!itemResult.totalItems) {
 										// check if priority is valid
 										if (!validPriorities.includes(data['Priority'])) {
