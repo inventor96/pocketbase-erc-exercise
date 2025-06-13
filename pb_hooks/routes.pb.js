@@ -58,7 +58,7 @@ routerUse(new Middleware((e) => {
 }, -1050))
 
 // render home page
-routerAdd("GET", "/", (c) => {
+routerAdd("GET", "/{$}", (c) => {
 	// redirect to login page if not logged in
 	if (!c.get('authRecord')) {
 		return c.redirect(302, "/login")
@@ -69,7 +69,7 @@ routerAdd("GET", "/", (c) => {
 		`${__hooks}/views/base.html`,
 		`${__hooks}/views/home.html`,
 	).render({
-		"appUrl": $app.settings().meta.appUrl,
+		"appURL": $app.settings().meta.appURL,
 	})
 
 	return c.html(200, html)
@@ -150,7 +150,7 @@ routerAdd("GET", "/signup", (c) => {
 		`${__hooks}/views/signup.html`,
 	).render({
 		"stakes": result,
-		"appUrl": $app.settings().meta.appUrl,
+		"appURL": $app.settings().meta.appURL,
 	})
 
 	return c.html(200, html)
@@ -190,7 +190,7 @@ routerAdd("GET", "/login", (c) => {
 		`${__hooks}/views/base.html`,
 		`${__hooks}/views/login.html`,
 	).render({
-		"appUrl": $app.settings().meta.appUrl,
+		"appURL": $app.settings().meta.appURL,
 		"smtpEnabled": $app.settings().smtp.enabled,
 	})
 
@@ -202,7 +202,7 @@ routerAdd("GET", "/monitor", (c) => {
 	const html = $template.loadFiles(
 		`${__hooks}/views/monitor.html`,
 	).render({
-		"appUrl": $app.settings().meta.appUrl,
+		"appURL": $app.settings().meta.appURL,
 	})
 
 	return c.html(200, html)
@@ -220,7 +220,7 @@ routerAdd("GET", "/forgot", (c) => {
 		`${__hooks}/views/base.html`,
 		`${__hooks}/views/forgot.html`,
 	).render({
-		"appUrl": $app.settings().meta.appUrl,
+		"appURL": $app.settings().meta.appURL,
 	})
 
 	return c.html(200, html)
