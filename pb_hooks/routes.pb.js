@@ -1,8 +1,5 @@
 /// <reference path="../pb_data/types.d.ts" />
 
-// log all requests
-routerUse($apis.activityLogger($app))
-
 // set cookie on successful auth request
 onRecordAuthRequest((e) => {
 	e.httpContext.response().header().set('Set-Cookie', `token=${e.token}; Path=/; HttpOnly; SameSite=Lax; ${e.httpContext.scheme() === 'https' ? 'Secure' : ''}`)
@@ -103,7 +100,7 @@ routerAdd("POST", "/fulfill-need", (c) => {
 	}
 
 	return c.json(200, {"success": result})
-}, $apis.requireRecordAuth())
+}, $apis.requireAuth("users"))
 
 // handle clearing pending needs
 routerAdd("POST", "/not-ready", (c) => {
@@ -130,7 +127,7 @@ routerAdd("POST", "/not-ready", (c) => {
 	$app.dao().saveRecord(user)
 
 	return c.json(200, {"success": true})
-}, $apis.requireRecordAuth())
+}, $apis.requireAuth("users"))
 
 // render the signup page
 routerAdd("GET", "/signup", (c) => {
