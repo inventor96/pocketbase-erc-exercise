@@ -27,6 +27,7 @@ ERC Exercise Admin
 				<h4 class="card-title">Exercises</h4>
 			</div>
 			<div class="col text-end">
+				<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="exercise" data-bs-action="delete all">Delete All</button>
 				<a href="/admin/exercise/new" class="btn btn-success">New Exercise</a>
 			</div>
 		</div>
@@ -63,6 +64,7 @@ ERC Exercise Admin
 				<h4 class="card-title">Regions</h4>
 			</div>
 			<div class="col text-end">
+				<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="region" data-bs-action="delete all">Delete All</button>
 				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csv_modal" data-bs-type="region" data-bs-columns="Name">Upload CSV</button>
 				<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#region_modal" data-bs-name="" data-bs-id="">New Region</button>
 			</div>
@@ -96,6 +98,7 @@ ERC Exercise Admin
 				<h4 class="card-title">Stakes</h4>
 			</div>
 			<div class="col text-end">
+				<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="stake" data-bs-action="delete all">Delete All</button>
 				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csv_modal" data-bs-type="stake" data-bs-columns="Name|Region (the name of an existing Region)">Upload CSV</button>
 				<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#stake_modal" data-bs-name="" data-bs-id="" data-bs-region="">New Stake</button>
 			</div>
@@ -130,6 +133,7 @@ ERC Exercise Admin
 				<h4 class="card-title">Items</h4>
 			</div>
 			<div class="col text-end">
+				<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="item" data-bs-action="delete all">Delete All</button>
 				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csv_modal" data-bs-type="item" data-bs-columns='Description|Quantity (can be more than just a number, e.g. "pack of 80")|Priority (one of: Emergency, Priority, Welfare, Routine)'>Upload CSV</button>
 				<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#item_modal" data-bs-name="" data-bs-id="" data-bs-quantity="" data-bs-priority="">New Item</button>
 			</div>
@@ -191,11 +195,14 @@ ERC Exercise Admin
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<p>Are you sure you want to <span id="action_name"></span> the "<span id="item_name"></span>" <span id="collection_name"></span>?</p>
+				<p>Are you sure you want to <span id="action_name"></span> the <span id="item_name"></span> <span id="collection_name"></span>?</p>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				<button type="button" id="action_confirm" class="btn btn-primary" data-bs-dismiss="modal" data-bs-collection="" data-bs-id="">Yes</button>
+				<button type="button" id="action_confirm" class="btn btn-primary" data-bs-collection="" data-bs-id="">
+					<span class="spinner-grow spinner-grow-sm"></span>
+					Yes
+				</button>
 			</div>
 		</div>
 	</div>
@@ -588,7 +595,7 @@ ERC Exercise Admin
 			});
 		}
 
-		// confirm exercise action
+		// handle action confirmation modal
 		$('#confirm_modal').on('show.bs.modal', function (event) {
 			// get data from the button that triggered the modal
 			const button = $(event.relatedTarget);
@@ -600,8 +607,8 @@ ERC Exercise Admin
 			// update the modal's content
 			const modal = $(this);
 			modal.find('#action_name').text(action);
-			modal.find('#item_name').text(objectName);
-			modal.find('#collection_name').text(collection);
+			modal.find('#item_name').text(action === 'delete all' ? '' : `"${objectName}"`);
+			modal.find('#collection_name').text(action === 'delete all' ? collection+'s' : collection);
 			modal.find('#action_confirm')
 				.data('bs-id', objectId)
 				.data('bs-collection', collection)
@@ -611,10 +618,17 @@ ERC Exercise Admin
 			const objectId = $(this).data('bs-id');
 			const collection = $(this).data('bs-collection') + 's';
 			const action = $(this).data('bs-action');
+			const modal = $('#confirm_modal');
+			const btn = $(this);
+			btn.prop('disabled', true);
 
 			// starting an exercise
 			if (action === 'start' && collection === 'exercises') {
 				pb.collection('exercises').update(objectId, { started: true })
+					.then(() => {
+						modal.modal('hide');
+						btn.prop('disabled', false);
+					})
 					.catch(err => {
 						console.error('Error starting exercise:', err);
 						alert(`Error starting exercise: ${err.message}`);
@@ -622,6 +636,10 @@ ERC Exercise Admin
 			// stopping an exercise
 			} else if (action === 'stop' && collection === 'exercises') {
 				pb.collection('exercises').update(objectId, { started: false })
+					.then(() => {
+						modal.modal('hide');
+						btn.prop('disabled', false);
+					})
 					.catch(err => {
 						console.error('Error stopping exercise:', err);
 						alert(`Error stopping exercise: ${err.message}`);
@@ -629,10 +647,49 @@ ERC Exercise Admin
 			// deleting an object
 			} else if (action === 'delete') {
 				pb.collection(collection).delete(objectId)
+					.then(() => {
+						modal.modal('hide');
+						btn.prop('disabled', false);
+					})
 					.catch(err => {
-						console.error('Error deleting exercise:', err);
-						alert(`Error deleting exercise: ${err.message}`);
+						console.error(`Error deleting ${collection}:`, err);
+						alert(`Error deleting ${collection}: ${err.message}`);
 					});
+			// deleting all objects
+			} else if (action === 'delete all') {
+				// get list of objects to delete
+				pb.collection(collection).getFullList()
+					.then(items => {
+						// delete all items in the collection one at a time
+						let deleteQueue = Promise.resolve();
+						items.forEach(item => {
+							deleteQueue = deleteQueue.then(async () => {
+								try {
+									pb.collection(collection).delete(item.id);
+								} catch (err) {
+									console.error(`Error deleting ${collection} ${item.id}:`, err);
+									alert(`Error deleting ${collection} ${item.id}: ${err.message}`);
+								}
+							});
+						});
+
+						// wait for all deletions to finish
+						deleteQueue.then(() => {
+							modal.modal('hide');
+							btn.prop('disabled', false);
+						});
+					})
+					.catch(err => {
+						console.error(`Error getting list to delete all ${collection}s:`, err);
+						alert(`Error getting list to delete all ${collection}s: ${err.message}`);
+						modal.modal('hide');
+						btn.prop('disabled', false);
+					});
+			} else {
+				console.error('Unknown action:', action);
+				alert(`Unknown action: ${action}`);
+				modal.modal('hide');
+				btn.prop('disabled', false);
 			}
 		});
 
