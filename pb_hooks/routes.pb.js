@@ -271,7 +271,7 @@ routerAdd("GET", "/item-pool", (c) => {
 		"priority": "",
 		"used": 0,
 	}))
-	$app.dao().db()
+	$app.dao().db() // should reflect the item pool query in assignments.pb.js
 		.newQuery(`SELECT items.*, COUNT(tasks.id) AS used
 			FROM items
 			LEFT JOIN tasks ON tasks.item = items.id

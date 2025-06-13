@@ -216,7 +216,7 @@ onModelBeforeUpdate((e) => {
 			for (let j = 0; j < new_task_count; j++) {
 				// pick a random task
 				var task = new DynamicModel({ "id": "" })
-				$app.dao().db()
+				$app.dao().db() // should reflect the item pool query in routes.pb.js
 					.newQuery(`SELECT items.id, COUNT(tasks.id) AS used
 						FROM items
 						LEFT JOIN tasks ON tasks.item = items.id
