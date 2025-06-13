@@ -261,3 +261,29 @@ routerAdd("GET", "/check-unconfirmed-tasks", (c) => {
 		return c.noContent(204)
 	}
 })
+
+// get json report of the current item pool
+routerAdd("GET", "/item-pool", (c) => {
+	var items = arrayOf(new DynamicModel({
+		"id": "",
+		"description": "",
+		"quantity": "",
+		"priority": "",
+		"used": 0,
+	}))
+	$app.dao().db()
+		.newQuery(`SELECT items.*, COUNT(tasks.id) AS used
+			FROM items
+			LEFT JOIN tasks ON tasks.item = items.id
+			WHERE NOT EXISTS (
+				SELECT 1 FROM tasks t2
+				WHERE t2.item = items.id
+					AND (t2.completed = '' OR t2.completed IS NULL)
+					AND (t2.cancelled = '' OR t2.cancelled IS NULL)
+			)
+			GROUP BY items.id
+			ORDER BY used ASC, RANDOM()`)
+		.all(items)
+
+	return c.json(200, items)
+})
