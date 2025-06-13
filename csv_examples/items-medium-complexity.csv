@@ -1,446 +1,867 @@
 Description,Quantity,Priority
-"2x4 Lumber","Bundle of 10 (8 ft)",Priority
-"AA Batteries","Pack of 8",Priority
-"Acetaminophen (Child)","Bottle of 80 chewables",Priority
+"""Blue Shell"" Emergency Mario Kart Aid",1 shell,Routine
+"""Pioneer Power"" Trail Mix",1 bag,Welfare
+"""Return With Honor"" Bedroll",1 unit,Welfare
+"""Settlers of Zion"" Board Game",1 game,Routine
+"'Endure to the End' Energy Bars","Box of 12",Welfare
+15A Circuit Breaker,1 unit,Priority
+2000 Stripling Warriors,1 jar,Routine
+2x4 Lumber,Bundle of 10,Priority
+3D Puzzle of Salt Lake Temple,1 box,Routine
+4-Leaf Clover,1 clover,Routine
+6-in-1 Folding Shovel,1 unit,Priority
+"72-Hour Kit","1 kit",Emergency
+AA Batteries,Pack of 8,Priority
+"Aaronic Priesthood Pizza Coupons","3 vouchers",Emergency
+Acetaminophen,Bottle of 80 chewables,Priority
+"Activated carbon tablets","1 pack",Welfare
 "Adhesive Weatherstripping Foam","1 roll",Welfare
-"Adjustable Wrench (10"")","1 unit",Welfare
+"Adjustable Crutches","1 pair",Priority
+"Adjustable Wrench","1 unit",Welfare
 "Air Filter Mask Cartridge Refill","Pack of 4",Priority
-"Air Horn","1 unit",Priority
+Air Horn,1 unit,Priority
+"Aladdin's Lamp",1 lamp,Routine
+"Alien Artifact",1 artifact,Routine
+Alien Communication Device,1 device,Routine
+"Alligator Repellent","1 can",Priority
 "AM/FM Radio with Headphones","1 unit",Welfare
-"Amateur Radio Field Antenna Tuner","1 unit",Priority
-"Antenna Mast (Telescoping, 20 ft)","1 unit",Priority
+"Amateur Radio Field Antenna Tuner",1 unit,Priority
+"Ancient Artifact",1 artifact,Routine
+Ancient Scroll,1 scroll,Routine
+Angel Moroni Trumpet Oil,1 vial,Priority
+"Animal Crossing Eviction Notice","1 form",Emergency
 "Antenna Mast Kit","1 set",Priority
-"Anti-diarrheal Tablets (Loperamide)","Box of 24",Emergency
+Anti-diarrheal Tablets,Box of 24,Emergency
+Anti-Flirting Bubble Wrap Suit,1 suit,Routine
+Anti-Goblin Netting,1 roll,Welfare
+"Anti-Murmuring Duct Tape","1 roll",Emergency
 "Antibiotic Ointment","1 tube",Emergency
-"Antihistamine Tablets (Diphenhydramine)","Box of 50",Emergency
+Antihistamine Tablets,Box of 50,Emergency
+Apocalypse Rainbow Sidewalk Chalk,1 bucket,Welfare
+Apostate Detector,1 meter,Routine
+"Aslan's Roaring Megaphone","1 unit",Welfare
 "Axle Grease","1 tub",Welfare
 "Baby Bottles","Pack of 2",Priority
-"Baby Formula","1 canister",Emergency
-"Baby Wipes","Pack of 80",Priority
-"Backup Eyeglasses","1 pair",Priority
+Baby Formula,1 canister,Emergency
+"Baby Shark (do-do do-do do-do)","1 plush",Routine
+Baby Wipes,Pack of 80,Priority
+"Back to the Future Hoverboard","1 board",Emergency
+Backup Eyeglasses,1 pair,Priority
+"Bag of Unused Object Lessons","1 bag",Welfare
 "Balun (1:1)","1 unit",Welfare
-"Bandana","Pack of 3",Routine
-"Basic Toolkit (Wrenches, Pliers, Tape, etc.)","1 set",Priority
-"Bed Roll","1 unit",Welfare
+Bandana,Pack of 3,Routine
+Bar soap,3 bars,Welfare
+Basic Electric Repair Toolkit,1 kit,Priority
+Basic Framing Hammer,1 unit,Priority
+"Basic Plumbing Repair Kit","1 kit",Priority
+"Basic Toolkit",1 set,Priority
+"Bat Signal","1 light",Routine
+"Bed Roll",1 unit,Welfare
+"Beef Stew","1 can",Priority
 "Bible or Scriptures","1 copy",Routine
 "Binoculars","1 unit",Welfare
-"Biodegradable Soap","1 bottle",Welfare
-"Bit Driver & Bit Set","1 set (20 bits)",Welfare
-"Blackout Curtains (Thermal)","Set of 2 panels",Routine
+Biodegradable Soap,1 bottle,Welfare
+Biohazard disposal bags,5 bags,Emergency
+Bishop's Emergency Tithing Calculator,1 device,Priority
+"Bishop's “No Dating Before 16” Whistle","1 whistle",Emergency
+Bit Driver & Bit Set,1 set,Welfare
+"Black Pearl in a Bottle","1 bottle",Routine
 "Blanket","1 blanket",Welfare
 "Bleach","1 gallon",Priority
 "Bleach Wipes","Tub of 35",Priority
-"Blood Pressure Cuff","1 unit",Priority
+Blood Pressure Cuff,1 unit,Priority
+"Blue's Clues Handy-Dandy Notebook","1 unit",Routine
 "BNC-to-SO239 Adapter","Pack of 2",Welfare
 "Body Bag","1 unit",Emergency
-"Bolt Cutters","1 unit",Welfare
-"Bottled Water","1 gallon",Emergency
-"Brick Chisel","1 unit",Welfare
-"Bucket Toilet Lid","1 unit",Priority
-"Bungee Cord Set","Pack of 12 (assorted sizes)",Welfare
+Bolt Cutters,1 unit,Welfare
+Book of Ether Cliff Notes,1 pamphlet,Routine
+Book of Mormon Coloring Pages,Pack of 30,Welfare
+"Book of Mormon Puppet Show Kit",1 set,Routine
+"Book of Shadows","1 book",Routine
+Bottled Water,1 gallon,Emergency
+"Bowser's Fire Insurance Policy","1 scroll",Routine
+Brick Chisel,1 unit,Welfare
+Broomstick for Quidditch Practice,1 broom,Routine
+"Brother of Jared's Touch Stones","16 glow pebbles",Welfare
+Bucket Toilet Lid,1 unit,Priority
+Building Permit Application,1 sheet,Routine
+"Bulk baking soda","1 bag",Welfare
+"Bungee Cord Set","Pack of 12",Welfare
 "Burn Gel Packets","Box of 12",Emergency
-"Butane Canisters","Pack of 4",Priority
+Butane Canisters,Pack of 4,Priority
+Butane torch for rapid heating,1 torch,Priority
+Buzz Lightyear's Jetpack,1 unit,Routine
+"C-3PO's Anxiety Kit","1 box",Priority
 "Cable Management Ties","Pack of 100",Routine
 "Camp Chair","1 unit",Routine
 "Camp Cooking Tripod","1 unit",Welfare
-"Camp Stove Fuel Pellets","Pack of 10",Priority
-"Canned Food","Pack of 6",Emergency
-"Canvas Ground Sheet (Treated, 10x10 ft)","1 unit",Priority
-"Canvas Tool Bag","1 unit",Welfare
+Camp Stove Fuel Pellets,Pack of 10,Priority
+"Campfire Testimony Gloves",1 pair,Routine
+"Can opener","1 unit",Priority
+Canned Food,Pack of 6,Emergency
+Canned Mac & Cheese,1 can,Welfare
+"Canning Lid Set","Box of 12",Priority
+"Canvas Ground Sheet","1 unit",Priority
+Canvas Tool Bag,1 unit,Welfare
+"Captain America's Frisbee","1 shield",Emergency
 "Car Battery","1 unit",Priority
-"Carabiner Clips (Heavy Duty)","Pack of 4",Welfare
-"Carbon Monoxide Detector (Battery Operated)","1 unit",Emergency
-"Carpenter’s Square","1 unit",Welfare
-"Cat Litter","1 bag (10 lbs)",Priority
-"Caulking Gun","1 unit",Welfare
-"Cell Signal Booster","1 unit",Priority
-"Chain (Steel, 10 ft)","1 length",Welfare
+"Carabiner Clips","Pack of 4",Welfare
+"Carbon Monoxide Detector","1 unit",Emergency
+Carpenter's Square,1 unit,Welfare
+"Cat in the Hat's Cleanup Machine","1 diagram",Welfare
+"Cat Litter",1 bag,Priority
+"Cauldron of Slight Confusion","1 pot",Routine
+"Caulking Gun",1 unit,Welfare
+"Celestial Navigation Chart","1 chart",Routine
+"Cell Signal Booster",1 unit,Priority
+"Centaur's Bow","1 bow",Routine
 "Chain Lock","1 unit",Welfare
 "Chain Saw","1 unit",Priority
 "Chain Saw Oil","1 quart",Welfare
-"Chainsaw Chain Oil","1 quart",Priority
 "Chalk Line Reel","1 unit",Welfare
 "Chemical Resistant Gloves","1 pair",Priority
 "Chemical Spill Kit","1 kit",Priority
-"Chemical Spill Pads (Absorbent)","Pack of 10",Emergency
-"Chest Seal","1 patch",Emergency
+Chemical Spill Pads,Pack of 10,Emergency
+"Chemical-resistant gloves","1 pair",Emergency
+Chest Seal,1 patch,Emergency
+"Chicken Coop Emergency Net","1 unit",Priority
 "Child ID Wristband","Pack of 5",Priority
-"Children's Cold Medicine","1 bottle (4 oz)",Priority
-"Children’s Coloring Book & Crayons","1 set",Welfare
-"Chlorine Tablets","Pack of 100",Priority
-"Circuit Breaker (15A)","1 unit",Priority
+"Children's Cold Medicine","1 bottle",Priority
+"Children's Coloring Book & Crayons",1 set,Welfare
+"Chimera's Fireproof Shield",1 shield,Routine
+"Chinese Warrior Dragon","1 dragon",Routine
+Chlorine Tablets,Pack of 100,Priority
+Chuck Norris's Wood-Chucked Wood,1 log,Emergency
+Church Ball Jerseys,Set of 5,Welfare
+Church Basketball Referee Whistle,1 whistle,Routine
+Church History Time Machine Blueprint,1 napkin,Routine
+Church Pew Padding,1 cushion,Welfare
+"Cinderella's Glass Slipper","1 shoe",Emergency
 "Clipboard","1 unit",Routine
-"CO Detector","1 unit (battery)",Priority
-"Coax Cable (RG-58, for radios)","25 ft",Welfare
+"CO Detector","1 unit",Priority
+"Coax Cable (RG-58)","25 ft",Welfare
 "Coax Cable (RG-8)","50 ft spool",Priority
 "Coax Seal Tape","1 roll",Welfare
-"Cold Compress Packs (Instant)","Pack of 4",Priority
-"Cold Pack Jacket","1 unit",Welfare
-"Cold Packs (Instant Chemical)","Box of 10",Priority
-"Cold Weather Sleeping Bag (0°F rated)","1 unit",Priority
+"Cold Compress Packs","Pack of 4",Priority
+Cold Pack Jacket,1 unit,Welfare
+"Cold weather hypothermia wrap","1 wrap",Emergency
+"Cold Weather Sleeping Bag",1 unit,Priority
+Collapsible animal crate,1 crate,Welfare
+"Collapsible Bucket","1 unit",Priority
 "Collapsible Camp Toilet","1 unit",Priority
 "Collapsible Chair","1 unit",Welfare
-"Collapsible Ladder (Aluminum, 12 ft)","1 unit",Priority
-"Collapsible Traffic Cones","Set of 4",Welfare
-"Collapsible Water Container (5 gal)","1 unit",Emergency
+Collapsible Ladder,1 unit,Priority
+"Collapsible stretcher with straps","1 stretcher",Emergency
+Collapsible Traffic Cones,Set of 4,Welfare
+"Collapsible Trash Bin","1 unit",Priority
+"Collapsible Water Container","1 unit",Emergency
 "Colored Safety Cones","Set of 4",Welfare
-"Comm Status Board","1 unit",Priority
-"Compact Cooking Kit","1 set (mess kit)",Welfare
-"Compact Field Stove (Fuel Tabs)","1 unit",Welfare
-"Compact Fishing Kit (Survival)","1 kit",Welfare
-"Compact Mirror (Unbreakable)","1 unit",Welfare
-"Compact Sewing Kit","1 kit",Routine
+Comm Status Board,1 unit,Priority
+Community Message Board Kit,1 kit,Welfare
+"Compact chainsaw","1 saw",Priority
+"Compact Cooking Kit","1 set",Welfare
+"Compact Field Stove","1 unit",Welfare
+"Compact Fishing Kit","1 kit",Welfare
+"Compact Mirror","1 unit",Welfare
+Compact Sewing Kit,1 kit,Routine
+"Compact weatherproof tool roll","1 kit",Priority
 "Compass","1 unit",Welfare
 "Compressed Towel Tablets","Pack of 50",Welfare
-"Concrete Mix Bags (80 lb)","Pallet of 10",Emergency
-"Construction Adhesive (Liquid Nails)","1 tube",Priority
-"Construction Screws (3"")","Box of 500",Priority
-"Cooking Pot","1 pot (2 qt)",Routine
+Concrete Mix Bags,Pallet of 10,Emergency
+Conference Bingo,1 card,Priority
+"Conference Talks USB","1 USB drive",Welfare
+"Construction Adhesive","1 tube",Priority
+"Construction Screws","Box of 500",Priority
+"Cooking Pot",1 pot,Routine
+"Cosmic Balance Scale","1 scale",Routine
 "Cotton Undergarments","Pack of 5",Welfare
-"Cough Suppressant Syrup","1 bottle (8 oz)",Priority
+Cough Suppressant Syrup,1 bottle,Priority
+"Cow that Jumped Over the Moon","1 plush",Emergency
 "Crank Flashlight","1 unit",Priority
-"Crowbar","1 unit",Welfare
-"Crutches (Adjustable)","1 pair",Priority
-"Darning Needles (Steel, Large Eye)","Pack of 6",Welfare
+"Crowbar",1 unit,Welfare
+Crystal Ball,1 ball,Routine
+CTR Ring Emergency Signaling Mirror,1 unit,Welfare
+CTR Ring Power Enhancer,1 ring,Priority
+"D&C Matching Card Game",1 set,Welfare
+Deacon's Quorum Noise Dampeners,2 earbuds,Welfare
+"Dehydrated Green Jell-O with Pineapple","1 packet",Routine
 "Dehydrated Meals","Pack of 12",Priority
-"Diapers","Pack of 24",Emergency
-"Digital Timer","1 unit",Welfare
+Dental Kit,1 kit,Welfare
+Dental Repair Kit,1 kit,Emergency
+"Devotional Bluetooth Speaker","1 unit",Routine
+Diapers,Pack of 24,Emergency
+"Digital Liahona","1 device",Routine
+"Digital Timer",1 unit,Welfare
+Dimensional Portal Key,1 key,Routine
+"Dino DNA Starter Kit","1 vial",Welfare
 "Disinfectant Wipes","1 container",Priority
 "Disposable Bed Pads","Pack of 10",Priority
-"Disposable Gloves (Latex-Free)","Box of 100",Emergency
-"Drywall Panels (4x8 ft, 1/2"")","Stack of 10",Priority
-"Drywall Screws (1 5/8"")","Box of 500",Priority
-"Drywall Tape (Paper, 250 ft roll)","1 unit",Priority
+Disposable Gloves,Box of 100,Emergency
+DIY Ark-Building Kit,1 kit,Routine
+DIY Ewok Village Kit,1 box,Welfare
+Doctrinal Deep-Dive Scuba Gear,1 set,Emergency
+Doctrine & Covenants Pocket Edition - Waterproof,1 book,Welfare
+Donkey Kong Barrel Roll Kit,1 barrel,Welfare
+"Dr. Nelson's Vitamin Pills - Spiritual Variety Pack",1 bottle,Routine
+"Dragon Egg",1 egg,Routine
+"Dragon Slayer's Sword","1 sword",Routine
+"Drywall Panels","Stack of 10",Priority
+"Drywall Screws","Box of 500",Priority
+"Drywall Tape","1 unit",Priority
 "Duct Seal Putty","1 block",Welfare
 "Duct Tape","1 roll",Welfare
-"Duct Tape (Colored)","1 roll (red)",Welfare
-"Ductless Mini AC Unit (Portable)","1 unit",Routine
-"Dust Mask (Non-N95)","Pack of 20",Welfare
-"Ear Protection","1 pair",Routine
-"Elastic Bandages (Ace-style, 4”)","Pack of 2",Emergency
+"Ductless Mini AC Unit","1 unit",Routine
+Dust Mask,Pack of 20,Welfare
+"Dwarves","7",Routine
+Ear Protection,1 pair,Routine
+"Earthquake-Proof Food Storage Shelf","1 unit",Priority
+"Elastic Bandages",Pack of 2,Emergency
+Elder Uchtdorf's Aviation Goggles,1 pair,Routine
+Elders Quorum Manual,1 manual,Priority
+"Elders Quorum President Survival Kit w/Beef Jerky","1 kit",Priority
 "Electrical Tape","Pack of 3",Welfare
-"Electrolyte Powder Packets","Box of 10",Emergency
-"Emergency Blanket","Pack of 5",Priority
+Electrolyte Powder Packets,Box of 10,Emergency
+Electrolyte Rehydration Tabs,Pack of 12,Priority
+"Elf Bread",1 wafer,Emergency
+"Elixir of Life",1 elixir,Routine
+Elsa's Emergency Ice Pack,1 pouch,Routine
+Emergency Baptism Checklist Magnet,1 magnet,Welfare
+Emergency Baptismal Font Inflator,1 pump,Routine
+"Emergency Bishop's Storehouse Access Card","1 card",Emergency
+Emergency Blanket,Pack of 5,Priority
+Emergency Camping Cot,1 unit,Priority
+Emergency Choir Music Binder,1 binder,Welfare
+Emergency Church Dance Lighting Kit,1 set,Routine
+"Emergency Clown Costume","1 suit",Routine
 "Emergency Contact Form Pad","Pad of 25",Priority
-"Emergency Contact Wristbands","Pack of 10",Priority
-"Emergency Dental Kit","1 kit",Welfare
+Emergency Contact Wristbands,Pack of 10,Priority
+"Emergency Death Star Schematic",1 napkin,Routine
+"Emergency dental repair kit","1 kit",Priority
 "Emergency Evacuation Map","1 laminated sheet",Emergency
-"Emergency Exit Sign (Battery Backup)","1 unit",Priority
-"Emergency ID Badges","Set of 10",Priority
-"Emergency Phone Tree Printout","1 copy",Priority
-"Emergency Radio (Hand Crank, AM/FM/NOAA)","1 unit",Emergency
-"Emergency Radio Frequency Chart","1 chart",Priority
-"Emergency Shelter Tent","1 unit (6-person)",Emergency
-"Emergency Toothbrushes","Pack of 4 (single-use)",Welfare
-"Emergency Whistle","1 unit",Welfare
-"Emergency Whistle (120 dB)","1 unit",Welfare
+Emergency Exit Sign,1 unit,Priority
+Emergency FHE Escape Tunnel,1 sticker kit,Routine
+Emergency fire escape hood,1 hood,Emergency
+"Emergency FM/NOAA Crank Radio",1 unit,Priority
+Emergency glass breaker & seatbelt cutter tool,1 tool,Emergency
+"Emergency Hymnbook","1 book",Priority
+Emergency ID Badges,Set of 10,Priority
+Emergency Iron Rod,1 stick,Welfare
+Emergency latrine bucket with seat,1 unit,Welfare
+Emergency livestock feed,1 bag,Welfare
+"Emergency Mess Kit",1 kit,Welfare
+Emergency Nail Clipper & Toenail Parable Booklet,1 combo,Routine
+"Emergency Nursery Kit","1 kit",Priority
+Emergency Phone Tree Printout,1 copy,Priority
+Emergency Potluck Spreadsheet,1 sheet,Routine
+"Emergency Quorum Roll Sheet","Pack of 10",Welfare
+"Emergency Radio","1 unit",Emergency
+Emergency Radio Frequency Chart,1 chart,Priority
+Emergency Relief Society Quilt,1 quilt,Routine
+"Emergency Seminary Teacher Handbook","1 booklet",Welfare
+Emergency Shelter Tent,1 unit,Priority
+Emergency signal panel,1 panel,Emergency
+Emergency Signal Whistle,1 unit,Emergency
+"Emergency TARDIS Key",1 key,Routine
+"Emergency Temple Recommend Protector","1 sleeve",Priority
+"Emergency Toothbrushes","Pack of 4",Welfare
+"Emergency Whistle",1 unit,Welfare
+"Enchanted Mirror",1 mirror,Routine
+Enchanted Ring,1 ring,Routine
+"Ensign Magazine Flame Retardant Edition","1 copy",Routine
 "EpiPen Trainer","1 unit",Emergency
-"Ethernet Cable","50 ft cable",Welfare
-"Expansion Foam Weather Seal","1 roll",Welfare
-"Extension Cord (25 ft cord)","1 unit",Welfare
-"Extension Cord (50 ft, outdoor-rated)","1 unit",Priority
-"Eye Wash Solution","1 bottle (500ml)",Priority
-"Face Shield","1 unit",Priority
-"Family Emergency Binder","1 binder",Emergency
-"Faraday Bag for Electronics","1 bag",Welfare
+Ethernet Cable,50 ft cable,Welfare
+"Ewok Fur Conditioner","1 bottle",Priority
+Expansion Foam Weather Seal,1 roll,Welfare
+"Experiment 626","1 plush",Routine
+"Extension Cord (25 ft)","1 unit",Welfare
+"Extension Cord (50 ft)","1 unit",Priority
+Eye Wash Solution,1 bottle,Priority
+"Eye wash station bottle","1 bottle",Emergency
+Face Shield,1 unit,Priority
+Fairy Dust,1 packet,Routine
+"Fairy Godmother On-Call Token",1 token,Emergency
+Fairy Wings,1 pair,Routine
+"Family Council Emergency Agenda Templates","Pack of 10",Welfare
+Family Emergency Binder,1 binder,Emergency
+Family History Starter Kit,1 binder,Welfare
+"Family Prep Drill Schedule","1 sheet",Welfare
+Faraday Bag for Electronics,1 bag,Welfare
+Fast Offering Collection Pouch,1 unit,Welfare
+Fast Sunday Energy Supplement,Pack of 10,Welfare
+"Fast Sunday Snack Safe",1 vault,Emergency
+"Feminine hygiene cup","1 cup",Welfare
 "Feminine Hygiene Pads","Pack of 24",Priority
-"Ferrite Beads (RF Suppression, Snap-on)","Pack of 10",Welfare
-"Fiberglass Repair Tape","1 roll",Welfare
+"Ferrite Beads",Pack of 10,Welfare
+FHE Activity Deck,1 deck,Welfare
+FHE Snack Negotiation Cards,1 deck,Routine
+"FHE Treat Emergency Cache","1 tin",Welfare
+Fiberglass Repair Tape,1 roll,Welfare
+"Fidget Spinner","1 toy",Routine
 "Field Comm Plan","1 copy",Emergency
 "Field Deployment Checklist Cards","Pack of 10",Priority
-"Field Deployment Pole Kit","1 set (3 poles)",Priority
-"Fire Blanket (Industrial)","1 unit",Emergency
-"Fire Extinguisher (ABC, 5 lb)","1 unit",Emergency
-"Firestarter","1 block",Welfare
-"First Aid Kit","1 kit",Emergency
-"Flagging Tape (Bright Color)","1 roll",Welfare
-"Flashlight","1 unit",Priority
-"Floodlight (Battery Powered)","1 unit",Priority
-"Foam Board Insulation (1"" thick, 4x8 ft)","Pack of 3",Priority
-"Foam Splints (SAM-style)","Pack of 2",Emergency
-"Foldable Solar Charger Array","1 unit (100W)",Priority
-"Foldable Water Bucket","1 unit (2.5 gallon)",Welfare
+"Field Deployment Pole Kit",1 set,Priority
+Field Sacrament Tray Kit,1 kit,Welfare
+"Field surgical kit with sterile instruments","1 kit",Emergency
+"Fire Blanket","1 unit",Emergency
+"Fire Extinguisher","1 unit",Emergency
+Firestarter,1 block,Welfare
+"Firestarter Magnesium Rod","1 unit",Priority
+First Aid Kit,1 kit,Emergency
+First Presidency Action Figures,Set of 3,Routine
+"First responder identification vest","1 vest",Priority
+Flagging Tape,1 roll,Welfare
+"Flashcards: 100 Ways to Say ""Minister""","1 pack",Routine
+Flashlight,1 unit,Priority
+"Flat-pack emergency shelter","1 shelter",Priority
+"Floodlight",1 unit,Priority
+"Flying Carpet","1 rug",Routine
+"Foam Board Insulation","Pack of 3",Priority
+"Foam Splints",Pack of 2,Emergency
+Fold-Out Campfire Testimony Ring,1 circle,Routine
+Foldable Baptismal Font,1 unit,Routine
+"Foldable Picnic Table","1 unit",Welfare
+"Foldable Solar Charger Array","1 unit",Priority
+Foldable Water Bucket,1 unit,Welfare
+"Folding Camp Stove","1 unit",Priority
 "Folding Cot","1 unit",Welfare
-"Folding Entrenching Tool (Shovel/Pick)","1 unit",Welfare
+"Folding Entrenching Tool","1 unit",Welfare
 "Folding Knife","1 unit",Welfare
-"Folding Ladder","1 unit (6 ft)",Welfare
-"Folding Mirror","1 unit (pocket-size)",Welfare
+"Folding Ladder","1 unit",Welfare
+"Folding Mirror","1 unit",Welfare
 "Folding Saw","1 unit",Priority
 "Folding Shovel","1 unit",Welfare
 "Folding Table","1 unit",Routine
-"Folding Wash Basin","1 unit",Welfare
-"Food Rotation Labels (Date Stickers)","Roll of 250",Welfare
-"Friction Tape (Non-slip Electrical)","1 roll",Welfare
+"Folding Wash Basin",1 unit,Welfare
+"Food Fight Kit","1 kit",Priority
+"Food Rotation Labels",Roll of 250,Welfare
+Forgotten Tome,1 tome,Routine
+"Freeze-Dried Cheesecake Bars",Pack of 6,Routine
+"Freeze-dried meal variety pack","1 box",Priority
+Friction Tape,1 roll,Welfare
+Frodo's Emotional Support Ring,1 ring,Welfare
+"Frosty's Magic Hat","1 hat",Priority
 "Fuel Cans","Pack of 2",Priority
 "Fuel Siphon Pump","1 unit",Welfare
-"Fuel Stabilizer","1 bottle",Routine
-"Gaiters (Leg Protection, Waterproof)","1 pair",Welfare
-"Gaiters (Snow/Debris Protection)","1 pair",Welfare
+"Fuel Stabilizer",1 bottle,Routine
+"Future Vision Goggles","1 goggles",Routine
+"Gaiters",1 pair,Welfare
+"Galactic Constellation Chart",1 chart,Routine
+"Galactic Peace Treaty",1 treaty,Routine
+"Galactic Starship Model","1 model",Routine
+Gandalf's Backup Beard,1 beard,Priority
+"Gandalf's Staff","1 staff",Welfare
 "Gas Mask","1 unit",Priority
 "Gasoline","5 gallons",Emergency
-"Gasoline Can (5 gal, empty)","1 unit",Priority
-"Generator (Gasoline, 3500W)","1 unit",Emergency
-"Glow-in-the-Dark Exit Sign","1 unit",Welfare
-"Glow-in-the-Dark Tape","1 roll",Welfare
-"Grease Pencil","Pack of 2",Welfare
-"Ground Cover Fabric (Landscape Cloth)","Roll (3 ft x 50 ft)",Welfare
+"Gasoline Can",1 unit,Priority
+Gasoline Stabilizer,1 bottle,Priority
+"General Authority Signature Stamp","1 stamp",Priority
+"Generator",1 unit,Emergency
+"Ghostbuster's Proton Pack",1 pack,Routine
+"GLaDOS Sarcasm Battery","1 unit",Routine
+Glow-in-the-Dark Exit Sign,1 unit,Welfare
+"Glow-in-the-Dark Stake Dance Armbands","Set of 10",Routine
+Glow-in-the-Dark Tape,1 roll,Welfare
+Gold Brick,1 block,Routine
+Gold Plates Reader's Digest Condensed Edition,1 book,Emergency
+Goose That Laid the Golden Egg,1 plastic goose,Welfare
+Gospel Trivia Cards - Disaster Edition,1 deck,Welfare
+Gratitude Journal,1 notebook,Welfare
+"Gravity Falls Journal 4","1 replica",Routine
+"Grease Pencil",Pack of 2,Welfare
+Griffin's Claw,1 claw,Routine
+"Groot's Sapling Planter","1 pot",Priority
+"Ground Cover Fabric","1 Roll",Welfare
 "Ground Rod and Clamp","1 set",Welfare
-"Ground Stakes (Steel)","Pack of 8",Priority
-"Grounding Rod (Copper, 8 ft)","1 unit",Priority
+"Ground Stakes","Pack of 8",Priority
+"Grounding Rod","1 unit",Priority
 "Hacksaw","1 unit",Priority
 "Hair Brush","1 unit",Welfare
-"Ham Logbook","1 booklet",Priority
-"Hammer (16 oz)","1 unit",Priority
-"Hand Lotion","1 bottle (8 oz)",Routine
-"Hand Sanitizer","1 bottle",Priority
-"Hand Saw (12”)","1 unit",Priority
-"Hand Warmers (Air Activated)","Box of 10 pairs",Welfare
+Ham Logbook,1 booklet,Priority
+"Hamburglar Disguise Kit","1 kit",Routine
+"Hammer","1 unit",Priority
+"Hand Lotion","1 bottle",Routine
+"Hand Sanitizer","1 bottle",Welfare
+"Hand Saw","1 unit",Priority
+"Hand Warmers","Box of 10 pairs",Welfare
 "Hand Winch","1 unit",Welfare
-"Hand-Crank Generator","1 unit",Priority
-"Handheld Radio (HT)","1 unit",Emergency
+Hand-Crank Generator,1 unit,Priority
+Handcart Wheel Grease,1 jar,Emergency
+"Handheld air quality monitor","1 monitor",Priority
+"Handheld Radio","1 unit",Emergency
 "Handkerchiefs","Pack of 5",Routine
-"Hard Hat","1 unit",Priority
-"Hearing Protection (Over-Ear Muffs)","1 unit",Welfare
-"Heat Shrink Tubing (Assorted)","Pack of 50",Welfare
-"Heavy-Duty Extension Cord (Outdoor Rated)","50 ft",Welfare
+Hard Hat,1 unit,Priority
+Hardened padlock with keyed duplicates,1 lock,Routine
+"Headlamp","1 unit",Emergency
+"Hearing Protection","1 unit",Welfare
+Heat Shrink Tubing,Pack of 50,Welfare
+Heavy-Duty Camp Chair,1 unit,Welfare
+"Heavy-Duty Crowbar","1 unit",Priority
+"Heavy-Duty Tarp (12x16 ft)","1 unit",Priority
 "Heavy-Duty Work Pants","1 pair",Welfare
-"Heavy-Duty Zip Ties (12"")","Pack of 100",Priority
-"Helmet Light","1 unit",Welfare
-"High-Calorie Energy Bars","Pack of 6",Emergency
+"Heavy-Duty Zip Ties","Pack of 100",Priority
+"Helmet Light",1 unit,Welfare
+"Hero's Amulet",1 amulet,Routine
+"Hidden Chamber Key",1 key,Routine
+Hidden Treasure,1 treasure,Routine
+"High Councilman Random Parable Deck","1 deck",Routine
+High-Calorie Energy Bars,Pack of 6,Emergency
+"High-calorie ration bars","1 pack",Emergency
 "High-Gain Antenna (2m/70cm)","1 unit",Priority
-"High-Vis Rain Jacket","1 unit",Priority
-"Hook & Pick Set (Metal, 4 pcs)","1 set",Welfare
+High-Vis Rain Jacket,1 unit,Priority
+High-Visibility Stake Assignment Vest,1 unit,Emergency
+Hobbit Rations,1 pack,Emergency
+Hogwarts Letter,1 envelope,Welfare
+Home Teaching Time Machine,1 device,Priority
+"Home-Centered, Church-Supported Manual","1 copy",Welfare
+"Hook & Pick Set","1 set",Welfare
 "Hose (25 ft)","1 unit",Welfare
 "Hose (50 ft)","1 unit",Welfare
 "Hose Bib Lock","1 unit",Welfare
-"Hose Clamps (Assorted Sizes)","Pack of 20",Welfare
-"Hose Splitter","1 unit",Welfare
-"Hotspot Device","1 unit (LTE)",Priority
-"Hydration Bladder","1 unit (2L)",Priority
-"Hydrogen Peroxide","1 bottle (16 oz)",Priority
-"Ibuprofen (Adult)","Bottle of 100 tablets",Emergency
-"Ice Chest","1 unit (medium)",Welfare
-"Ice Packs (Instant)","Pack of 5",Welfare
-"Incident Command Vest Set","Set of 5",Priority
-"Industrial Degreaser (Spray Can)","1 unit",Welfare
+"Hose Clamps",Pack of 20,Welfare
+"Hose Repair Kit","1 kit",Priority
+Hose Splitter,1 unit,Welfare
+Hot Cocoa Emergency Ration Tub,1 tub,Welfare
+"Hoth Survival Socks","1 pair",Welfare
+Hotspot Device,1 unit,Priority
+"Hulk's Backup Pants",1 pair,Priority
+"Hydration Bladder","1 unit",Priority
+Hydrogen Peroxide,1 bottle,Priority
+"Hyperactive Golden Snitch","1 unit",Welfare
+"Ibuprofen","Bottle of 100 tablets",Emergency
+"Ice Chest","1 unit",Welfare
+"Ice Packs","Pack of 5",Welfare
+Incident Command Vest Set,Set of 5,Priority
+"Indiana Jones' Fedora","1 hat",Priority
+"Industrial Degreaser","1 unit",Welfare
 "Industrial Velcro Straps","Pack of 10",Welfare
-"Industrial Zip Ties (Heavy Duty)","Pack of 50",Welfare
-"Inflatable Mattress","1 unit (twin size)",Priority
+Industrial Zip Ties,Pack of 50,Welfare
+"Infant Formula","1 can",Emergency
+"Inflatable Mattress","1 unit",Priority
 "Inflatable Pillow","1 unit",Welfare
-"Infrared Thermometer","1 unit",Priority
-"Insulated Cooler Bag","1 unit (12L)",Welfare
-"Insulated Coveralls (Extreme Cold Rated)","1 pair",Priority
+Infrared Thermometer,1 unit,Priority
+"Instant Freeze Ice Packs","Pack of 6",Emergency
+"Insulated Cooler Bag","1 unit",Welfare
+Insulated Coveralls,1 pair,Priority
+"Insulated Water Jug","1 unit",Emergency
 "Insulated Wire (14 gauge, 100 ft)","1 roll",Priority
 "Insulated Work Gloves","1 pair",Priority
-"Insulation Rolls (R13, fiberglass)","Roll of 32 ft²",Priority
-"Insulin","1-week supply",Emergency
-"J-Pole Antenna","1 unit",Emergency
-"Joint Compound (Premixed, 1 gal)","1 bucket",Priority
-"Jumper Cables","1 set",Welfare
-"Knee Pads (Gel-Cushion)","1 pair",Welfare
-"Language Translation Cards (Visual)","1 set",Welfare
-"Large Plastic Storage Totes (27 gal)","Pack of 2",Welfare
-"Latex Gloves","Box of 100",Priority
-"Laundry Detergent Pods","Pack of 10",Welfare
+"Insulation Rolls","Roll of 32 ft²",Priority
+"Insulin",1-week supply,Emergency
+"Intergalactic Friendship Bracelet",1 bracelet,Routine
+Intergalactic Passport,1 passport,Routine
+"Invisible Cloak",1 cloak,Welfare
+Iron Man's Arc Reactor,1 unit,Emergency
+IV starter kit,1 set,Emergency
+J-Pole Antenna,1 unit,Emergency
+"Jack Sparrow's Compass",1 compass,Routine
+Jedi Mind Trick Flashcards,1 deck,Routine
+Jedi Robe,1 robe,Emergency
+"Jell-O Mold Emergency Stash",3 molds,Welfare
+"Jester's Hat","1 hat",Routine
+"Joint Compound","1 bucket",Priority
+Jumper Cables,1 set,Welfare
+"Jurassic Park Emergency Flares",3 flares,Priority
+King's Crown,1 crown,Routine
+Kirby's Snack Pouch,1 bag,Priority
+Knee Pads,1 pair,Welfare
+"Knight in Shining Armor",1 cardboard cutout,Routine
+Knight's Shield,1 shield,Routine
+Kraken Repellent,1 can,Welfare
+"Lamanite Disguise Kit",1 kit,Priority
+Laminated local area map with grid overlay,1 map,Priority
+"Laminated Plan of Salvation Poster","1 unit",Routine
+"Language Translation Cards","1 set",Welfare
+Large Plastic Storage Totes,Pack of 2,Welfare
+"Large Print Triple Combination",1 book,Welfare
+"Lashing straps for cargo or rescue","4 straps",Priority
+Latex Gloves,Box of 100,Priority
+Latter-day Lantern,1 unit,Priority
+"Latter-day Saint Stickers - Moroni Edition","1 sheet",Routine
+Laundry Detergent Pods,Pack of 10,Welfare
+"LDS Prepper Almanac","1 book",Welfare
 "Leather Work Gloves (Welding Rated)","1 pair",Priority
 "LED Lantern","1 unit",Priority
-"LED Road Flares (Rechargeable)","Set of 3",Welfare
-"Level (2 ft)","1 unit",Welfare
-"Light Bulbs (LED, 60W equiv.)","Pack of 6",Welfare
-"Light Sticks (12-hour)","Pack of 4",Priority
+"LED Road Flares",Set of 3,Welfare
+"Legend of Zelda Rupee Bag",1 bag,Welfare
+Level,1 unit,Welfare
+"Liahona Replica - Battery Operated","1 unit",Routine
+"Light Bulbs","Pack of 6",Welfare
+Light Sticks,Pack of 4,Priority
+"Lightsaber",1 saber,Emergency
+"Lightsaber Salad Spinner","1 spinner",Routine
 "Lightweight Tarps (8x10 ft)","Pack of 2",Welfare
-"Lip Balm","1 tube",Routine
+"Lip Balm",1 tube,Routine
+Liquid castile soap,1 bottle,Welfare
+"Liquid electrolyte concentrate","1 bottle",Priority
 "Local Maps","1 map",Welfare
-"Locking Storage Bin (Stackable, 27 gal)","1 unit",Welfare
-"Locking Storage Cabinet (Plastic, 2-door)","1 unit",Welfare
-"Luggage Tag with Emergency Contact Info","Set of 2",Routine
+"Locking Storage Bin","1 unit",Welfare
+"Locking Storage Cabinet",1 unit,Welfare
+Long-Lasting Candles,Set of 3,Priority
+Long-range two-way radio repeater node,1 unit,Emergency
+"Looney Tunes Escape Tunnel Sticker",1 roll,Welfare
+"Lost Relic","1 relic",Routine
+Luggage Tag with Emergency Contact Info,Set of 2,Routine
+Luigi's Ghost Vacuum,1 backpack,Priority
+"Magic Beanstalk Beans",5 beans,Priority
+Magic Carpet,1 carpet,Routine
+Magic Mirror,1 mirror,Routine
+"Magic School Bus Emergency Manual",1 book,Emergency
+"Magical Staff","1 staff",Routine
 "Magnesium Fire Starter Block","1 unit",Priority
-"Magnet Set (Recovery/Tool Drop)","Pack of 2",Welfare
-"Manual Air Pump (Ball/Inflatable Equipment)","1 unit",Welfare
-"Manual Can Opener","1 unit",Priority
+"Magnet Set","Pack of 2",Welfare
+"Manual Air Pump","1 unit",Welfare
+Manual Can Opener,1 unit,Priority
+Manual Grain Grinder,1 unit,Priority
+"Manual Post-Hole Digger","1 unit",Priority
 "Manual Water Pump","1 unit",Priority
-"Manual Winch (Hand Crank)","1 unit",Welfare
-"Masonry Trowel","1 unit",Welfare
-"Megaphone","1 unit",Welfare
+Manual Winch,1 unit,Welfare
+"Masonry Nails","Box of 50",Priority
+Masonry Trowel,1 unit,Welfare
+Maui's Fish Hook,1 hook,Emergency
+"Medusa's Backup Mirror","1 unit",Priority
+"Megaphone",1 unit,Welfare
+"Mermaid's Scale","1 scale",Routine
 "Military Field Dressing","1 unit",Welfare
-"Military Field Manual (Survival Basics)","1 book",Routine
-"Mini Inverter (12V DC to 110V AC, 300W)","1 unit",Priority
-"Mini Propane Stove (Backpacking)","1 unit",Priority
-"Mobile Device Faraday Pouch","1 unit",Priority
-"Mobile Water Filtration System (Gravity-fed)","1 unit",Welfare
-"Mobile Whiteboard (Dry-Erase)","1 unit",Welfare
-"Modular Sandbags (Empty, Nylon)","Pack of 10",Welfare
+Military Field Manual,1 book,Routine
+"Millennium Falcon Cup Holder",1 unit,Routine
+"Minecraft Creeper Repellent","1 bottle",Routine
+"Mini Inverter","1 unit",Priority
+Mini Propane Stove,1 unit,Priority
+Ministering Bingo Cards,1 set,Welfare
+"Ministering Companion Matching Hats",2 hats,Routine
+Minotaur's Labyrinth Map,1 map,Routine
+Missionaries,Two by Two,Routine
+"Mobile Baptism Interview Room Divider",1 unit,Welfare
+"Mobile device charging cables","3 cables",Routine
+Mobile Device Faraday Pouch,1 unit,Priority
+"Mobile Relief Society Bulletin Board","1 unit",Welfare
+"Mobile Water Filtration System","1 unit",Welfare
+"Mobile Whiteboard","1 unit",Welfare
+"Modular Sandbags","Pack of 10",Welfare
 "Mold/Mildew Cleaner","1 bottle",Welfare
 "Moleskin Blister Pads","Pack of 6",Priority
-"Morse Code Reference Card","1 card",Welfare
+Morse Code Reference Card,1 card,Welfare
+Mosiah-Approved Mosquito Net,1 unit,Priority
+"Mosiah-Made Duct Tape Cape","1 unit",Routine
 "Mosquito Head Net","1 unit",Welfare
 "Multi-Band Scanner","1 unit",Priority
 "Multi-Meter","1 unit",Priority
-"Multi-Tool","1 unit",Welfare
-"Multivitamins","1 bottle (30 count)",Welfare
+"Multi-Tool",1 unit,Welfare
+Multiverse Travel Guide,1 guide,Routine
+Multivitamins,1 bottle,Welfare
+Musketeers,3,Emergency
+"Mutual Activity Spinner","1 unit",Routine
 "Mylar Reflective Tent","1 unit",Emergency
 "N95 Masks","Pack of 20",Emergency
 "Nail Clippers","1 unit",Welfare
-"Naproxen Sodium (Aleve Generic)","Bottle of 50",Emergency
-"Nitrile Gloves (Medical, XL)","Box of 100",Emergency
+"Naproxen Sodium",Bottle of 50,Emergency
+Narnia Wardrobe Door Hinge,1 hinge,Priority
+Nauvoo Temple Puzzle,1 box,Routine
+"Nephi-Grade Bow String","1 roll",Priority
+"Nitrile Gloves",Box of 100,Emergency
 "Noise-Cancelling Earplugs","Pack of 10 pairs",Welfare
 "Non-Contact Voltage Tester","1 unit",Welfare
-"Non-Slip Matting (Rubber, 2x3 ft)","1 unit",Welfare
-"Non-Slip Stair Tread Tape","Roll (2""x30 ft)",Welfare
-"Notebook Computer (ruggedized)","1 unit",Priority
-"Notepad and Pen","1 set",Routine
+"Non-Slip Matting","1 unit",Welfare
+"Non-Slip Stair Tread Tape","Roll",Welfare
+"Notebook Computer","1 unit",Priority
+Notepad and Pen,1 set,Routine
+"Official Rick-Roll Deployment Kit",1 USB drive,Routine
+Old Testament Story Flashcards,Set of 20,Welfare
+One Does Not Simply Survival Map,1 map,Emergency
+Oompa Loompas,2 mini figs,Emergency
+"Oval Office Backup Key","1 key",Welfare
 "P100 Respirator","1 unit",Priority
-"Padlock (Weatherproof)","Pack of 2",Welfare
-"Pain Relievers","1 bottle (100 tabs)",Priority
+"Padlock","Pack of 2",Welfare
+"Pain Relievers","1 bottle",Priority
 "Paint Roller & Tray Set","1 set",Routine
 "Paper Plates","Pack of 20",Routine
-"Paper Towels","Pack of 4",Welfare
-"Paramedic Field Guide","1 guidebook",Priority
-"Personal Hygiene Kit","1 bag (7 items)",Welfare
-"Personal Journal","1 notebook",Routine
-"Pet Food (Dry, Small Dog)","1 bag (5 lbs)",Priority
+"Paper Towels",Pack of 4,Welfare
+"Parallel Universe Map","1 map",Routine
+Paramedic Field Guide,1 guidebook,Priority
+"Patriarchal Blessing Waterproof Sleeve",1 unit,Welfare
+"Pegasus Feather Quill","1 quill",Routine
+"Personal Hygiene Kit","1 bag",Welfare
+Personal Journal,1 notebook,Routine
+"Personal water filtration straw","1 straw",Emergency
+"Pet Food","1 bag",Priority
 "Pet Leash","1 unit",Priority
-"Pet Waste Bags","Roll of 30",Welfare
-"PEX Tubing (1/2"", 100 ft)","1 coil",Priority
-"Pickaxe","1 unit",Priority
-"Pipe Cutter (PVC/PEX)","1 unit",Priority
-"PL-259 Coax Connectors","Pack of 4",Priority
-"Plastic Buckets (5-gallon)","Stack of 4",Priority
-"Plastic Cutlery Set","Set of 20 (forks/spoons)",Routine
+Pet Waste Bags,Roll of 30,Welfare
+"Peter Piper's Pickled Peppers","1 jar",Routine
+"PEX Tubing",1 coil,Priority
+"Phoenix Feather","1 feather",Routine
+Pickaxe,1 unit,Priority
+Pioneer Games Survival Pack,1 box,Routine
+Pioneer Trek Blister Kit,1 kit,Routine
+"Pioneers vs Zombies Card Game","1 deck",Routine
+Pipe Cutter,1 unit,Priority
+"Piranha Bait",1 bag,Emergency
+"Pirate's Treasure Map","1 map",Routine
+PL-259 Coax Connectors,Pack of 4,Priority
+"Plan of Salvation Puzzle","1 toy",Priority
+"Plastic Buckets","Stack of 4",Priority
+Plastic Cutlery Set,Set of 20,Routine
+"Plastic sheeting (10'x10')","1 sheet",Priority
 "Plastic Sheeting (6 mil, 10x25 ft)","1 roll",Emergency
-"Plastic Storage Bin","1 bin (18 gal)",Routine
+Plastic Storage Bin,1 bin,Routine
+"Plastic Totes","Set of 2",Priority
 "Playing Cards","1 deck",Routine
 "Plywood Sheets","Pack of 5",Welfare
-"Pocket Knife","1 unit",Priority
+Pocket Knife,1 unit,Priority
+Poké Ball with Pikachu Complaints,1 ball,Emergency
+"Popcorn Popping Kit for Youth Firesides","1 kit",Welfare
 "Portable Air Compressor","1 unit",Welfare
-"Portable Clothesline (Elastic, 10 ft)","1 unit",Welfare
-"Portable Fan","1 unit (battery)",Welfare
-"Portable Ham Shack Case","1 case (custom)",Priority
-"Portable Inverter (300W)","1 unit",Priority
-"Portable Shower Bag (Solar Heated)","1 unit",Welfare
+"Portable Clothesline",1 unit,Welfare
+"Portable Diesel Heater","1 unit",Priority
+Portable Fan,1 unit,Welfare
+Portable Fire Pit,1 unit,Welfare
+Portable Folding Table,1 unit,Welfare
+Portable Food Processor,1 unit,Priority
+"Portable Generator","1 unit",Emergency
+Portable Ham Shack Case,1 case,Priority
+"Portable handwashing station","1 unit",Welfare
+Portable Inverter (300W),1 unit,Priority
+Portable Projector,1 unit,Welfare
+"Portable Pulpit","1 unit",Welfare
+Portable Shower Bag,1 unit,Welfare
+"Portable Sink","1 unit",Priority
 "Portable Solar Battery Charger","1 unit",Welfare
-"Portable Solar Lantern","1 unit",Priority
+Portable Solar Lantern,1 unit,Priority
+"Portable Solar Shower Bag",1 unit,Welfare
+"Portable solar-powered fan","1 unit",Priority
 "Portable Stove","1 unit",Priority
-"Portable Toilet","1 unit",Welfare
-"Portable Water Container","5-gallon jug",Emergency
-"Portable Water Filter (Pump Style)","1 unit",Welfare
-"Portable Water Purifier (UV)","1 unit",Welfare
+Portable Toilet,1 unit,Welfare
+"Portable UV Water Purifier","1 unit",Welfare
+Portable Water Container,5-gallon jug,Emergency
+"Portable Water Filter",1 unit,Emergency
+"Portable water purification system","1 unit",Priority
 "Portable Weather Station","1 unit",Priority
-"Portable Whiteboard","1 unit (24""x18"")",Routine
-"Potassium Iodide Tablets","Pack of 14",Emergency
-"Power Bank (USB, 10,000mAh)","1 unit",Priority
-"Power Strip (Surge Protected)","1 unit",Welfare
-"Power Supply (13.8V DC)","1 unit",Emergency
-"PPE Gown (Disposable)","Pack of 10",Priority
-"Prescription Medication","1-week supply",Emergency
-"Propane Cylinder","1 cylinder (20 lbs)",Priority
+Portable Whiteboard,"1 unit",Routine
+Portable Wi-Fi Hotspot,1 unit,Welfare
+"Portable WiFi Router",1 unit,Emergency
+"Portable wind turbine",1 unit,Priority
+"Portable wood stove",1 unit,Priority
+"Portable workbench with clamps",1 unit,Priority
+Portable X-ray machine,1 unit,Priority
+"Portal Companion Cube",1 plush,Routine
+"Pot of Gold","1 pot",Routine
+"Potassium Iodide Tablets",Pack of 14,Emergency
+"Potion of Invisibility","1 potion",Routine
+"Power Bank",1 unit,Priority
+"Power outage survival guide","1 book",Routine
+"Power Strip","1 unit",Welfare
+"Power Supply","1 unit",Emergency
+PPE Gown,Pack of 10,Priority
+Pre-Written Testimony Cards,Pack of 20,Welfare
+"Preach My Gospel Color-By-Number","1 book",Welfare
+Prescription Medication,1-week supply,Emergency
+"Prescription medication organizer",1 case,Welfare
+Pressure cooker with safety valve,1 cooker,Welfare
+Pressure Treated 2x4 Lumber,Bundle of 10,Priority
+Priesthood Line-of-Authority Poster,1 unit,Routine
+Priesthood Tie Straightener,1 gadget,Routine
+Primary Songbook,1 book,Routine
+"Princess Peach Tracker",1 GPS tag,Routine
+"Princess's Tiara","1 tiara",Routine
+Propane Cylinder,1 cylinder,Priority
+"Prophetic Preparedness Journal","1 notebook",Welfare
 "Pulse Oximeter","1 unit",Priority
 "Puzzle Book","1 book",Routine
-"PVC Cement","1 can (8 oz)",Priority
-"PVC Pipe (1"", 10 ft sections)","Pack of 5",Priority
+"PVC Cement","1 can",Priority
+"PVC Pipe",Pack of 5,Priority
+"Quantum Leap Device",1 device,Routine
+"Queen's Scepter",1 scepter,Routine
+"Quick-Dry Towels","Set of 2",Priority
 "Quick-Release Hose Couplings","Pack of 4",Welfare
-"Quick-Set Cement (Water Activated)","Bag (10 lbs)",Priority
-"Radiation Detector (Geiger Counter)","1 unit",Priority
+Quick-Set Cement,Bag,Priority
+Quilted Scripture Case w/ Hidden Pockets,1 unit,Welfare
+Quorum Unity Rope,1 rope,Welfare
+"R2-D2 Translator","1 app",Emergency
+"Radiation Detector","1 unit",Priority
 "Radiation Dosimeter Badge","1 unit",Emergency
 "Radio Charger","1 unit",Priority
-"Rain Fly (Universal)","1 unit",Priority
-"Rain Poncho","1 unit",Welfare
+"Rain Fly","1 unit",Priority
+Rain Poncho,1 unit,Welfare
+Rainbow Connection Fishing Rod,1 rod,Routine
+"Rainwater Collection Barrel","1 unit",Priority
 "Ratchet Strap Tie-Downs","Pack of 4",Priority
 "Ratcheting Tie Down Straps","Set of 4",Welfare
-"Rebar (3/8"", 10 ft)","Bundle of 10",Priority
+"Rebar","Bundle of 10",Priority
 "Rebar Cutter","1 unit",Welfare
-"Red Cross Triage Manual","1 copy",Priority
+"Red Cross Triage Manual",1 copy,Priority
+Red Shirt Disguise Kit,1 kit,Routine
+"Reflective Road Flares","Set of 3",Emergency
 "Reflective Safety Tape","1 roll",Welfare
-"Reflective Safety Vest","1 unit",Priority
-"Rehydration Drink Mix (Oral Electrolyte Solution)","Box of 10",Welfare
-"Rehydration Salts","Box of 10 sachets",Emergency
-"Replacement Fuses (Assorted Types)","Pack of 20",Welfare
-"Replacement Water Filters (Sawyer/LifeStraw type)","Pack of 2",Welfare
-"Respirator (Half-Face, P100 Filters)","1 unit",Emergency
-"Reusable Grocery Bags","Pack of 5",Welfare
-"RF Adapter Kit (Ham Radio Connectors)","1 kit",Welfare
-"Road Flares","Pack of 3",Priority
-"Roll-Up Dry Bag","1 bag (20L)",Welfare
-"Roof Patch Tape (4” x 25 ft)","1 roll",Priority
-"Roofing Felt","1 roll (15 lb, 36"" x 144')",Priority
+Reflective Safety Vest,1 unit,Priority
+"Rehydration Drink Mix","Box of 10",Welfare
+Rehydration Salts,Box of 10 sachets,Emergency
+Relief Society Casserole Catapult,1 launcher,Emergency
+Relief Society Compassion Blaster,1 ray gun,Welfare
+Relief Society Crisis Cookbook,1 book,Priority
+Relief Society President Survival Kit w/Extra Chocolate Bars,1 kit,Priority
+Relief Society Quilting Kit,1 kit,Routine
+"Repair patch kit","1 kit",Priority
+"Replacement Fuses","Pack of 20",Welfare
+"Replacement Water Filters","Pack of 2",Welfare
+Respirator,1 unit,Emergency
+"Reusable canteen with filtration lid",1 canteen,Priority
+"Reusable Food Grade Water Bags","Set of 3",Emergency
+Reusable Grocery Bags,Pack of 5,Welfare
+"Reverence Reward Stickers","Pack of 100",Routine
+RF Adapter Kit,1 kit,Welfare
+"Ring of Power","1 ring",Routine
+"Road Flares",Pack of 3,Priority
+"Robot Companion Kit","1 kit",Routine
+"Roll-Up Dry Bag",1 bag,Welfare
+Roll-Up Dry Erase Board,1 unit,Priority
+"Ronald McDonald Emergency Mascot","1 clown",Welfare
+"Roof Patch Tape","1 roll",Priority
+"Roofing Felt","1 roll",Priority
 "Roofing Nails","Box of 1,000",Priority
-"Roofing Shingles","Bundle (covers 33 sq ft)",Priority
+"Roofing Shingles","Bundle",Priority
 "Rope (Climbing-grade, 50 ft)","1 coil",Priority
-"Rope (Paracord)","50 ft bundle",Welfare
-"Rope Light (LED, 10 ft, USB)","1 unit",Welfare
+Rope (Paracord),50 ft bundle,Welfare
+"Rope ladder","1 ladder",Emergency
+"Rope Light",1 unit,Welfare
+"Royal Robe","1 robe",Routine
 "Rubber Boots","1 pair",Welfare
-"Rubbing Alcohol","1 bottle (12 oz)",Priority
-"Rugged Ethernet Switch","1 unit (5-port)",Priority
+"Rubbing Alcohol","1 bottle",Priority
+"Rugged Ethernet Switch",1 unit,Priority
+Runestone of Power,1 stone,Routine
+"Sabbatical Hammock","1 unit",Routine
 "Safety Goggles","1 pair",Priority
 "Safety Harness","1 unit",Priority
-"Safety Vest (Reflective, ANSI Class 2)","1 unit",Welfare
-"Safety Whistle","1 unit",Priority
-"Sandbags","Pack of 10",Priority
-"Sandbags (Empty)","Bundle of 100",Priority
-"Satellite Internet Terminal","1 unit (portable)",Emergency
-"Satellite Phone","1 unit",Emergency
-"Screwdriver Set","1 set (6 pieces)",Priority
-"Sewing Kit (Heavy Duty Thread)","1 kit",Welfare
-"Shelf Brackets (Steel, 8"")","Pack of 4",Welfare
-"Shock Cord (Bungee, 1/4"")","25 ft",Welfare
-"Shoe Covers (Disposable)","Pack of 10 pairs",Welfare
-"Shoe/Boot Dryer","1 unit",Routine
-"Shovel (Round Point)","1 unit",Priority
+"Safety Vest","1 unit",Welfare
+Safety Whistle,1 unit,Priority
+Sally's Sea Shells,1 dozen,Routine
+Salt block for livestock/human use,1 block,Welfare
+"Samwise's Tater Sack","1 sack",Routine
+"Sandbags","Bundle of 100",Priority
+"Satellite Internet Terminal","1 unit",Emergency
+"Satellite Phone",1 unit,Emergency
+Sauron's Contact Lens,1 lens,Routine
+"Scooby Snacks","1 box",Priority
+Screwdriver Set,1 set,Priority
+"Scripture-Powered Flashlight",1 unit,Welfare
+Scroll of Wisdom,1 scroll,Routine
+"Seagull-Approved Rain Poncho",1 unit,Priority
+Secret Passage Map,1 map,Routine
+Self-Reliance Group Planner,1 booklet,Welfare
+Seminary Alarm Clock,1 clock,Emergency
+"Seminary Pajama Pass","1 card",Welfare
+Sewing Kit,1 kit,Welfare
+Sheet Metal Screws,Box of 100,Priority
+"Sheet Music Emergency Binder","1 binder",Welfare
+"Shelf Brackets","Pack of 4",Welfare
+"Shock Cord","25 ft",Welfare
+"Shoe Covers","Pack of 10 pairs",Welfare
+Shoe/Boot Dryer,1 unit,Routine
+"Shoulder Sling","1 unit",Emergency
+Shovel (Round Point),1 unit,Priority
+"Shrek's Swamp Candle","1 candle",Priority
 "Signal Flags","Set of 3",Welfare
 "Signal Mirror","1 unit",Welfare
-"Silicone Caulk Tubes","Pack of 4",Welfare
+Silicone Caulk Tubes,Pack of 4,Welfare
+"Sister Eubank's Power Blazer","1 jacket",Routine
 "Sleep Mask","1 unit",Routine
 "Sleeping Bag","1 bag",Priority
-"Small Fire Extinguisher","1 unit",Emergency
+Small Fire Extinguisher,1 unit,Emergency
+"Smeagol's Precious Fish","1 fish",Routine
 "Smoke Detector","1 unit",Emergency
-"Snake Bite Kit","1 unit",Welfare
-"Socket Set (Standard/Metric, 40-piece)","1 unit",Priority
+Snake Bite Kit,1 unit,Welfare
+"Snapping Turtle Sushi","1 roll",Welfare
+"Socket Set",1 unit,Priority
+"Solar Dehydrated Funeral Potatoes","1 packet",Routine
 "Solar Lantern","1 unit",Priority
 "Solar Oven","1 unit",Priority
-"Solar Panel (portable)","1 panel (50W)",Priority
+"Solar Panel (50W)","1 panel",Priority
 "Solar Phone Charger","1 unit",Priority
-"Solar Shower Bag","1 unit (5 gallon)",Welfare
-"Solar String Lights","1 set",Routine
+"Solar Shower Bag","1 unit",Welfare
+"Solar String Lights",1 set,Routine
+"Solar System Model","1 model",Routine
 "Solar USB Charger Panel (10W)","1 unit",Priority
-"Soot Remover for Chimneys/Campfires","1 unit",Welfare
-"Spare Fuses","Pack of 6",Welfare
-"Spare Shoelaces (Heavy Duty)","Pack of 3 pairs",Welfare
-"Spray Foam Insulation","1 can",Welfare
-"Steel Cable (1/8"", 25 ft)","1 roll",Welfare
-"Steel Toe Rubber Overshoes","1 pair",Priority
-"Stomach Relief Tablets (e.g., Loperamide)","Pack of 12",Welfare
-"Storage Bin (Plastic, Latching)","1 unit (18 gallon)",Welfare
+Soot Remover for Chimneys/Campfires,1 unit,Welfare
+"Sorting Hat",1 hat,Routine
+Space Explorer's Helmet,1 helmet,Routine
+"Space Heater","1 unit",Priority
+Spare Fuses,Pack of 6,Welfare
+"Spare Name Tag Lanyards","Set of 5",Welfare
+"Spare Shoelaces",Pack of 3 pairs,Welfare
+Spell Casting Wand,1 wand,Routine
+Spider-Man's Web Shooter,1 can,Routine
+"Spiritual Thought Rolodex","1 unit",Welfare
+Spray Foam Insulation,1 can,Welfare
+Stake Dance Glowsticks,Pack of 10,Routine
+Stake Emergency Coordination Binder,1 binder,Emergency
+Stake President Megaphone,1 unit,Welfare
+"Stake Technology Specialist's Ultimate Cord Bag",1 bag,Priority
+Star Map,1 map,Routine
+"Starfleet Phaser","1 unit",Emergency
+"Steel Cable","1 roll",Welfare
+"Steel Chain","1 length",Welfare
+"Steel Darning Needles","Pack of 6",Welfare
+"Steel Toe Rubber Overshoes",1 pair,Priority
+"Stellar Cartography Map","1 map",Routine
+"Stomach Relief Tablets","Pack of 12",Welfare
+"Storage Bin","1 unit",Welfare
 "Story Book for Children","1 book",Routine
-"Structural Adhesive Epoxy","1 tube",Welfare
-"Stud Finder (Battery Powered)","1 unit",Welfare
-"Stuffed Animal (Comfort Toy)","1 unit",Welfare
+Structural Adhesive Epoxy,1 tube,Welfare
+"Structural Bracing Straps","Set of 4",Priority
+"Stud Finder","1 unit",Welfare
+Stuffed Animal,1 unit,Welfare
+Sunday School Distraction Toolkit,1 kit,Welfare
+"Sunday Shoes of Swiftness","1 pair",Emergency
 "Sunglasses","1 pair",Welfare
-"Sunscreen","1 bottle",Routine
+"Sunscreen",1 bottle,Routine
+"Superhero Cape","1 cape",Routine
 "Surge Protector Strip","1 unit",Welfare
-"Surveyor's Tape (Flagging Tape)","Roll (150 ft)",Welfare
+"Surveyor's Tape","Roll",Welfare
 "Survival Manual","1 book",Routine
-"Suture Kit","1 kit",Emergency
+Suture Kit,1 kit,Emergency
+Sven's Reindeer Carrots,5 carrots,Priority
+Sword of Laban,1 sword,Routine
+"Tabernacle Choir Practice Kazoo","1 kazoo",Welfare
 "Tactical Flashlight","1 unit",Priority
-"Tactical Headlamp","1 unit",Priority
+Tactical Headlamp,1 unit,Priority
+"Tactical Tithing Envelopes","Pack of 50",Routine
 "Tactical Vest","1 unit",Welfare
-"Tar Remover (Industrial Wipes)","1 canister",Welfare
+Tar Remover,1 canister,Welfare
+"TARDIS Instruction Manual","1 book",Routine
 "Tarp (Heavy Duty, 10x12 ft)","1 unit",Emergency
 "Tarpaulin","1 sheet",Priority
-"Tarpaulin Clips","Pack of 10",Priority
-"Temporary Fence Panel","1 unit (6x10 ft)",Priority
-"Tension Rod (Spring Loaded, 3-5 ft)","1 unit",Welfare
-"Tensioning Tool (For Fencing Wire)","1 unit",Welfare
-"Tent","1 unit (2-person)",Priority
-"Tent Groundsheet (Heavy Duty)","1 unit",Priority
-"Tent Poles (Collapsible)","Set of 4",Priority
-"Tent Repair Kit (Patches + Seam Sealer)","1 kit",Welfare
+Tarpaulin Clips,Pack of 10,Priority
+"Tauntaun Sleeping Bag","1 bag",Routine
+Telescoping Antenna Mast,1 unit,Priority
+Telescoping Ladder,1 unit,Priority
+"Temple Recommend Lanyard","1 lanyard",Welfare
+Temporary Fence Panel,1 unit,Priority
+Temporary Roof Patch Kit,1 kit,Priority
+"Temporary Window Board-Up Panels","Set of 5",Priority
+"Tension Rod","1 unit",Welfare
+"Tensioning Tool","1 unit",Welfare
+"Tent","1 unit",Priority
+"Tent Groundsheet","1 unit",Priority
+"Tent Poles","Set of 4",Priority
+Tent Repair Kit,1 kit,Welfare
+Testimony Builder Blocks,1 set,Priority
+Testimony Firewood Bundle,1 bundle,Routine
+Thanos's Snap Guard Gloves,2 gloves,Welfare
+"The Holy Grail","1 chalice",Priority
 "Thermal Base Layer Shirt","1 unit",Welfare
+Thermal Blackout Curtains,Set of 2 panels,Routine
+"Thermal imaging monocular","1 unit",Priority
 "Thermal Imaging Scope","1 unit",Priority
-"Thermal Imaging Thermometer (Non-contact)","1 unit",Welfare
+"Thermal Imaging Thermometer","1 unit",Welfare
 "Thermal Sleeping Bag","1 unit",Priority
-"Thermal Work Gloves (Insulated)","1 pair",Welfare
-"Throat Lozenges","Pack of 20",Welfare
-"Toilet Paper","Pack of 12",Priority
+"Thermal Work Gloves",1 pair,Welfare
+Thor's Foam Hammer,1 hammer,Emergency
+"Three Stooges Slap Pack","3 noise makers",Priority
+"Throat Lozenges",Pack of 20,Welfare
+"Time Machine Blueprint",1 blueprint,Routine
+Time Traveler's Pocket Watch,1 watch,Routine
+"Time-Turner",1 trinket,Welfare
+"Toad's Mushroom Hat","1 hat",Emergency
+Toilet Paper,Pack of 12,Priority
+"Tom & Jerry Peace Treaty","1 scroll",Routine
 "Tool Belt","1 unit",Welfare
 "Toolkit","1 set",Welfare
 "Toothbrush","1 unit",Routine
@@ -448,55 +869,133 @@ Description,Quantity,Priority
 "Tourniquet","1 unit",Emergency
 "Tow Strap","1 unit",Welfare
 "Towel (Microfiber)","1 unit",Welfare
-"Traffic Cones (Collapsible, Reflective)","Pack of 4",Priority
-"Trash Bags (Contractor Grade, 3 mil)","Roll of 20",Priority
-"Trash Compactor Bags","Roll of 20",Priority
-"Trauma Shears","1 pair",Emergency
-"Travel-Size Toothpaste","1 tube",Welfare
-"Triage Tag Kit","Pack of 20",Welfare
-"Triage Tags","Pack of 50",Emergency
+"Traffic Cones","Pack of 4",Priority
+"Trash Bags","Roll of 20",Priority
+Trash Compactor Bags,Roll of 20,Priority
+Trauma Bandage,1 unit,Emergency
+"Trauma shears","1 pair",Emergency
+"Travel-Size Toothpaste",1 tube,Welfare
+"Treasure Chest","1 chest",Routine
+Triage Tags,Pack of 50,Emergency
+Tribble Repellent,1 bottle,Welfare
+"Turkish Delight",1 box,Routine
+"Two-Way Radios","3 Pair",Emergency
 "Two-Way Repeater","1 unit",Emergency
-"Tylenol (Acetaminophen, 500mg)","Bottle of 100",Emergency
-"Tylenol PM","Bottle of 50 tablets",Welfare
+"Tylenol","Bottle of 100",Emergency
 "Tyvek Suit","1 suit",Priority
-"USB LED Strip","1 strip (6 ft)",Welfare
-"USB Power Bank","1 unit (10,000 mAh)",Priority
-"USB-C Charging Cable","1 cable (3 ft)",Welfare
+Unicorn Horn,1 horn,Routine
+"Unicorn Tears",1 vial,Priority
+"Universal Energy Source",1 source,Routine
+Universal Language Translator,1 translator,Routine
+"Ursula's Voice Jar","1 jar",Welfare
+"USB LED Strip","1 strip",Welfare
+"USB Power Bank","1 unit",Priority
+USB-C Charging Cable,1 cable,Welfare
+"Utility apron with pockets","1 apron",Welfare
 "Utility Knife","1 unit",Priority
 "UV Protection Sleeves","1 pair",Welfare
-"UV Water Sterilizer","1 unit",Priority
-"Vaseline","1 jar (4 oz)",Welfare
+"UV Water Sterilizer",1 unit,Priority
+"Vampire-Approved Sparkle Sunscreen","1 tube",Routine
+"Vaseline","1 jar",Welfare
 "Vehicle First Aid Kit","1 kit",Priority
-"Velcro Cable Ties","Pack of 20",Welfare
-"Walkie Talkie Battery Pack (NiMH)","1 unit",Priority
-"Walkie Talkie Set","1 set (2 radios)",Emergency
+Velcro Cable Ties,Pack of 20,Welfare
+"Velociraptor Whispering Manual",1 book,Routine
+"Villain's Evil Lair Blueprint",1 blueprint,Routine
+Visiting Teaching Bingo Card,1 card,Welfare
+Voldemort's Nose,0 units,Emergency
+"Waffle Iron","1 unit",Routine
+Walkie Talkie Battery Pack,1 unit,Priority
+"Walkie Talkie Chargers","1 unit",Emergency
+Walkie Talkie Set,1 set,Emergency
+Wall anchor repair kit,1 kit,Routine
+Wand of Minor Inconveniences,1 wand,Priority
+Ward BBQ Grill,1 unit,Welfare
+Ward Camp Cookbook,1 book,Routine
+Ward Clerk Sleep Mask,1 mask,Priority
+Ward Directory Printout,1 copy,Welfare
+Ward Mission Leader Whiteboard w/Inspirational Quotes,1 unit,Welfare
+Ward Sportsball,1 ball,Routine
+Ward-Wide Sign-Up Board,1 unit,Welfare
+Warp Core Stabilizer,1 unit,Routine
+"Water Barrel Pump","1 unit",Priority
 "Water Filter Straw","1 straw",Emergency
 "Water Purification Tablets","Pack of 50",Emergency
 "Water-Resistant Clipboard","1 unit",Welfare
 "Waterproof Boots","1 pair",Priority
-"Waterproof Field Notebook","1 notebook",Welfare
-"Waterproof Hard Case","1 unit (medium)",Welfare
+"Waterproof Hard Case","1 unit",Welfare
 "Waterproof Matches","Box of 40",Welfare
 "Waterproof Notebook","1 unit",Welfare
 "Weather Alert Beacon Light","1 unit",Emergency
-"Weather Stripping Tape","Roll (20 ft)",Welfare
-"Weatherproof Electrical Box","1 unit",Priority
+"Weather Stripping Tape","Roll",Welfare
+Weatherproof Electrical Box,1 unit,Priority
+Weatherproof emergency binder,1 binder,Priority
+"Weatherproof Visiting Teaching Log","1 notebook",Routine
 "Wet Floor Sign","1 unit",Routine
 "Wheelbarrow","1 unit",Priority
-"White Latex Paint (Exterior, 1 gal)","1 can",Routine
-"Wide-Brim Hat","1 unit",Welfare
-"Wind Meter (Anemometer)","1 unit",Welfare
-"Wind-up Radio","1 unit",Priority
-"Wire Nuts (Assorted Sizes)","Box of 100",Welfare
-"Wireless Mesh Node","1 unit",Priority
-"Wood Screws (2"", Phillips Head)","Box of 250",Priority
+"White Latex Paint","1 can",Routine
+Wide-Brim Hat,1 unit,Welfare
+"Wile E. Coyote's Acme Order Form","1 form",Priority
+"Wind Meter","1 unit",Welfare
+Wind-up Radio,1 unit,Priority
+Window Repair Film,1 roll,Priority
+"Windproof Matches","Box of 50",Priority
+"Wire Nuts","Box of 100",Welfare
+"Wire Rope Cutter","1 unit",Priority
+Wireless Mesh Node,1 unit,Priority
+"Wireless Microphone System","1 unit",Priority
+"Wireless Router","1 unit",Priority
+Wise Men,3,Welfare
+"Wizard Beard",1 beard,Priority
+"Wood Screws","Box of 250",Priority
 "Wool Blanket","1 unit",Priority
 "Wool Socks","Pack of 3 pairs",Priority
 "Work Apron","1 unit",Welfare
-"Work Gloves","1 pair",Welfare
+"Work Boots","1 pair",Priority
+Work Gloves,1 pair,Welfare
 "Work Jeans","1 pair",Welfare
-"Work Light (Rechargeable)","1 unit",Priority
-"Wound Dressing Pack","1 pack",Emergency
+"Work Light","1 unit",Priority
+Wound Dressing Pack,1 pack,Emergency
+Wound Irrigation Syringe,1 unit,Emergency
+X-Wing Assembly Kit,1 flat-pack,Welfare
+"Yeast & Bread Mix",1 bag,Priority
+Yeti's Snow Boots,1 pair,Routine
+Young Men's Survival Tarp,1 tarp,Emergency
+Young Women's Glitter Bomb,1 pack,Routine
+Youth Dance Icebreaker Cards,10 cards,Routine
+Youth Emergency Preparedness Merit Patch,1 patch,Routine
+YSA Survival Guide,1 copy,Routine
+YSA Survival Kit,1 pouch,Routine
+"Zion Trail Compass","1 unit",Welfare
 "Zip Ties","Pack of 50",Welfare
 "Zip-Off Utility Pants","1 pair",Welfare
-"Ziplock Freezer Bags","Pack of 25 (gallon size)",Welfare
+"Ziplock Freezer Bags",Pack of 25,Welfare
+Zombie Survival Kit,1 kit,Routine
+“Arise and Shine Forth” LED Lantern,1 unit,Priority
+“Be Still” Pillow,1 unit,Routine
+“Be Ye Therefore Prepared” Magnet,1 unit,Welfare
+“Choose the Right” Brand Trail Mix,1 bag,Welfare
+“Don't Run in the Chapel” Floor Tape,1 roll,Routine
+“Heavenly Father's Toolbox” Children's Object Lesson Kit,1 kit,Routine
+“Hold to the Rod” Grab Pole,1 unit,Welfare
+“I Am a Child of God” Emergency Blanket,1 unit,Routine
+“I Survived the Last Ward Potluck” T-Shirt,1 shirt,Emergency
+“I Will Go and Do” Doormat,1 unit,Routine
+"“I'm Not a Hoarder, I'm Prepared” Tote Bag",1 bag,Priority
+“Modest is Hottest” Fire Blanket,1 unit,Routine
+“Return with Honor” Reflective Blanket,1 unit,Priority
+“Sons of Helaman” Workout Resistance Bands,Set of 3,Welfare
+"“Still Small Voice” White Noise Machine",1 unit,Routine
+“Strength in Numbers” Group Activity Kit,1 kit,Welfare
+“Testimony Builder” LEGO Set,1 set,Routine
+“Trust in the Lord” Compass,1 unit,Welfare
+"“We Are All in This Together” Community Sign",1 sign,Routine
+"“Where Two or Three Are Gathered” Folding Chairs",Set of 4,Welfare
+"“You Are My Sunshine” Emergency Solar Light",1 unit,Routine
+"“Your Ward is My Ward” Welcome Mat",1 unit,Routine
+"“Zion's Camp” Emergency Backpack",1 unit,Routine
+"“Zion's Camp” First Aid Kit",1 kit,Routine
+"“Zion's Camp” Portable Water Filter",1 unit,Routine
+"“Zion's Camp” Survival Guide",1 book,Routine
+"“Zion's Camp” Trail Map",1 map,Routine
+"“Zion's Camp” Weather Radio",1 unit,Routine
+“Zion's Camp” Wilderness Cooking Set,1 set,Routine
