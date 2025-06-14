@@ -7,15 +7,15 @@ onRecordAuthRequest((e) => {
 })
 
 // clear cookie on logout
-routerAdd("GET", "/logout", (c) => {
-	c.response().header().set('Set-Cookie', `token=; Path=/; HttpOnly; SameSite=Lax; ${c.scheme() === 'https' ? 'Secure' : ''}`)
-	return c.redirect(302, "/login")
+routerAdd("GET", "/logout", (e) => {
+	e.response.header().set('Set-Cookie', `token=; Path=/; HttpOnly; SameSite=Lax; ${e.request.url.scheme === 'https' ? 'Secure' : ''}`)
+	return e.redirect(302, "/login")
 })
 
 // cookie authentication middleware
 routerUse(new Middleware((e) => {
 	// skip cookie processing if already authenticated
-	if (e.get('authRecord')) {
+	if (e.auth) {
 		return e.next()
 	}
 
@@ -40,28 +40,32 @@ routerUse(new Middleware((e) => {
 	// set the auth record in the context
 	let user = null
 	try {
-		user = $app.dao().findAuthRecordByToken(tokenValue, $app.settings().recordAuthToken.secret)
+		user = $app.findAuthRecordByToken(tokenValue)
 		if (user) {
-			e.set('authRecord', user)
+			e.auth = user
 		}
 	} catch (err) {
 		// check for admin
 		try {
-			user = $app.dao().findAdminByToken(tokenValue, $app.settings().adminAuthToken.secret)
+			user = $app.db().findAdminByToken(tokenValue, $app.settings().adminAuthToken.secret)
 			if (user) {
-				e.set('admin', user)
+				e.auth = user
 			}
-		} catch (err) { /* no user or admin */}
+		} catch (err) {
+			// no user or admin
+			console.error("Error finding admin by token:", err)
+		}
 	}
 
 	return e.next()
-}, -1050))
+}, -1001))
 
 // render home page
-routerAdd("GET", "/{$}", (c) => {
+routerAdd("GET", "/{$}", (e) => {
 	// redirect to login page if not logged in
-	if (!c.get('authRecord')) {
-		return c.redirect(302, "/login")
+	console.log(e.auth)
+	if (!e.auth) {
+		return e.redirect(302, "/login")
 	}
 
 	// render the home page
@@ -72,14 +76,14 @@ routerAdd("GET", "/{$}", (c) => {
 		"appURL": $app.settings().meta.appURL,
 	})
 
-	return c.html(200, html)
+	return e.html(200, html)
 })
 
 // handle need fulfillment verification
-routerAdd("POST", "/fulfill-need", (c) => {
+routerAdd("POST", "/fulfill-need", (e) => {
 	// get data
-	const user = c.get('authRecord')
-	const data = $apis.requestInfo(c).data
+	const user = e.auth
+	const data = $apis.requestInfo(e).data
 	const task = $app.dao().findRecordById("tasks", data.need_id)
 
 	// require correct user
@@ -97,13 +101,13 @@ routerAdd("POST", "/fulfill-need", (c) => {
 		$app.dao().saveRecord(task)
 	}
 
-	return c.json(200, {"success": result})
+	return e.json(200, {"success": result})
 }, $apis.requireAuth("users"))
 
 // handle clearing pending needs
-routerAdd("POST", "/not-ready", (c) => {
+routerAdd("POST", "/not-ready", (e) => {
 	// get data
-	const user = c.get('authRecord')
+	const user = e.auth
 	console.log(`Clearing pending tasks for user ${user.id}...`)
 
 	// get all pending tasks for the user
@@ -124,14 +128,14 @@ routerAdd("POST", "/not-ready", (c) => {
 	user.set('ready', false)
 	$app.dao().saveRecord(user)
 
-	return c.json(200, {"success": true})
+	return e.json(200, {"success": true})
 }, $apis.requireAuth("users"))
 
 // render the signup page
-routerAdd("GET", "/signup", (c) => {
+routerAdd("GET", "/signup", (e) => {
 	// redirect to home if already logged in
-	if (c.get('authRecord')) {
-		return c.redirect(302, "/")
+	if (e.auth) {
+		return e.redirect(302, "/")
 	}
 
 	const result = arrayOf(new DynamicModel({
@@ -153,11 +157,11 @@ routerAdd("GET", "/signup", (c) => {
 		"appURL": $app.settings().meta.appURL,
 	})
 
-	return c.html(200, html)
+	return e.html(200, html)
 })
 
 // get a random callsign
-routerAdd("GET", "/callsign", (c) => {
+routerAdd("GET", "/callsign", (e) => {
 	// generate a unique callsign
 	var callsign;
 	do {
@@ -175,14 +179,14 @@ routerAdd("GET", "/callsign", (c) => {
 			}
 		}
 	} while (exists)
-	return c.json(200, {"callsign": callsign})
+	return e.json(200, {"callsign": callsign})
 })
 
 // render the login page
-routerAdd("GET", "/login", (c) => {
+routerAdd("GET", "/login", (e) => {
 	// redirect to home if already logged in
-	if (c.get('authRecord')) {
-		return c.redirect(302, "/")
+	if (e.auth) {
+		return e.redirect(302, "/")
 	}
 
 	// render the login page
@@ -194,25 +198,25 @@ routerAdd("GET", "/login", (c) => {
 		"smtpEnabled": $app.settings().smtp.enabled,
 	})
 
-	return c.html(200, html)
+	return e.html(200, html)
 })
 
 // render monitor page
-routerAdd("GET", "/monitor", (c) => {
+routerAdd("GET", "/monitor", (e) => {
 	const html = $template.loadFiles(
 		`${__hooks}/views/monitor.html`,
 	).render({
 		"appURL": $app.settings().meta.appURL,
 	})
 
-	return c.html(200, html)
+	return e.html(200, html)
 })
 
 // render the forgot password page
-routerAdd("GET", "/forgot", (c) => {
+routerAdd("GET", "/forgot", (e) => {
 	// redirect to home if already logged in
-	if (c.get('authRecord') || !$app.settings().smtp.enabled) {
-		return c.redirect(302, "/")
+	if (e.auth || !$app.settings().smtp.enabled) {
+		return e.redirect(302, "/")
 	}
 
 	// render the forgot password page
@@ -223,11 +227,11 @@ routerAdd("GET", "/forgot", (c) => {
 		"appURL": $app.settings().meta.appURL,
 	})
 
-	return c.html(200, html)
+	return e.html(200, html)
 })
 
 // cron job to handle unconfirmed tasks
-routerAdd("GET", "/check-unconfirmed-tasks", (c) => {
+routerAdd("GET", "/check-unconfirmed-tasks", (e) => {
 	// get all unconfirmed resources that haven't been updated in at least 130 seconds
 	const report = []
 	const unconfirmed_tasks = $app.dao().findRecordsByExpr("tasks",
@@ -251,14 +255,14 @@ routerAdd("GET", "/check-unconfirmed-tasks", (c) => {
 		$app.dao().saveRecord(task)
 	})
 	if (report.length > 0) {
-		return c.json(200, report)
+		return e.json(200, report)
 	} else {
-		return c.noContent(204)
+		return e.noContent(204)
 	}
 })
 
 // get json report of the current item pool
-routerAdd("GET", "/item-pool", (c) => {
+routerAdd("GET", "/item-pool", (e) => {
 	var items = arrayOf(new DynamicModel({
 		"id": "",
 		"description": "",
@@ -280,5 +284,5 @@ routerAdd("GET", "/item-pool", (c) => {
 			ORDER BY used ASC, RANDOM()`)
 		.all(items)
 
-	return c.json(200, items)
+	return e.json(200, items)
 })
