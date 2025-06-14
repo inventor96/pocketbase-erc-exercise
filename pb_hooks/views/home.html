@@ -426,7 +426,7 @@
 						fulfilled_needs_list.forEach(need => {
 							$needs_fulfilled_list.append(`<tr>\
 									<td>${need.expand?.item?.description || '(deleted)'}</td>\
-									<td>${need.expand.resource_user.callsign}</td>\
+									<td>${need.expand?.resource_user?.callsign || '(deleted)'}</td>\
 								</tr>`)
 						})
 					}
@@ -455,7 +455,7 @@
 						fulfilled_resources_list.forEach(resource => {
 							$resources_fulfilled_list.append(`<tr>\
 									<td>${resource.expand?.item?.description || '(deleted)'}</td>\
-									<td>${resource.expand.need_user.callsign}</td>\
+									<td>${resource.expand?.need_user?.callsign || '(deleted)'}</td>\
 								</tr>`)
 						})
 					}
