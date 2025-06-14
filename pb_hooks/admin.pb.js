@@ -14,7 +14,7 @@ routerAdd("GET", "/admin", (e) => {
 		`${__hooks}/views/base.html`,
 		`${__hooks}/views/admin/home.html`,
 	).render({
-		"appUrl": $app.settings().meta.appUrl,
+		"appURL": $app.settings().meta.appURL,
 	})
 
 	return e.html(200, html)
@@ -26,7 +26,7 @@ routerAdd("GET", "/admin/login", (e) => {
 		`${__hooks}/views/base.html`,
 		`${__hooks}/views/admin/login.html`,
 	).render({
-		"appUrl": $app.settings().meta.appUrl,
+		"appURL": $app.settings().meta.appURL,
 	})
 
 	return e.html(200, html)
@@ -53,7 +53,7 @@ routerAdd("GET", "/admin/exercise/:id", (e) => {
 		`${__hooks}/views/base.html`,
 		`${__hooks}/views/admin/exercise.html`,
 	).render({
-		"appUrl": $app.settings().meta.appUrl,
+		"appURL": $app.settings().meta.appURL,
 		"pgTitle": id === "new" ? "New Exercise" : "Edit Exercise",
 		"id": id,
 	})
