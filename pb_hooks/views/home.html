@@ -426,7 +426,7 @@
 						fulfilled_needs_list.forEach(need => {
 							$needs_fulfilled_list.append(`<tr>\
 									<td>${need.expand?.item?.description || '(deleted)'}</td>\
-									<td>${need.expand?.resource_user?.callsign || '(error)'}</td>\
+									<td>${need.expand?.resource_user?.callsign || '(deleted)'}</td>\
 								</tr>`)
 						})
 					}
