@@ -45,16 +45,7 @@ routerUse(new Middleware((e) => {
 			e.auth = user
 		}
 	} catch (err) {
-		// check for admin
-		try {
-			user = $app.db().findAdminByToken(tokenValue, $app.settings().adminAuthToken.secret)
-			if (user) {
-				e.auth = user
-			}
-		} catch (err) {
-			// no user or admin
-			console.error("Error finding admin by token:", err)
-		}
+		/* no user */
 	}
 
 	return e.next()
