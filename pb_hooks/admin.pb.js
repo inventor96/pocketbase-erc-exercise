@@ -33,7 +33,7 @@ routerAdd("GET", "/admin/login", (e) => {
 })
 
 // add/edit exercise page
-routerAdd("GET", "/admin/exercise/:id", (e) => {
+routerAdd("GET", "/admin/exercise/{id}", (e) => {
 	// check if the user is logged in
 	const user = e.hasSuperuserAuth()
 	if (!user) {
@@ -42,7 +42,7 @@ routerAdd("GET", "/admin/exercise/:id", (e) => {
 	}
 
 	// parse the exercise ID from the URL
-	const id = e.pathParam("id")
+	const id = e.request.pathValue("id")
 	if (!id) {
 		// redirect to the admin page
 		return e.redirect(302, "/admin")
