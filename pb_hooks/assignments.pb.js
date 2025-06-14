@@ -105,7 +105,7 @@ onRecordUpdateExecute((e) => {
 			if (scope_chooser <= stake_weight && !skip_stake) {
 				try {
 					// get user from the stake
-					$app.dao().db()
+					$app.db()
 						.newQuery("SELECT users.id, COUNT(tasks.id) AS count\
 							FROM users\
 							LEFT JOIN tasks ON tasks.resource_user = users.id\
@@ -130,7 +130,7 @@ onRecordUpdateExecute((e) => {
 			} else if (scope_chooser <= region_weight + stake_weight && !skip_region) {
 				try {
 					// get user from the region
-					$app.dao().db()
+					$app.db()
 						.newQuery("SELECT users.id, COUNT(tasks.id) AS count\
 							FROM users\
 							LEFT JOIN tasks ON tasks.resource_user = users.id\
@@ -156,7 +156,7 @@ onRecordUpdateExecute((e) => {
 			} else if (!skip_storehouse) {
 				try {
 					// get user from the storehouse
-					$app.dao().db()
+					$app.db()
 						.newQuery("SELECT users.id, COUNT(tasks.id) AS count\
 							FROM users\
 							LEFT JOIN tasks ON tasks.resource_user = users.id\
@@ -198,7 +198,7 @@ onRecordUpdateExecute((e) => {
 		if (table == 'users' || table == 'exercises') {
 			// check users existing tasks
 			var tasks = new DynamicModel({ "count": 0 })
-			$app.dao().db()
+			$app.db()
 				.newQuery("SELECT COUNT(id) AS count\
 					FROM tasks\
 					WHERE need_user = {:need_user}\
@@ -216,7 +216,7 @@ onRecordUpdateExecute((e) => {
 			for (let j = 0; j < new_task_count; j++) {
 				// pick a random task
 				var task = new DynamicModel({ "id": "" })
-				$app.dao().db() // should reflect the item pool query in routes.pb.js
+				$app.db() // should reflect the item pool query in routes.pb.js
 					.newQuery(`SELECT items.id, COUNT(tasks.id) AS used
 						FROM items
 						LEFT JOIN tasks ON tasks.item = items.id

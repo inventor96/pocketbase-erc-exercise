@@ -12,7 +12,7 @@ routerAdd("GET", "/monitordata", function (c) {
 		// check if we looking for a specific exercise
 		const exercise_id = c.queryParam("exercise_id")
 		if (exercise_id) {
-			$app.dao().db()
+			$app.db()
 				.newQuery("SELECT id, name, start, end\
 					FROM exercises\
 					WHERE id = {:id}\
@@ -20,7 +20,7 @@ routerAdd("GET", "/monitordata", function (c) {
 				.bind({ id: exercise_id })
 				.one(reporting_exercise)
 		} else {
-			$app.dao().db()
+			$app.db()
 				.newQuery("SELECT id, name, start, end\
 					FROM exercises\
 					WHERE start <= {:now}\
@@ -39,7 +39,7 @@ routerAdd("GET", "/monitordata", function (c) {
 		"name": "",
 		"participants": 0,
 	}))
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT regions.name AS name, COUNT(DISTINCT users.id) AS participants\
 			FROM tasks\
 			LEFT JOIN users ON tasks.resource_user = users.id\
@@ -60,7 +60,7 @@ routerAdd("GET", "/monitordata", function (c) {
 		"name": "",
 		"count": 0,
 	}))
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT users.comm_type AS name, COUNT(DISTINCT users.id) AS count\
 			FROM tasks\
 			LEFT JOIN users ON tasks.resource_user = users.id\
@@ -77,7 +77,7 @@ routerAdd("GET", "/monitordata", function (c) {
 
 	// count of open tasks with the need and resource being in the same stake
 	const stake_tasks_open = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -95,7 +95,7 @@ routerAdd("GET", "/monitordata", function (c) {
 
 	// count of completed tasks with the need and resource being in the same stake
 	const stake_tasks_completed = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -111,7 +111,7 @@ routerAdd("GET", "/monitordata", function (c) {
 
 	// count of cancelled tasks with the need and resource being in the same stake
 	const stake_tasks_cancelled = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -127,7 +127,7 @@ routerAdd("GET", "/monitordata", function (c) {
 
 	// count of open tasks with the need and resource being in the same region (excluding stake)
 	const region_tasks_open = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -148,7 +148,7 @@ routerAdd("GET", "/monitordata", function (c) {
 
 	// count of completed tasks with the need and resource being in the same region (excluding stake)
 	const region_tasks_completed = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -167,7 +167,7 @@ routerAdd("GET", "/monitordata", function (c) {
 
 	// count of cancelled tasks with the need and resource being in the same region (excluding stake)
 	const region_tasks_cancelled = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -186,7 +186,7 @@ routerAdd("GET", "/monitordata", function (c) {
 
 	// count of open tasks with the need and resource NOT in the same region (i.e. storehouse)
 	const storehouse_tasks_open = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -206,7 +206,7 @@ routerAdd("GET", "/monitordata", function (c) {
 
 	// count of completed tasks with the need and resource NOT in the same region
 	const storehouse_tasks_completed = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -224,7 +224,7 @@ routerAdd("GET", "/monitordata", function (c) {
 
 	// count of cancelled tasks with the need and resource NOT in the same region
 	const storehouse_tasks_cancelled = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -245,7 +245,7 @@ routerAdd("GET", "/monitordata", function (c) {
 		"name": "",
 		"count": 0,
 	}))
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT regions.name, COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users ON users.id = tasks.need_user\
@@ -268,7 +268,7 @@ routerAdd("GET", "/monitordata", function (c) {
 		"name": "",
 		"count": 0,
 	}))
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT regions.name, COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users ON users.id = tasks.need_user\
@@ -289,7 +289,7 @@ routerAdd("GET", "/monitordata", function (c) {
 		"name": "",
 		"count": 0,
 	}))
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT regions.name, COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users ON users.id = tasks.need_user\
@@ -343,7 +343,7 @@ routerAdd("GET", "/monitordata", function (c) {
 		"completed": "",
 		"created": "",
 	}))
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT tasks.completed, tasks.created\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -374,7 +374,7 @@ routerAdd("GET", "/monitordata", function (c) {
 		"completed": "",
 		"created": "",
 	}))
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT tasks.completed, tasks.created\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -408,7 +408,7 @@ routerAdd("GET", "/monitordata", function (c) {
 		"completed": "",
 		"created": "",
 	}))
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT tasks.completed, tasks.created\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -440,7 +440,7 @@ routerAdd("GET", "/monitordata", function (c) {
 	const registered_users = new DynamicModel({
 		"count": 0,
 	})
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(id) as count FROM users")
 		.one(registered_users)
 
