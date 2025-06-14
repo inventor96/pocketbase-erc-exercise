@@ -1,6 +1,6 @@
 /// <reference path="../pb_data/types.d.ts" />
 
-routerAdd("GET", "/report", (c) => {
+routerAdd("GET", "/report", (e) => {
 	// get exercise to report on
 	const reporting_exercise = new DynamicModel({
 		"id": "",
@@ -10,7 +10,7 @@ routerAdd("GET", "/report", (c) => {
 	})
 	try {
 		// check if we looking for a specific exercise
-		const exercise_id = c.queryParam("exercise_id")
+		const exercise_id = e.request.pathValue("exercise_id")
 		if (exercise_id) {
 			$app.db()
 				.newQuery("SELECT id, name, start, end\
@@ -30,7 +30,8 @@ routerAdd("GET", "/report", (c) => {
 				.one(reporting_exercise)
 		}
 	} catch (error) {
-		c.json(404, {"error": "Could not find an exercise to report on."})
+		console.error("Error finding exercise for report:", error)
+		e.json(404, {"error": "Could not find an exercise to report on."})
 		return
 	}
 
@@ -306,7 +307,7 @@ routerAdd("GET", "/report", (c) => {
 
 	// output report
 	const total_tasks = stake_tasks.count + region_tasks.count + storehouse_tasks.count
-	c.json(200, {
+	e.json(200, {
 		"exercise": reporting_exercise,
 		"reports": {
 			"multiple_tasks": {

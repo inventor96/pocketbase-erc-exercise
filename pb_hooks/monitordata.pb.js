@@ -1,6 +1,6 @@
 /// <reference path="../pb_data/types.d.ts" />
 
-routerAdd("GET", "/monitordata", function (c) {
+routerAdd("GET", "/monitordata", function (e) {
 	// get exercise to report on
 	const reporting_exercise = new DynamicModel({
 		"id": "",
@@ -10,7 +10,7 @@ routerAdd("GET", "/monitordata", function (c) {
 	})
 	try {
 		// check if we looking for a specific exercise
-		const exercise_id = c.queryParam("exercise_id")
+		const exercise_id = e.request.pathValue("exercise_id")
 		if (exercise_id) {
 			$app.db()
 				.newQuery("SELECT id, name, start, end\
@@ -30,7 +30,7 @@ routerAdd("GET", "/monitordata", function (c) {
 				.one(reporting_exercise)
 		}
 	} catch (error) {
-		c.json(404, {"error": "Could not find an exercise to report on."})
+		e.json(404, {"error": "Could not find an exercise to report on."})
 		return
 	}
 
@@ -445,7 +445,7 @@ routerAdd("GET", "/monitordata", function (c) {
 		.one(registered_users)
 
 	// output
-	c.json(200, {
+	e.json(200, {
 		"participants": {
 			"by_region": participant_data,
 			"by_service": commTypeCounts,
