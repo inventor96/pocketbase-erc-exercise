@@ -59,10 +59,10 @@
 		$(() => {
 			// update user info
 			if (pb.authStore.isValid) {
-				$('.user-disp').text(pb.authStore.model.email)
-				$('.name-disp').text(pb.authStore.model.name)
-				$('#current_email').val(pb.authStore.model.email)
-				$('.callsign-disp').text(pb.authStore.isAdmin ? 'admin' : pb.authStore.model.callsign)
+				$('.user-disp').text(pb.authStore?.model?.email)
+				$('.name-disp').text(pb.authStore?.model?.name)
+				$('#current_email').val(pb.authStore?.model?.email)
+				$('.callsign-disp').text(pb.authStore?.isAdmin ? 'admin' : pb.authStore?.model?.callsign)
 			}
 
 			// handle logout
