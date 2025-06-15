@@ -29,7 +29,7 @@ ERC Exercise Admin
 		<button class="nav-link active" id="config-tab" data-bs-toggle="tab" data-bs-target="#admin-config" role="tab" aria-controls="admin-config" aria-selected="true">Configuration</button>
 	</li>
 	<li class="nav-item" role="presentation">
-		<button class="nav-link" id="operators-tab" data-bs-toggle="tab" data-bs-target="#admin-operators" role="tab" aria-controls="admin-operators" aria-selected="false">Operators</button>
+		<button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#admin-users" role="tab" aria-controls="admin-users" aria-selected="false">Users</button>
 	</li>
 	<li class="nav-item" role="presentation">
 		<button class="nav-link" id="assignments-tab" data-bs-toggle="tab" data-bs-target="#admin-assignments" role="tab" aria-controls="admin-assignments" aria-selected="false">Assignments</button>
@@ -38,6 +38,8 @@ ERC Exercise Admin
 
 <!-- admin tab content -->
 <div class="tab-content" id="admin-tabs-content">
+
+	<!-- configuration tab -->
 	<div class="tab-pane fade show active" id="admin-config" role="tabpanel" aria-labelledby="config-tab">
 		<!-- exercises table -->
 		<div class="card mb-5">
@@ -178,28 +180,6 @@ ERC Exercise Admin
 						</tr>
 					</tbody>
 				</table>
-			</div>
-		</div>
-		
-		<!-- action confirmation modal -->
-		<div class="modal fade" id="confirm_modal" tabindex="-1">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h4 class="modal-title">Are you sure?</h4>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-						<p>Are you sure you want to <span id="action_name"></span> the <span id="item_name"></span> <span id="collection_name"></span>?</p>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-						<button type="button" id="action_confirm" class="btn btn-primary" data-bs-collection="" data-bs-id="">
-							<span class="spinner-grow spinner-grow-sm"></span>
-							Yes
-						</button>
-					</div>
-				</div>
 			</div>
 		</div>
 		
@@ -347,8 +327,110 @@ ERC Exercise Admin
 			</div>
 		</div>
 	</div>
-	<div class="tab-pane fade" id="admin-operators" role="tabpanel" aria-labelledby="operators-tab"></div>
+
+	<!-- users tab -->
+	<div class="tab-pane fade" id="admin-users" role="tabpanel" aria-labelledby="users-tab">
+		<!-- users table -->
+		<table class="table table-striped table-hover mb-0">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Callsign</th>
+					<th>Service</th>
+					<th>Stake/Region</th>
+					<th>Ready</th>
+					<th>Rejected</th>
+					<th class="text-end">Actions</th>
+				</tr>
+			</thead>
+			<tbody id="user-list">
+				<tr>
+					<td colspan="8" class="text-center">
+						<div class="d-flex justify-content-center align-items-center">
+							<div class="spinner-border me-2" role="status" aria-hidden="true"></div>
+							<span>loading...</span>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<!-- edit user modal -->
+		<div class="modal fade" id="user_modal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Edit User</h4>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form id="user_form">
+							<div class="mb-4">
+								<label for="user_name" class="form-label fs-5 fw-bold">Name</label>
+								<input type="text" class="form-control" id="user_name" name="user_name" required minlength="3">
+							</div>
+							<div class="mb-4">
+								<label for="user_email" class="form-label fs-5 fw-bold">Email</label>
+								<input type="email" class="form-control" id="user_email" name="user_email" required>
+							</div>
+							<div class="mb-4">
+								<label for="user_callsign" class="form-label fs-5 fw-bold">Callsign</label>
+								<input type="text" class="form-control" id="user_callsign" name="user_callsign" required minlength="3">
+							</div>
+							<div class="mb-4">
+								<label for="user_comm_type" class="form-label fs-5 fw-bold">Service</label>
+								<select class="form-select" id="user_comm_type" name="user_comm_type" required>
+									<option value="" disabled selected>Select a service</option>
+									<option value="Ham">Ham</option>
+									<option value="GMRS/FRS">GMRS/FRS</option>
+									<option value="MURS">MURS</option>
+									<option value="Commercial">Commercial</option>
+									<option value="Satellite">Satellite</option>
+									<option value="Other">Other</option>
+								</select>
+							</div>
+							<div class="mb-4">
+								<label for="user_stake" class="form-label fs-5 fw-bold">Stake</label>
+								<select class="form-select" id="user_stake" name="user_stake" required>
+									<option value="" disabled selected>Select a Stake</option>
+								</select>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+						<button type="button" id="user_confirm" class="btn btn-primary" data-bs-dismiss="modal" data-bs-id="">Save</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- assignments tab -->
 	<div class="tab-pane fade" id="admin-assignments" role="tabpanel" aria-labelledby="assignments-tab"></div>
+</div>
+
+<!-- action confirmation modal -->
+<div class="modal fade" id="confirm_modal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Are you sure?</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure you want to <span id="action_name"></span> the <span id="item_name"></span> <span id="collection_name"></span>?</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				<button type="button" id="action_confirm" class="btn btn-primary" data-bs-collection="" data-bs-id="">
+					<span class="spinner-grow spinner-grow-sm"></span>
+					Yes
+				</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <!-- pocketbase admin confirm modal -->
@@ -388,6 +470,118 @@ ERC Exercise Admin
 		$('#open_pb_admin').on('click', function () {
 			window.open('/_', '_blank');
 		});
+
+		// handle action confirmation modal
+		$('#confirm_modal').on('show.bs.modal', function (event) {
+			// get data from the button that triggered the modal
+			const button = $(event.relatedTarget);
+			const action = button.data('bs-action');
+			const collection = button.data('bs-collection');
+			const objectId = button.data('bs-id');
+			const objectName = button.data('bs-name');
+
+			// update the modal's content
+			const modal = $(this);
+			modal.find('#action_name').text(action);
+			modal.find('#item_name').text(action === 'delete all' ? '' : `"${objectName}"`);
+			modal.find('#collection_name').text(action === 'delete all' ? collection+'s' : collection);
+			modal.find('#action_confirm')
+				.data('bs-id', objectId)
+				.data('bs-collection', collection)
+				.data('bs-action', action);
+		});
+		$('#action_confirm').on('click', function () {
+			const objectId = $(this).data('bs-id');
+			const collection = $(this).data('bs-collection') + 's';
+			const action = $(this).data('bs-action');
+			const modal = $('#confirm_modal');
+			const btn = $(this);
+			btn.prop('disabled', true);
+
+			// starting an exercise
+			if (action === 'start' && collection === 'exercises') {
+				pb.collection('exercises').update(objectId, { started: true })
+					.then(() => {
+						modal.modal('hide');
+						btn.prop('disabled', false);
+					})
+					.catch(err => {
+						console.error('Error starting exercise:', err);
+						alert(`Error starting exercise: ${err.message}`);
+					});
+			// stopping an exercise
+			} else if (action === 'stop' && collection === 'exercises') {
+				pb.collection('exercises').update(objectId, { started: false })
+					.then(() => {
+						modal.modal('hide');
+						btn.prop('disabled', false);
+					})
+					.catch(err => {
+						console.error('Error stopping exercise:', err);
+						alert(`Error stopping exercise: ${err.message}`);
+					});
+			// deleting an object
+			} else if (action === 'delete') {
+				pb.collection(collection).delete(objectId)
+					.then(() => {
+						modal.modal('hide');
+						btn.prop('disabled', false);
+					})
+					.catch(err => {
+						console.error(`Error deleting ${collection}:`, err);
+						alert(`Error deleting ${collection}: ${err.message}`);
+					});
+			// deleting all objects
+			} else if (action === 'delete all') {
+				// get list of objects to delete
+				pb.collection(collection).getFullList()
+					.then(items => {
+						// delete all items in the collection one at a time
+						let deleteQueue = Promise.resolve();
+						items.forEach(item => {
+							deleteQueue = deleteQueue.then(async () => {
+								try {
+									pb.collection(collection).delete(item.id);
+								} catch (err) {
+									console.error(`Error deleting ${collection} ${item.id}:`, err);
+									alert(`Error deleting ${collection} ${item.id}: ${err.message}`);
+								}
+							});
+						});
+
+						// wait for all deletions to finish
+						deleteQueue.then(() => {
+							modal.modal('hide');
+							btn.prop('disabled', false);
+						});
+					})
+					.catch(err => {
+						console.error(`Error getting list to delete all ${collection}s:`, err);
+						alert(`Error getting list to delete all ${collection}s: ${err.message}`);
+						modal.modal('hide');
+						btn.prop('disabled', false);
+					});
+			// reset rejection count
+			} else if (action === 'reset the "rejected" count for' && collection === 'users') {
+				pb.collection(collection).update(objectId, { rejected: 0 })
+					.then(() => {
+						modal.modal('hide');
+						btn.prop('disabled', false);
+					})
+					.catch(err => {
+						console.error('Error resetting rejection count:', err);
+						alert(`Error resetting rejection count: ${err.message}`);
+					});
+			// unknown action
+			} else {
+				console.error('Unknown action:', action);
+				alert(`Unknown action: ${action}`);
+				modal.modal('hide');
+				btn.prop('disabled', false);
+			}
+		});
+
+		//#region configuration tab
 
 		// update list of exercises
 		function updateExercises(exercises) {
@@ -526,6 +720,11 @@ ERC Exercise Admin
 							</td>
 						</tr>
 					`);
+
+					// also clear user_stake select if no stakes
+					const userStakeSelect = $('#user_stake');
+					userStakeSelect.empty();
+					userStakeSelect.append('<option value="" disabled selected>Select a Stake</option>');
 					return;
 				}
 
@@ -543,6 +742,15 @@ ERC Exercise Admin
 					`);
 					tbody.append(tr);
 				});
+
+				// update the user_stake select options
+				const userStakeSelect = $('#user_stake');
+				userStakeSelect.empty();
+				userStakeSelect.append('<option value="" disabled selected>Select a Stake</option>');
+				stakes.forEach(stake => {
+					const option = $(`<option value="${stake.id}">${stake.name}</option>`);
+					userStakeSelect.append(option);
+				});
 			}).catch(err => {
 				console.error('Error fetching stakes:', err);
 				tbody.append(`
@@ -554,6 +762,11 @@ ERC Exercise Admin
 						</td>
 					</tr>
 				`);
+
+				// on error, clear user_stake select
+				const userStakeSelect = $('#user_stake');
+				userStakeSelect.empty();
+				userStakeSelect.append('<option value="" disabled selected>Select a Stake</option>');
 			});
 		}
 		updateStakes();
@@ -621,104 +834,6 @@ ERC Exercise Admin
 				`);
 			});
 		}
-
-		// handle action confirmation modal
-		$('#confirm_modal').on('show.bs.modal', function (event) {
-			// get data from the button that triggered the modal
-			const button = $(event.relatedTarget);
-			const action = button.data('bs-action');
-			const collection = button.data('bs-collection');
-			const objectId = button.data('bs-id');
-			const objectName = button.data('bs-name');
-
-			// update the modal's content
-			const modal = $(this);
-			modal.find('#action_name').text(action);
-			modal.find('#item_name').text(action === 'delete all' ? '' : `"${objectName}"`);
-			modal.find('#collection_name').text(action === 'delete all' ? collection+'s' : collection);
-			modal.find('#action_confirm')
-				.data('bs-id', objectId)
-				.data('bs-collection', collection)
-				.data('bs-action', action);
-		});
-		$('#action_confirm').on('click', function () {
-			const objectId = $(this).data('bs-id');
-			const collection = $(this).data('bs-collection') + 's';
-			const action = $(this).data('bs-action');
-			const modal = $('#confirm_modal');
-			const btn = $(this);
-			btn.prop('disabled', true);
-
-			// starting an exercise
-			if (action === 'start' && collection === 'exercises') {
-				pb.collection('exercises').update(objectId, { started: true })
-					.then(() => {
-						modal.modal('hide');
-						btn.prop('disabled', false);
-					})
-					.catch(err => {
-						console.error('Error starting exercise:', err);
-						alert(`Error starting exercise: ${err.message}`);
-					});
-			// stopping an exercise
-			} else if (action === 'stop' && collection === 'exercises') {
-				pb.collection('exercises').update(objectId, { started: false })
-					.then(() => {
-						modal.modal('hide');
-						btn.prop('disabled', false);
-					})
-					.catch(err => {
-						console.error('Error stopping exercise:', err);
-						alert(`Error stopping exercise: ${err.message}`);
-					});
-			// deleting an object
-			} else if (action === 'delete') {
-				pb.collection(collection).delete(objectId)
-					.then(() => {
-						modal.modal('hide');
-						btn.prop('disabled', false);
-					})
-					.catch(err => {
-						console.error(`Error deleting ${collection}:`, err);
-						alert(`Error deleting ${collection}: ${err.message}`);
-					});
-			// deleting all objects
-			} else if (action === 'delete all') {
-				// get list of objects to delete
-				pb.collection(collection).getFullList()
-					.then(items => {
-						// delete all items in the collection one at a time
-						let deleteQueue = Promise.resolve();
-						items.forEach(item => {
-							deleteQueue = deleteQueue.then(async () => {
-								try {
-									pb.collection(collection).delete(item.id);
-								} catch (err) {
-									console.error(`Error deleting ${collection} ${item.id}:`, err);
-									alert(`Error deleting ${collection} ${item.id}: ${err.message}`);
-								}
-							});
-						});
-
-						// wait for all deletions to finish
-						deleteQueue.then(() => {
-							modal.modal('hide');
-							btn.prop('disabled', false);
-						});
-					})
-					.catch(err => {
-						console.error(`Error getting list to delete all ${collection}s:`, err);
-						alert(`Error getting list to delete all ${collection}s: ${err.message}`);
-						modal.modal('hide');
-						btn.prop('disabled', false);
-					});
-			} else {
-				console.error('Unknown action:', action);
-				alert(`Unknown action: ${action}`);
-				modal.modal('hide');
-				btn.prop('disabled', false);
-			}
-		});
 
 		// handle region modal
 		$('#region_modal').on('show.bs.modal', function (event) {
@@ -1017,6 +1132,122 @@ ERC Exercise Admin
 				}
 			});
 		});
-	})
+
+		//#endregion
+
+		//#region users tab
+
+		// update list of users
+		function updateUsers() {
+			const tbody = $('#user-list');
+			tbody.empty();
+
+			pb.collection('users').getFullList({
+				sort: 'name',
+				requestKey: 'users',
+				expand: 'stake,stake.region',
+			}).then(users => {
+				// check if the users array is empty
+				if (users.length === 0) {
+					tbody.append(`
+						<tr>
+							<td colspan="8" class="text-center">
+								<div class="d-flex justify-content-center align-items-center">
+									<span>No users found</span>
+								</div>
+							</td>
+						</tr>
+					`);
+					return;
+				}
+
+				// loop through the users and create a table row for each
+				users.forEach(user => {
+					const tr = $(`
+						<tr>
+							<td class="align-middle fw-bold">${user.name}</td>
+							<td class="align-middle">${user.email}</td>
+							<td class="align-middle">${user.callsign}</td>
+							<td class="align-middle">${user.comm_type}</td>
+							<td class="align-middle">${user.expand?.stake?.name || '(deleted)'}<br>/ ${user.expand?.stake?.expand?.region?.name || '(deleted)'}</td>
+							<td class="align-middle">${user.ready ? '<span class="badge text-bg-success">Ready</span>' : '<span class="badge text-bg-warning">Not Ready</span>'}</td>
+							<td class="align-middle">${user.rejected}</td>
+							<td class="align-middle text-end">
+								<button type="button" class="btn btn-primary m-1" data-bs-toggle="modal" data-bs-target="#user_modal" data-bs-id="${user.id}" data-bs-name="${user.name}" data-bs-email="${user.email}" data-bs-callsign="${user.callsign}" data-bs-comm-type="${user.comm_type}" data-bs-stake="${user.expand?.stake?.id}">Edit</button>
+								<button type="button" class="btn btn-warning m-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="user" data-bs-id="${user.id}" data-bs-name="${user.name}" data-bs-action=\'reset the "rejected" count for\'>Reset Reject #</button>
+								<button type="button" class="btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="user" data-bs-id="${user.id}" data-bs-name="${user.name}" data-bs-action="delete">Delete</button>
+							</td>
+						</tr>
+					`);
+					tbody.append(tr);
+				});
+			}).catch(err => {
+				console.error('Error fetching users:', err);
+				tbody.append(`
+					<tr>
+						<td colspan="8" class="text-center">
+							<div class="d-flex justify-content-center align-items-center">
+								<span>Error loading users</span
+							</div>
+						</td>
+					</tr>
+				`);
+			});
+		}
+		updateUsers();
+		pb.collection('users').subscribe('*', updateUsers);
+
+		// handle user modal
+		$('#user_modal').on('show.bs.modal', function (event) {
+			// get data from the button that triggered the modal
+			const button = $(event.relatedTarget);
+			const userId = button.data('bs-id');
+			const userName = button.data('bs-name');
+			const userEmail = button.data('bs-email');
+			const userCallsign = button.data('bs-callsign');
+			const userCommType = button.data('bs-comm-type');
+			const userStake = button.data('bs-stake');
+
+			// update the modal's content
+			const modal = $(this);
+			modal.find('#user_name').val(userName);
+			modal.find('#user_email').val(userEmail);
+			modal.find('#user_callsign').val(userCallsign);
+			modal.find('#user_comm_type').val(userCommType);
+			modal.find('#user_stake').val(userStake);
+			modal.find('#user_confirm').data('bs-id', userId);
+		});
+		$('#user_confirm').on('click', function () {
+			const userId = $(this).data('bs-id');
+			const userName = $('#user_name').val();
+			const userEmail = $('#user_email').val();
+			const userCallsign = $('#user_callsign').val();
+			const userCommType = $('#user_comm_type').val();
+			const userStake = $('#user_stake').val();
+
+			// update existing user
+			if (userId) {
+				pb.collection('users').update(userId, {
+					name: userName,
+					email: userEmail,
+					callsign: userCallsign,
+					comm_type: userCommType,
+					stake: userStake,
+				})
+					.catch(err => {
+						console.error('Error updating user:', err);
+						alert(`Error updating user: ${err.message}`);
+					});
+			} else {
+				console.warn('No user ID provided! This should not happen.');
+			}
+		});
+
+		//#endregion
+
+		//#region assignments tab
+
+		//#endregion
+})
 </script>
 {{end}}
