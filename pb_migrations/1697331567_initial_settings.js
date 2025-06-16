@@ -4,7 +4,7 @@ migrate((db) => {
 
   const settings = dao.findSettings()
   settings.meta.appName = "ERC Exercise"
-  settings.meta.appUrl = "https://exercise.idahoerc.org"
+  settings.meta.senderName = "ERC Exercise"
 
   dao.saveSettings(settings)
 }, (db) => {

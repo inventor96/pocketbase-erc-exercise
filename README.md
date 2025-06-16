@@ -1,6 +1,6 @@
 # Pocketbase ERC Exercise
 ## Description
-The hardest part of any communications exercise is having something to talk about or to do. This application is designed to help with that by generating need/resource pairs for users (i.e. participants) to find and fulfill during an exercise. One user is assigned the need, and another one is assigned the matching resource. It's then the responsibility of "need" user (and the necessary net control stations) to then find the "resource" user. The app works with three scopes: stakes, regions, and storehouse (the top level, i.e. global). The app spreads the pairs across scopes as configured per exercise.
+The hardest part of any communications exercise is having something to talk about or to do. This application is designed to help with that by generating need/resource pairs for users (i.e. participants/operators) to find and fulfill during an exercise. One user is assigned the need, and another one is assigned the matching resource. It's then the responsibility of "need" user (and the necessary net control stations) to then find the "resource" user. The app works with three scopes: stakes, regions, and storehouse (the top level, i.e. global). The app spreads the pairs across scopes as configured per exercise.
 
 The application is built to handle only one exercise at a time. If more than one exercise needs to happen at a time, you should create separate instances.
 
@@ -11,10 +11,16 @@ Note that these setup instructions are geared toward Linux hosts. You'll have to
 
 1. Get this repo on your host.
 1. Before proceeding, consider the point in [Production-ready Setup](#production-ready-setup) regarding a reverse proxy.
-1. If needed, update the URL in the initial config (found in `pb_migrations/1697331567_initial_settings.js`).
 1. Start the server (e.g. `systemctl start pocketbase-erc` if you setup the systemd service, or `./pocketbase serve` to just do it manually).
 1. Create your admin user in the PocketBase Admin UI at `/_` (e.g. if running locally, go to `http://127.0.0.1:8090/_`).
-1. If you want to enable password reset emails, you'll need to set up the SMTP settings in the PocketBase Admin UI.
+1. Set your application URL in the PocketBase Admin UI at `/_`:
+	- Go to the "Settings" tab (the tools icon in the left sidebar).
+	- Click the "Application" section if it's not already selected.
+	- Set the "Application URL" to the URL where your application will be accessible (e.g. `https://exercise.idahoerc.org`, or `http://127.0.0.1:8090` if developing locally).
+1. (Optional) If you want to enable password reset requests, you'll need to set up the SMTP settings in the PocketBase Admin UI. If you skip this step, users will not be able to reset their passwords, and the "Forgot Password" link will not be shown on the login page.
+	- Go to the "Settings" tab (the tools icon in the left sidebar).
+	- Click the "Mail settings" section.
+	- Set the Sender and SMTP settings to your email provider's SMTP server, port, username, and password.
 
 Congrats! The application is functional!
 
