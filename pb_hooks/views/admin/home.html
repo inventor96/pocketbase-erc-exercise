@@ -561,16 +561,16 @@ ERC Exercise Admin
 			} else if (action === 'delete all') {
 				// get list of objects to delete
 				pb.collection(collection).getFullList()
-					.then(items => {
-						// delete all items in the collection one at a time
+					.then(objects => {
+						// delete all objects in the collection one at a time
 						let deleteQueue = Promise.resolve();
-						items.forEach(item => {
+						objects.forEach(object => {
 							deleteQueue = deleteQueue.then(async () => {
 								try {
-									pb.collection(collection).delete(item.id);
+									await pb.collection(collection).delete(object.id);
 								} catch (err) {
-									console.error(`Error deleting ${collection} ${item.id}:`, err);
-									alert(`Error deleting ${collection} ${item.id}: ${err.message}`);
+									console.error(`Error deleting ${collection} ${object.id}:`, err);
+									alert(`Error deleting ${collection} ${object.id}: ${err.message}`);
 								}
 							});
 						});
