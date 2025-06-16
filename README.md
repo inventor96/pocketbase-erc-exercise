@@ -54,8 +54,6 @@ Just a few more things to get you ready for go-time.
 	<VirtualHost *:80>
 		ServerName exercise.idahoerc.org
 
-		ServerAdmin webmaster+erc@hornbeck.us.to
-
 		ErrorLog ${APACHE_LOG_DIR}/error.log
 		CustomLog ${APACHE_LOG_DIR}/access.log combined
 
