@@ -1327,16 +1327,16 @@ ERC Exercise Admin
 					const tr = $(`
 						<tr>
 							<td class="align-middle">
-								<span class="badge text-bg-${badge_type}">${task.expand?.item?.priority || '(deleted)'}</span>
-								<span class="fw-bold">${task.expand?.item?.description || '(deleted)'}</span>
+								<span class="badge text-bg-${badge_type}">${task.expand?.item?.priority || '(deleted)'}</span><br>
+								<span class="fw-bold">${task.expand?.item?.description || '(deleted)'}</span><br>
 								${task.expand?.item?.quantity || '(deleted)'}
 							</td>
 							<td class="align-middle">
-								${task.expand?.need_user?.name || '(deleted)'}
+								${task.expand?.need_user?.name || '(deleted)'}<br>
 								${task.expand?.need_user?.callsign || '(deleted)'}
 							</td>
 							<td class="align-middle">
-								${task.expand?.resource_user?.name || '(deleted)'}
+								${task.expand?.resource_user?.name || '(deleted)'}<br>
 								${task.expand?.resource_user?.callsign || '(deleted)'}
 							</td>
 							<td class="align-middle">${getTaskScope(task)}</td>
