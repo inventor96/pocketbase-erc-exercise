@@ -41,7 +41,57 @@ That's it! You should have a complete ERC Exercise site ready to go.
 ## Production-ready Setup
 Just a few more things to get you ready for go-time.
 
-1. (Optional, but highly recommended) Consider using a reverse proxy so you can use a nice domain and HTTPS.
+1. (Optional, but highly recommended) Consider using a reverse proxy so you can use a nice domain and HTTPS. e.g., if using Apache2/httpd, you could create a config like this:
+	```apache
+	<VirtualHost *:80>
+		ServerName exercise.idahoerc.org
+
+		ServerAdmin webmaster+erc@hornbeck.us.to
+
+		ErrorLog ${APACHE_LOG_DIR}/error.log
+		CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+		RedirectMatch permanent "(.*)" "https://exercise.idahoerc.org$1"
+	</VirtualHost>
+
+	<IfModule mod_ssl.c>
+		<VirtualHost *:443>
+			ServerName exercise.idahoerc.org
+			DocumentRoot /var/www/pocketbase-erc-exercise/pb_public
+			<Directory /var/www/pocketbase-erc-exercise>
+				Options -Indexes +FollowSymLinks +Includes
+				AllowOverride All
+				Order allow,deny
+				Allow from All
+			</Directory>
+
+			ErrorLog ${APACHE_LOG_DIR}/exercise.idahoerc.org/error.log
+			CustomLog ${APACHE_LOG_DIR}/exercise.idahoerc.org/access.log vhost_combined
+
+			# enable SSL with LetsEncrypt
+			SSLCertificateFile /etc/letsencrypt/live/exercise.idahoerc.org/fullchain.pem
+			SSLCertificateKeyFile /etc/letsencrypt/live/exercise.idahoerc.org/privkey.pem
+
+			# main proxy stuff
+			ProxyPass / http://127.0.0.1:8090/ connectiontimeout=5 timeout=600
+			ProxyPassReverse / http://127.0.0.1:8090/
+
+			# special stuff for SSE
+			<Location /api/realtime>
+				# enables chunked responses from upstream to support streaming
+				SetEnv proxy-sendchunked
+				# ensures HTTP/1.0 is used from Apache to upstream (some versions of Apache have issues with HTTP/1.1 + chunking)
+				SetEnv force-proxy-request-1.0
+				# no gzip
+				SetEnvIfNoCase Request_URI "^/api/realtime" no-gzip
+
+				ProxyPass http://127.0.0.1:8090/api/realtime connectiontimeout=5 timeout=600
+				ProxyPassReverse http://127.0.0.1:8090/api/realtime
+			</Location>
+		</VirtualHost>
+	</IfModule>
+	```
+	Make sure to adjust the `ServerName` value, and the `DocumentRoot` path to point to the public directory of the repo. Also, make sure to enable the necessary Apache modules (e.g. `proxy`, `proxy_http`, `ssl`, `rewrite`, etc.) and restart the service.
 1. (Optional, but highly recommended) Create a system service for the application. e.g. for a systemd service on a Linux host, create `/etc/systemd/system/pocketbase-erc.service`:
 	```ini
 	[Unit]
@@ -57,7 +107,7 @@ Just a few more things to get you ready for go-time.
 	[Install]
 	WantedBy=multi-user.target
 	```
-1. (Sorta optional, but basically required for user sanity) Create a system service that triggers the handling of unconfirmed tasks. e.g. `/etc/systemd/system/pocketbase-erc-check.service`:
+1. (Basically required for user sanity) Create a system service that triggers the handling of unconfirmed tasks. e.g. `/etc/systemd/system/pocketbase-erc-check.service`:
 	```ini
 	[Unit]
 	Description=Pocketbase - ERC Exercise - check unconfirmed tasks
