@@ -1315,7 +1315,7 @@ ERC Exercise Admin
 				tasks.forEach(task => {
 					// determine priority badge color
 					var badge_type;
-					switch (need.expand?.item?.priority || '(deleted)') {
+					switch (task.expand?.item?.priority || '(deleted)') {
 						case 'Emergency': badge_type = 'danger'; break;
 						case 'Priority': badge_type = 'warning'; break;
 						case 'Welfare': badge_type = 'primary'; break;
