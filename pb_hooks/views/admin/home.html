@@ -333,6 +333,23 @@ ERC Exercise Admin
 
 	<!-- users tab -->
 	<div class="tab-pane fade" id="admin-users" role="tabpanel" aria-labelledby="users-tab">
+		<div class="row mb-2">
+			<div class="col text-end">
+				<button
+					type="button"
+					class="btn btn-warning mb-1"
+					id="reset-all-rejects-btn"
+					data-bs-toggle="modal"
+					data-bs-target="#confirm_modal"
+					data-bs-collection="user"
+					data-bs-id=""
+					data-bs-name=""
+					data-bs-action='reset all "rejected" counts for'
+				>
+					Reset All Reject #s
+				</button>
+			</div>
+		</div>
 		<!-- users table -->
 		<table class="table table-striped table-hover mb-0">
 			<thead>
@@ -506,11 +523,14 @@ ERC Exercise Admin
 			const objectId = button.data('bs-id');
 			const objectName = button.data('bs-name');
 
+			// batch actions
+			const isBatchAction = ['delete all', 'reset all "rejected" counts for'].includes(action);
+
 			// update the modal's content
 			const modal = $(this);
 			modal.find('#action_name').text(action);
-			modal.find('#item_name').text(action === 'delete all' ? '' : `"${objectName}"`);
-			modal.find('#collection_name').text(action === 'delete all' ? collection+'s' : collection);
+			modal.find('#item_name').text(isBatchAction ? '' : `"${objectName}"`);
+			modal.find('#collection_name').text(isBatchAction ? collection+'s' : collection);
 			modal.find('#action_confirm')
 				.data('bs-id', objectId)
 				.data('bs-collection', collection)
@@ -584,6 +604,31 @@ ERC Exercise Admin
 					.catch(err => {
 						console.error(`Error getting list to delete all ${collection}s:`, err);
 						alert(`Error getting list to delete all ${collection}s: ${err.message}`);
+						modal.modal('hide');
+						btn.prop('disabled', false);
+					});
+			// reset all rejection counts
+			} else if (action === 'reset all "rejected" counts for' && collection === 'users') {
+				pb.collection('users').getFullList({requestKey: null})
+					.then(users => {
+						let queue = Promise.resolve();
+						users.forEach(user => {
+							queue = queue.then(async () => {
+								try {
+									await pb.collection('users').update(user.id, { rejected: 0 });
+								} catch (err) {
+									console.error(`Error resetting rejection count for user ${user.id}:`, err);
+									alert(`Error resetting rejection count for user ${user.id}: ${err.message}`);
+								}
+							});
+						});
+						queue.then(() => {
+							modal.modal('hide');
+							btn.prop('disabled', false);
+						});
+					})
+					.catch(err => {
+						alert('Error resetting all reject counts: ' + err.message);
 						modal.modal('hide');
 						btn.prop('disabled', false);
 					});
