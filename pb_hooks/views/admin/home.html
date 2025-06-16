@@ -348,8 +348,15 @@ ERC Exercise Admin
 				>
 					Reset All Reject #s
 				</button>
+				<button
+					type="button"
+					class="btn btn-primary mb-1 ms-2"
+					id="export-users-csv-btn"
+				>
+					Export Users CSV
+				</button>
 			</div>
-		</div>
+	</div>
 		<!-- users table -->
 		<table class="table table-striped table-hover mb-0">
 			<thead>
@@ -1267,6 +1274,55 @@ ERC Exercise Admin
 		}
 		updateUsers();
 		pb.collection('users').subscribe('*', updateUsers);
+
+		// export users csv
+		$('#export-users-csv-btn').on('click', function () {
+			const btn = $(this);
+			btn.prop('disabled', true);
+
+			pb.collection('users').getFullList({
+				sort: 'name',
+				expand: 'stake,stake.region'
+			}).then(users => {
+				const csvRows = [];
+				csvRows.push([
+					'Name',
+					'Email',
+					'Callsign',
+					'Service',
+					'Stake',
+					'Region',
+					'Rejected'
+				]);
+				users.forEach(user => {
+					const stake = user.expand?.stake?.name || '';
+					const region = user.expand?.stake?.expand?.region?.name || '';
+					csvRows.push([
+						user.name || '',
+						user.email || '',
+						user.callsign || '',
+						user.comm_type || '',
+						stake,
+						region,
+						user.rejected != null ? user.rejected : ''
+					]);
+				});
+				const csv = Papa.unparse(csvRows);
+				const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'users.csv';
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+				URL.revokeObjectURL(url);
+				btn.prop('disabled', false);
+			}).catch(err => {
+				alert('Error exporting users: ' + err.message);
+				btn.prop('disabled', false);
+			});
+		});
 
 		// handle user modal
 		$('#user_modal').on('show.bs.modal', function (event) {
