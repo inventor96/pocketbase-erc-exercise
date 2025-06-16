@@ -1,8 +1,10 @@
 # Pocketbase ERC Exercise
 ## Description
-This is a simple application written for the [Pocketbase backend and framework](https://pocketbase.io/). The general idea is to generate need/resource pairs to give a real reason to pass around radio traffic for an ERC exercise. One user/participate/operator is assigned the need, and another one is assigned the matching resource. It's then the responsibility of "need" user (and the necessary net control stations) to then find the "resource" user. The app works with three scopes: stakes, regions, and storehouse (the top level, i.e. global). The app spreads the pair across scopes as configured per exercise.
+The hardest part of any communications exercise is having something to talk about or to do. This application is designed to help with that by generating need/resource pairs for users (i.e. participants) to find and fulfill during an exercise. One user is assigned the need, and another one is assigned the matching resource. It's then the responsibility of "need" user (and the necessary net control stations) to then find the "resource" user. The app works with three scopes: stakes, regions, and storehouse (the top level, i.e. global). The app spreads the pairs across scopes as configured per exercise.
 
 The application is built to handle only one exercise at a time. If more than one exercise needs to happen at a time, you should create separate instances.
+
+This application is built on [PocketBase](https://pocketbase.io/), which provides authentication, user management, a SQLite database, and realtime updates to the frontend via server-sent events (SSE). The frontend is built with [jQuery](https://jquery.com/), the [PocketBase JS SDK](https://github.com/pocketbase/js-sdk) and [Bootstrap](https://getbootstrap.com/).
 
 ## Setup
 Note that these setup instructions are geared toward Linux hosts. You'll have to adjust and refactor stuff as necessary for other platforms.
