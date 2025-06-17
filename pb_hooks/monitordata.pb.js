@@ -71,13 +71,22 @@ routerAdd("GET", "/monitordata", function (c) {
 		"count": 0,
 	}))
 	$app.dao().db()
-		.newQuery("SELECT users.comm_type AS name, COUNT(DISTINCT users.id) AS count\
-			FROM tasks\
-			LEFT JOIN users ON tasks.resource_user = users.id\
-			LEFT JOIN stakes ON users.stake = stakes.id\
-			LEFT JOIN regions ON stakes.region = regions.id\
-			WHERE tasks.created BETWEEN {:start} AND {:end}\
-			GROUP BY comm_type\
+		.newQuery("SELECT users.comm_type AS name, COUNT(DISTINCT user_participation.id) AS count\
+			FROM (\
+				SELECT users.id, users.comm_type\
+				FROM tasks\
+				LEFT JOIN users ON tasks.resource_user = users.id\
+				WHERE tasks.resource_confirmed = true\
+					AND tasks.created BETWEEN {:start} AND {:end}\
+				UNION\
+				SELECT users.id, users.comm_type\
+				FROM tasks\
+				LEFT JOIN users ON tasks.need_user = users.id\
+				WHERE (tasks.completed != '' OR tasks.cancelled != '')\
+					AND tasks.created BETWEEN {:start} AND {:end}\
+			) AS user_participation\
+			LEFT JOIN users ON users.id = user_participation.id\
+			GROUP BY users.comm_type\
 			ORDER BY count DESC, name")
 		.bind({
 			"start": reporting_exercise.start,
