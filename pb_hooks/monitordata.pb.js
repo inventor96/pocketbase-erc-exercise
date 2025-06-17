@@ -41,11 +41,20 @@ routerAdd("GET", "/monitordata", function (c) {
 	}))
 	$app.dao().db()
 		.newQuery("SELECT regions.name AS name, COUNT(DISTINCT users.id) AS participants\
-			FROM tasks\
-			LEFT JOIN users ON tasks.resource_user = users.id\
-			LEFT JOIN stakes ON users.stake = stakes.id\
+			FROM (\
+				SELECT users.id, users.stake\
+				FROM tasks\
+				LEFT JOIN users ON tasks.resource_user = users.id\
+				WHERE tasks.resource_confirmed = true\
+					AND tasks.created BETWEEN {:start} AND {:end}\
+				UNION\
+				SELECT users.id, users.stake\
+				FROM tasks\
+				LEFT JOIN users ON tasks.need_user = users.id\
+				WHERE tasks.created BETWEEN {:start} AND {:end}\
+			) AS user_participation\
+			LEFT JOIN stakes ON user_participation.stake = stakes.id\
 			LEFT JOIN regions ON stakes.region = regions.id\
-			WHERE tasks.created BETWEEN {:start} AND {:end}\
 			GROUP BY regions.name\
 			ORDER BY regions.name")
 		.bind({
