@@ -1,4 +1,4 @@
-# Pocketbase ERC Exercise
+# PocketBase ERC Exercise
 ## Description
 The hardest part of any communications exercise is having something to talk about or to do. This application is designed to help with that by generating need/resource pairs for users (i.e. participants/operators) to find and fulfill during an exercise. One user is assigned the need, and another one is assigned the matching resource. It's then the responsibility of "need" user (and the necessary net control stations) to then find the "resource" user. The app works with three scopes: stakes, regions, and storehouse (the top level, i.e. global). The app spreads the pairs across scopes as configured per exercise.
 

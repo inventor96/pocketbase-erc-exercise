@@ -435,7 +435,19 @@ ERC Exercise Admin
 	<!-- tasks tab -->
 	<div class="tab-pane fade" id="admin-tasks" role="tabpanel" aria-labelledby="tasks-tab">
 		<div class="row mb-2">
-			<div class="col text-end">
+			<div class="col">
+				<div class="row">
+					<div class="col-auto">
+						<label for="tasks_exercise_filter" class="col-form-label fw-bold">Filter by Exercise:</label>
+					</div>
+					<div class="col-auto">
+						<select id="tasks_exercise_filter" class="form-select" disabled>
+							<option value="" disabled selected>Loading...</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="col-auto text-end">
 				<button
 					type="button"
 					class="btn btn-primary mb-1 ms-2"
@@ -679,9 +691,17 @@ ERC Exercise Admin
 
 		// update list of exercises
 		function updateExercises(exercises) {
+			// reset the exercises table
 			const tbody = $('#exercise-list');
 			tbody.empty();
 
+			// reset the exercises filter and note the current value
+			const tasks_exercise_filter = $('#tasks_exercise_filter');
+			const current_tasks_exercise_filter = tasks_exercise_filter.val();
+			tasks_exercise_filter.prop('disabled', true);
+			tasks_exercise_filter.empty();
+
+			// fetch exercises from the database
 			pb.collection('exercises').getFullList({sort: '-start', requestKey: 'exercises'}).then(exercises => {
 				// check if the exercises array is empty
 				if (exercises.length === 0) {
@@ -694,6 +714,11 @@ ERC Exercise Admin
 							</td>
 						</tr>
 					`);
+
+					// update tasks filter
+					tasks_exercise_filter.append('<option value="" disabled selected>No exercises found</option>');
+					tasks_exercise_filter.prop('disabled', true);
+					updateTasks();
 					return;
 				}
 
@@ -719,6 +744,25 @@ ERC Exercise Admin
 					`);
 					tbody.append(tr);
 				});
+
+				// update the exercise filter select options
+				exercises.forEach(exercise => {
+					const option = $(`
+						<option value="${exercise.id}" data-start="${exercise.start}" data-end="${exercise.end}">${exercise.name} (${new Date(exercise.start).toLocaleString()} - ${new Date(exercise.end).toLocaleString()})</option>
+					`);
+					tasks_exercise_filter.append(option);
+				});
+				tasks_exercise_filter.append('<option value="">All exercises</option>');
+				tasks_exercise_filter.prop('disabled', false);
+
+				// if the current tasks filter value is still valid, set it
+				if (current_tasks_exercise_filter && tasks_exercise_filter.find(`option[value="${current_tasks_exercise_filter}"]`).length) {
+					tasks_exercise_filter.val(current_tasks_exercise_filter);
+				} else {
+					// select the first option if no valid current filter
+					tasks_exercise_filter.val(tasks_exercise_filter.find('option').first().val());
+					updateTasks();
+				}
 			}).catch(err => {
 				console.error('Error fetching exercises:', err);
 				tbody.append(`
@@ -730,6 +774,11 @@ ERC Exercise Admin
 						</td>
 					</tr>
 				`);
+
+				// update tasks filter
+				tasks_exercise_filter.append('<option value="" disabled selected>Error loading exercises</option>');
+				tasks_exercise_filter.prop('disabled', true);
+				updateTasks();
 			});
 		}
 		updateExercises();
@@ -1411,7 +1460,19 @@ ERC Exercise Admin
 			const tbody = $('#task-list');
 			tbody.empty();
 
+			// get start and end dates from the selected exercise filter, if selected
+			const tasks_exercise_filter = $('#tasks_exercise_filter');
+			let selectedExercise = null;
+			let startDate = '';
+			let endDate = '';
+			if (tasks_exercise_filter.val()) {
+				selectedExercise = tasks_exercise_filter.find('option:selected');
+				startDate = selectedExercise.data('start');
+				endDate = selectedExercise.data('end');
+			}
+
 			pb.collection('tasks').getFullList({
+				filter: selectedExercise ? `created >= "${startDate}" && created <= "${endDate}"` : '',
 				sort: 'created',
 				requestKey: 'tasks',
 				expand: 'resource_user,need_user,item,resource_user.stake,need_user.stake',
@@ -1477,15 +1538,31 @@ ERC Exercise Admin
 				`);
 			});
 		}
-		updateTasks();
+		// updateTasks(); // will be called after exercises are loaded
 		pb.collection('tasks').subscribe('*', updateTasks);
+
+		// handle task filter change
+		$('#tasks_exercise_filter').on('change', updateTasks);
 
 		// export tasks csv
 		$('#export-tasks-csv-btn').on('click', function () {
 			const btn = $(this);
 			btn.prop('disabled', true);
 
+			// get start and end dates from the selected exercise filter, if selected
+			const tasks_exercise_filter = $('#tasks_exercise_filter');
+			let selectedExercise = null;
+			let startDate = '';
+			let endDate = '';
+			if (tasks_exercise_filter.val()) {
+				selectedExercise = tasks_exercise_filter.find('option:selected');
+				startDate = selectedExercise.data('start');
+				endDate = selectedExercise.data('end');
+			}
+
+			// fetch tasks with the selected filter
 			pb.collection('tasks').getFullList({
+				filter: selectedExercise ? `created >= "${startDate}" && created <= "${endDate}"` : '',
 				sort: 'created',
 				expand: 'resource_user,need_user,item,resource_user.stake,need_user.stake,resource_user.stake.region,need_user.stake.region',
 			}).then(tasks => {
