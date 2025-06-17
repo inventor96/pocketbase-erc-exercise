@@ -51,7 +51,8 @@ routerAdd("GET", "/monitordata", function (c) {
 				SELECT users.id, users.stake\
 				FROM tasks\
 				LEFT JOIN users ON tasks.need_user = users.id\
-				WHERE tasks.created BETWEEN {:start} AND {:end}\
+				WHERE (tasks.completed != '' OR tasks.cancelled != '')\
+					AND tasks.created BETWEEN {:start} AND {:end}\
 			) AS user_participation\
 			LEFT JOIN stakes ON user_participation.stake = stakes.id\
 			LEFT JOIN regions ON stakes.region = regions.id\
