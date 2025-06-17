@@ -40,7 +40,7 @@ routerAdd("GET", "/monitordata", function (c) {
 		"participants": 0,
 	}))
 	$app.dao().db()
-		.newQuery("SELECT regions.name AS name, COUNT(DISTINCT users.id) AS participants\
+		.newQuery("SELECT regions.name AS name, COUNT(DISTINCT user_participation.id) AS participants\
 			FROM (\
 				SELECT users.id, users.stake\
 				FROM tasks\
