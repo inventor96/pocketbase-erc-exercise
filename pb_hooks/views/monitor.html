@@ -297,7 +297,13 @@
 
 			function updateDisplay() {
 				// get the data using jquery
-				$.getJSON('/monitordata', function(data) {
+				const urlParams = new URLSearchParams(window.location.search)
+				let monitorDataUrl = '/monitordata'
+				const idParam = urlParams.get('exercise_id')
+				if (idParam && idParam.trim() !== '') {
+					monitorDataUrl += `?exercise_id=${encodeURIComponent(idParam)}`
+				}
+				$.getJSON(monitorDataUrl, function(data) {
 					// update the display
 					$('#participants').text(data.participants.total)
 					$('#registered_users').text(data.participants.registered)

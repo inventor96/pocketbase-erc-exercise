@@ -529,6 +529,8 @@ ERC Exercise Admin
 <script src="/papaparse.min.js"></script>
 <script type="text/javascript">
 	$(() => {
+		//#region general
+
 		// tooltips
 		[...$('[data-bs-title]')].map(el => new bootstrap.Tooltip(el));
 
@@ -675,6 +677,8 @@ ERC Exercise Admin
 			}
 		});
 
+		//#endregion
+
 		//#region configuration tab
 
 		// update list of exercises
@@ -712,6 +716,8 @@ ERC Exercise Admin
 								}
 								<a href="/admin/exercise/${exercise.id}" class="btn btn-primary m-1">View/Edit</a>
 								<button type="button" class="btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="exercise" data-bs-id="${exercise.id}" data-bs-name="${exercise.name}" data-bs-action="delete">Delete</button>
+								<a href="/monitor?exercise_id=${exercise.id}" class="btn btn-primary m-1" target="_blank">Monitor</a>
+								<a href="/report?exercise_id=${exercise.id}" class="btn btn-primary m-1" target="_blank">Report</a>
 							</td>
 						</tr>
 					`);
