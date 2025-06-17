@@ -3,50 +3,474 @@ ERC Exercise Admin
 {{end}}
 
 {{define "container"}}
-<div class="row">
+<div class="row mb-3">
 	<div class="col">
 		<h1>ERC Exercise Admin</h1>
 	</div>
 	<div class="col-auto text-end">
-		<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#pb_admin_modal" data-bs-title="With great power comes great responsibility.">
+		<button type="button" class="btn btn-secondary mb-1" data-bs-toggle="modal" data-bs-target="#pb_admin_modal" data-bs-title="With great power comes great responsibility.">
 			PocketBase Admin
 			<i class="ms-1 bi bi-box-arrow-up-right"></i>
 		</button>
-		<a href="/item-pool" target="_blank" class="btn btn-secondary" data-bs-title="A JSON report to display the items eligible for assignments.">
+		<a href="/item-pool" target="_blank" class="btn btn-secondary mb-1" data-bs-title="A JSON report to display the items eligible for assignments.">
 			Item Pool
-			<i class="ms-1 bi bi-box-arrow-up-right"></i>
-		</a>
-		<a href="/monitor" target="_blank" class="btn btn-primary" data-bs-title="A live view of the current exercise, participants and assignments.">
-			Monitor
 			<i class="ms-1 bi bi-box-arrow-up-right"></i>
 		</a>
 	</div>
 </div>
 
-<!-- exercises table -->
-<div class="card mb-5">
-	<div class="card-body">
-		<div class="row">
-			<div class="col">
-				<h4 class="card-title">Exercises</h4>
-			</div>
-			<div class="col text-end">
-				<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="exercise" data-bs-action="delete all">Delete All</button>
-				<a href="/admin/exercise/new" class="btn btn-success">New Exercise</a>
+<!-- admin tabs -->
+<ul class="nav nav-tabs mb-4" id="admin-tabs" role="tablist">
+	<li class="nav-item" role="presentation">
+		<button class="nav-link active" id="config-tab" data-bs-toggle="tab" data-bs-target="#admin-config" role="tab" aria-controls="admin-config" aria-selected="true">Configuration</button>
+	</li>
+	<li class="nav-item" role="presentation">
+		<button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#admin-users" role="tab" aria-controls="admin-users" aria-selected="false">Users</button>
+	</li>
+	<li class="nav-item" role="presentation">
+		<button class="nav-link" id="tasks-tab" data-bs-toggle="tab" data-bs-target="#admin-tasks" role="tab" aria-controls="admin-tasks" aria-selected="false">Tasks</button>
+	</li>
+</ul>
+
+<!-- admin tab content -->
+<div class="tab-content" id="admin-tabs-content">
+
+	<!-- configuration tab -->
+	<div class="tab-pane fade show active" id="admin-config" role="tabpanel" aria-labelledby="config-tab">
+		<!-- exercises table -->
+		<div class="card mb-5">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-auto">
+						<h4 class="card-title">Exercises</h4>
+					</div>
+					<div class="col text-end">
+						<button type="button" class="btn btn-danger mb-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="exercise" data-bs-action="delete all">Delete All</button>
+						<a href="/admin/exercise/new" class="btn btn-success mb-1">New Exercise</a>
+					</div>
+				</div>
+				
+				<table class="table table-striped table-hover mb-0">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Start</th>
+							<th>End</th>
+							<th>Started</th>
+							<th class="text-end">Actions</th>
+						</tr>
+					</thead>
+					<tbody id="exercise-list">
+						<tr>
+							<td colspan="5" class="text-center">
+								<div class="d-flex justify-content-center align-items-center">
+									<div class="spinner-border me-2" role="status" aria-hidden="true"></div>
+									<span>loading...</span>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 		
+		<!-- regions table -->
+		<div class="card mb-5">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-auto">
+						<h4 class="card-title">Regions</h4>
+					</div>
+					<div class="col text-end">
+						<button type="button" class="btn btn-danger mb-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="region" data-bs-action="delete all">Delete All</button>
+						<button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#csv_modal" data-bs-type="region" data-bs-columns="Name">Upload CSV</button>
+						<button type="button" class="btn btn-success mb-1" data-bs-toggle="modal" data-bs-target="#region_modal" data-bs-name="" data-bs-id="">New Region</button>
+					</div>
+				</div>
+				<table class="table table-striped table-hover mb-0">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th class="text-end">Actions</th>
+						</tr>
+					</thead>
+					<tbody id="region-list">
+						<tr>
+							<td colspan="2" class="text-center">
+								<div class="d-flex justify-content-center align-items-center">
+									<div class="spinner-border me-2" role="status" aria-hidden="true"></div>
+									<span>loading...</span>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		
+		<!-- stakes table -->
+		<div class="card mb-5">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-auto">
+						<h4 class="card-title">Stakes</h4>
+					</div>
+					<div class="col text-end">
+						<button type="button" class="btn btn-danger mb-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="stake" data-bs-action="delete all">Delete All</button>
+						<button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#csv_modal" data-bs-type="stake" data-bs-columns="Name|Region (the name of an existing Region)">Upload CSV</button>
+						<button type="button" class="btn btn-success mb-1" data-bs-toggle="modal" data-bs-target="#stake_modal" data-bs-name="" data-bs-id="" data-bs-region="">New Stake</button>
+					</div>
+				</div>
+				<table class="table table-striped table-hover mb-0">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Region</th>
+							<th class="text-end">Actions</th>
+						</tr>
+					</thead>
+					<tbody id="stake-list">
+						<tr>
+							<td colspan="3" class="text-center">
+								<div class="d-flex justify-content-center align-items-center">
+									<div class="spinner-border me-2" role="status" aria-hidden="true"></div>
+									<span>loading...</span>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		
+		<!-- items table -->
+		<div class="card mb-5">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-auto">
+						<h4 class="card-title">Items</h4>
+					</div>
+					<div class="col text-end">
+						<button type="button" class="btn btn-danger mb-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="item" data-bs-action="delete all">Delete All</button>
+						<button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#csv_modal" data-bs-type="item" data-bs-columns='Description|Quantity (can be more than just a number, e.g. "pack of 80")|Priority (one of: Emergency, Priority, Welfare, Routine)'>Upload CSV</button>
+						<button type="button" class="btn btn-success mb-1" data-bs-toggle="modal" data-bs-target="#item_modal" data-bs-description="" data-bs-id="" data-bs-quantity="" data-bs-priority="">New Item</button>
+					</div>
+				</div>
+				
+				<table class="table table-striped table-hover mb-0">
+					<thead>
+						<tr>
+							<th>Description</th>
+							<th>Quantity</th>
+							<th>Priority</th>
+							<th class="text-end">Actions</th>
+						</tr>
+					</thead>
+					<tbody id="item-list">
+						<tr>
+							<td colspan="4" class="text-center">
+								<div class="d-flex justify-content-center align-items-center">
+									<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#load_items_modal">Load Items...</button>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		
+		<!-- create/edit region modal -->
+		<div class="modal fade" id="region_modal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title"><span id="region_modal_title">Edit</span> Region</h4>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form id="region_form">
+							<div class="mb-4">
+								<label for="region_name" class="form-label fs-5 fw-bold">Name</label>
+								<input type="text" class="form-control" id="region_name" name="region_name" required minlength="3">
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+						<button type="button" id="region_confirm" class="btn btn-primary" data-bs-dismiss="modal" data-bs-id="">Save</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- create/edit stake modal -->
+		<div class="modal fade" id="stake_modal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title"><span id="stake_modal_title">Edit</span> Stake</h4>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form id="stake_form">
+							<div class="mb-4">
+								<label for="stake_name" class="form-label fs-5 fw-bold">Name</label>
+								<input type="text" class="form-control" id="stake_name" name="stake_name" required minlength="3">
+							</div>
+							<div class="mb-4">
+								<label for="stake_region" class="form-label fs-5 fw-bold">Region</label>
+								<select class="form-select" id="stake_region" name="stake_region" required>
+									<option value="" disabled selected>Select a region</option>
+								</select>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+						<button type="button" id="stake_confirm" class="btn btn-primary" data-bs-dismiss="modal" data-bs-id="">Save</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- create/edit item modal -->
+		<div class="modal fade" id="item_modal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title"><span id="item_modal_title">Edit</span> Item</h4>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form id="item_form">
+							<div class="mb-4">
+								<label for="item_description" class="form-label fs-5 fw-bold">Description</label>
+								<input type="text" class="form-control" id="item_description" name="item_description" required minlength="3">
+							</div>
+							<div class="mb-4">
+								<label for="item_quantity" class="form-label fs-5 fw-bold">Quantity</label>
+								<input type="text" class="form-control" id="item_quantity" name="item_quantity" required minlength="1">
+								<div class="form-text"><i class="bi bi-info-circle-fill text-primary"></i> Can be more than just a number, e.g. "pack of 80"</div>
+							</div>
+							<div class="mb-4">
+								<label for="item_priority" class="form-label fs-5 fw-bold">Priority</label>
+								<select class="form-select" id="item_priority" name="item_priority" required>
+									<option value="" disabled selected>Select priority</option>
+									<option value="Emergency">Emergency</option>
+									<option value="Priority">Priority</option>
+									<option value="Welfare">Welfare</option>
+									<option value="Routine">Routine</option>
+								</select>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+						<button type="button" id="item_confirm" class="btn btn-primary" data-bs-dismiss="modal" data-bs-id="">Save</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- load items modal -->
+		<div class="modal fade" id="load_items_modal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Load Items?</h4>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>Are you sure you want to load items from the database? If you have a large number of items, this can affect the performance of your browser. If you find your browser is unreasonably slow or freezes, reload or close and reopen the tab.</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+						<button type="button" id="load_items_confirm" class="btn btn-primary" data-bs-dismiss="modal">Continue</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- csv upload modal -->
+		<div class="modal fade" id="csv_modal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Upload CSV</h4>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>
+							Let's get started on this upload! To upload <span class="upload-type"></span>s, you need a CSV file with the following columns:
+							<ul id="upload_columns"></ul>
+						</p>
+						<p>
+							The file should include headers (i.e. the first row being the column names). The headers are <b>case-sensitive</b>, but they can be in any order.
+						</p>
+						<p>
+							If there is an existing <span class="upload-type"></span> with the same details as a row in the CSV file, that row will be skipped. Otherwise, a new one will be created.
+						</p>
+						<p>
+							There's technically no file size limit (because the file is only processed by your browser, not the server). But if you have a large number of <span class="upload-type"></span>s, it can take a while to import everything, so please be paitent.
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+						<label for="imported_file" role="button" id="import_confirm" class="btn btn-primary">
+							<span class="spinner-grow spinner-grow-sm"></span>
+							<span id="import_confirm_label">Select File...</span>
+							<input type="file" id="imported_file" accept=".csv" class="d-none" data-type="">
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- users tab -->
+	<div class="tab-pane fade" id="admin-users" role="tabpanel" aria-labelledby="users-tab">
+		<div class="row mb-2">
+			<div class="col text-end">
+				<button
+					type="button"
+					class="btn btn-warning mb-1"
+					id="reset-all-rejects-btn"
+					data-bs-toggle="modal"
+					data-bs-target="#confirm_modal"
+					data-bs-collection="user"
+					data-bs-id=""
+					data-bs-name=""
+					data-bs-action='reset all "rejected" counts for'
+				>
+					Reset All Reject #s
+				</button>
+				<button
+					type="button"
+					class="btn btn-primary mb-1 ms-2"
+					id="export-users-csv-btn"
+				>
+					<span class="spinner-grow spinner-grow-sm"></span>
+					Export Users CSV
+				</button>
+			</div>
+		</div>
+
+		<!-- users table -->
 		<table class="table table-striped table-hover mb-0">
 			<thead>
 				<tr>
 					<th>Name</th>
-					<th>Start</th>
-					<th>End</th>
-					<th>Started</th>
+					<th>Email</th>
+					<th>Callsign</th>
+					<th>Service</th>
+					<th>Stake/Region</th>
+					<th>Ready</th>
+					<th>Rejected</th>
 					<th class="text-end">Actions</th>
 				</tr>
 			</thead>
-			<tbody id="exercise-list">
+			<tbody id="user-list">
+				<tr>
+					<td colspan="8" class="text-center">
+						<div class="d-flex justify-content-center align-items-center">
+							<div class="spinner-border me-2" role="status" aria-hidden="true"></div>
+							<span>loading...</span>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<!-- edit user modal -->
+		<div class="modal fade" id="user_modal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Edit User</h4>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form id="user_form">
+							<div class="mb-4">
+								<label for="user_name" class="form-label fs-5 fw-bold">Name</label>
+								<input type="text" class="form-control" id="user_name" name="user_name" required minlength="3">
+							</div>
+							<div class="mb-4">
+								<label for="user_email" class="form-label fs-5 fw-bold">Email</label>
+								<input type="email" class="form-control" id="user_email" name="user_email" required>
+							</div>
+							<div class="mb-4">
+								<label for="user_callsign" class="form-label fs-5 fw-bold">Callsign</label>
+								<input type="text" class="form-control" id="user_callsign" name="user_callsign" required minlength="3">
+							</div>
+							<div class="mb-4">
+								<label for="user_comm_type" class="form-label fs-5 fw-bold">Service</label>
+								<select class="form-select" id="user_comm_type" name="user_comm_type" required>
+									<option value="" disabled selected>Select a service</option>
+									<option value="Ham">Ham</option>
+									<option value="GMRS/FRS">GMRS/FRS</option>
+									<option value="MURS">MURS</option>
+									<option value="Commercial">Commercial</option>
+									<option value="Satellite">Satellite</option>
+									<option value="Other">Other</option>
+								</select>
+							</div>
+							<div class="mb-4">
+								<label for="user_stake" class="form-label fs-5 fw-bold">Stake</label>
+								<select class="form-select" id="user_stake" name="user_stake" required>
+									<option value="" disabled selected>Select a Stake</option>
+								</select>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+						<button type="button" id="user_confirm" class="btn btn-primary" data-bs-dismiss="modal" data-bs-id="">Save</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- tasks tab -->
+	<div class="tab-pane fade" id="admin-tasks" role="tabpanel" aria-labelledby="tasks-tab">
+		<div class="row mb-2">
+			<div class="col">
+				<div class="row">
+					<div class="col-auto">
+						<label for="tasks_exercise_filter" class="col-form-label fw-bold">Filter by Exercise:</label>
+					</div>
+					<div class="col-auto">
+						<select id="tasks_exercise_filter" class="form-select" disabled>
+							<option value="" disabled selected>Loading...</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="col-auto text-end">
+				<button
+					type="button"
+					class="btn btn-primary mb-1 ms-2"
+					id="export-tasks-csv-btn"
+				>
+					<span class="spinner-grow spinner-grow-sm"></span>
+					Export Tasks CSV
+				</button>
+			</div>
+		</div>
+
+		<!-- tasks table -->
+		<table class="table table-striped table-hover mb-0">
+			<thead>
+				<tr>
+					<th>Item</th>
+					<th>Need User</th>
+					<th>Resource User</th>
+					<th>Scope</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody id="task-list">
 				<tr>
 					<td colspan="5" class="text-center">
 						<div class="d-flex justify-content-center align-items-center">
@@ -58,110 +482,28 @@ ERC Exercise Admin
 			</tbody>
 		</table>
 	</div>
+
 </div>
 
-<!-- regions table -->
-<div class="card mb-5">
-	<div class="card-body">
-		<div class="row">
-			<div class="col">
-				<h4 class="card-title">Regions</h4>
+<!-- action confirmation modal -->
+<div class="modal fade" id="confirm_modal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Are you sure?</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="col text-end">
-				<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="region" data-bs-action="delete all">Delete All</button>
-				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csv_modal" data-bs-type="region" data-bs-columns="Name">Upload CSV</button>
-				<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#region_modal" data-bs-name="" data-bs-id="">New Region</button>
+			<div class="modal-body">
+				<p>Are you sure you want to <span id="action_name"></span> the <span id="item_name"></span> <span id="collection_name"></span>?</p>
 			</div>
-		</div>
-		<table class="table table-striped table-hover mb-0">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th class="text-end">Actions</th>
-				</tr>
-			</thead>
-			<tbody id="region-list">
-				<tr>
-					<td colspan="2" class="text-center">
-						<div class="d-flex justify-content-center align-items-center">
-							<div class="spinner-border me-2" role="status" aria-hidden="true"></div>
-							<span>loading...</span>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</div>
-
-<!-- stakes table -->
-<div class="card mb-5">
-	<div class="card-body">
-		<div class="row">
-			<div class="col">
-				<h4 class="card-title">Stakes</h4>
-			</div>
-			<div class="col text-end">
-				<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="stake" data-bs-action="delete all">Delete All</button>
-				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csv_modal" data-bs-type="stake" data-bs-columns="Name|Region (the name of an existing Region)">Upload CSV</button>
-				<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#stake_modal" data-bs-name="" data-bs-id="" data-bs-region="">New Stake</button>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				<button type="button" id="action_confirm" class="btn btn-primary" data-bs-collection="" data-bs-id="">
+					<span class="spinner-grow spinner-grow-sm"></span>
+					Yes
+				</button>
 			</div>
 		</div>
-		<table class="table table-striped table-hover mb-0">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Region</th>
-					<th class="text-end">Actions</th>
-				</tr>
-			</thead>
-			<tbody id="stake-list">
-				<tr>
-					<td colspan="3" class="text-center">
-						<div class="d-flex justify-content-center align-items-center">
-							<div class="spinner-border me-2" role="status" aria-hidden="true"></div>
-							<span>loading...</span>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</div>
-
-<!-- items table -->
-<div class="card mb-5">
-	<div class="card-body">
-		<div class="row">
-			<div class="col">
-				<h4 class="card-title">Items</h4>
-			</div>
-			<div class="col text-end">
-				<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="item" data-bs-action="delete all">Delete All</button>
-				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csv_modal" data-bs-type="item" data-bs-columns='Description|Quantity (can be more than just a number, e.g. "pack of 80")|Priority (one of: Emergency, Priority, Welfare, Routine)'>Upload CSV</button>
-				<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#item_modal" data-bs-description="" data-bs-id="" data-bs-quantity="" data-bs-priority="">New Item</button>
-			</div>
-		</div>
-		
-		<table class="table table-striped table-hover mb-0">
-			<thead>
-				<tr>
-					<th>Description</th>
-					<th>Quantity</th>
-					<th>Priority</th>
-					<th class="text-end">Actions</th>
-				</tr>
-			</thead>
-			<tbody id="item-list">
-				<tr>
-					<td colspan="4" class="text-center">
-						<div class="d-flex justify-content-center align-items-center">
-							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#load_items_modal">Load Items...</button>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
 	</div>
 </div>
 
@@ -189,178 +531,14 @@ ERC Exercise Admin
 		</div>
 	</div>
 </div>
-
-<!-- action confirmation modal -->
-<div class="modal fade" id="confirm_modal" tabindex="-1">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title">Are you sure?</h4>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<p>Are you sure you want to <span id="action_name"></span> the <span id="item_name"></span> <span id="collection_name"></span>?</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				<button type="button" id="action_confirm" class="btn btn-primary" data-bs-collection="" data-bs-id="">
-					<span class="spinner-grow spinner-grow-sm"></span>
-					Yes
-				</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- create/edit region modal -->
-<div class="modal fade" id="region_modal" tabindex="-1">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title"><span id="region_modal_title">Edit</span> Region</h4>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<form id="region_form">
-					<div class="mb-4">
-						<label for="region_name" class="form-label fs-5 fw-bold">Name</label>
-						<input type="text" class="form-control" id="region_name" name="region_name" required minlength="3">
-					</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				<button type="button" id="region_confirm" class="btn btn-primary" data-bs-dismiss="modal" data-bs-id="">Save</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- create/edit stake modal -->
-<div class="modal fade" id="stake_modal" tabindex="-1">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title"><span id="stake_modal_title">Edit</span> Stake</h4>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<form id="stake_form">
-					<div class="mb-4">
-						<label for="stake_name" class="form-label fs-5 fw-bold">Name</label>
-						<input type="text" class="form-control" id="stake_name" name="stake_name" required minlength="3">
-					</div>
-					<div class="mb-4">
-						<label for="stake_region" class="form-label fs-5 fw-bold">Region</label>
-						<select class="form-select" id="stake_region" name="stake_region" required>
-							<option value="" disabled selected>Select a region</option>
-						</select>
-					</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				<button type="button" id="stake_confirm" class="btn btn-primary" data-bs-dismiss="modal" data-bs-id="">Save</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- create/edit item modal -->
-<div class="modal fade" id="item_modal" tabindex="-1">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title"><span id="item_modal_title">Edit</span> Item</h4>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<form id="item_form">
-					<div class="mb-4">
-						<label for="item_description" class="form-label fs-5 fw-bold">Description</label>
-						<input type="text" class="form-control" id="item_description" name="item_description" required minlength="3">
-					</div>
-					<div class="mb-4">
-						<label for="item_quantity" class="form-label fs-5 fw-bold">Quantity</label>
-						<input type="text" class="form-control" id="item_quantity" name="item_quantity" required minlength="1">
-						<div class="form-text"><i class="bi bi-info-circle-fill text-primary"></i> Can be more than just a number, e.g. "pack of 80"</div>
-					</div>
-					<div class="mb-4">
-						<label for="item_priority" class="form-label fs-5 fw-bold">Priority</label>
-						<select class="form-select" id="item_priority" name="item_priority" required>
-							<option value="" disabled selected>Select priority</option>
-							<option value="Emergency">Emergency</option>
-							<option value="Priority">Priority</option>
-							<option value="Welfare">Welfare</option>
-							<option value="Routine">Routine</option>
-						</select>
-					</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				<button type="button" id="item_confirm" class="btn btn-primary" data-bs-dismiss="modal" data-bs-id="">Save</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- load items modal -->
-<div class="modal fade" id="load_items_modal" tabindex="-1">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title">Load Items?</h4>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<p>Are you sure you want to load items from the database? If you have a large number of items, this can affect the performance of your browser. If you find your browser is unreasonably slow or freezes, reload or close and reopen the tab.</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				<button type="button" id="load_items_confirm" class="btn btn-primary" data-bs-dismiss="modal">Continue</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- csv upload modal -->
-<div class="modal fade" id="csv_modal" tabindex="-1">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title">Upload CSV</h4>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<p>
-					Let's get started on this upload! To upload <span class="upload-type"></span>s, you need a CSV file with the following columns:
-					<ul id="upload_columns"></ul>
-				</p>
-				<p>
-					The file should include headers (i.e. the first row being the column names). The headers are <b>case-sensitive</b>, but they can be in any order.
-				</p>
-				<p>
-					If there is an existing <span class="upload-type"></span> with the same details as a row in the CSV file, that row will be skipped. Otherwise, a new one will be created.
-				</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				<label for="imported_file" role="button" id="import_confirm" class="btn btn-primary">
-					<span class="spinner-grow spinner-grow-sm"></span>
-					<span id="import_confirm_label">Select File...</span>
-					<input type="file" id="imported_file" accept=".csv" class="d-none" data-type="">
-				</label>
-			</div>
-		</div>
-	</div>
-</div>
 {{end}}
 
 {{define "script"}}
 <script src="/papaparse.min.js"></script>
 <script type="text/javascript">
 	$(() => {
+		//#region general
+
 		// tooltips
 		[...$('[data-bs-title]')].map(el => new bootstrap.Tooltip(el));
 
@@ -369,11 +547,161 @@ ERC Exercise Admin
 			window.open('/_', '_blank');
 		});
 
+		// handle action confirmation modal
+		$('#confirm_modal').on('show.bs.modal', function (event) {
+			// get data from the button that triggered the modal
+			const button = $(event.relatedTarget);
+			const action = button.data('bs-action');
+			const collection = button.data('bs-collection');
+			const objectId = button.data('bs-id');
+			const objectName = button.data('bs-name');
+
+			// batch actions
+			const isBatchAction = ['delete all', 'reset all "rejected" counts for'].includes(action);
+
+			// update the modal's content
+			const modal = $(this);
+			modal.find('#action_name').text(action);
+			modal.find('#item_name').text(isBatchAction ? '' : `"${objectName}"`);
+			modal.find('#collection_name').text(isBatchAction ? collection+'s' : collection);
+			modal.find('#action_confirm')
+				.data('bs-id', objectId)
+				.data('bs-collection', collection)
+				.data('bs-action', action);
+		});
+		$('#action_confirm').on('click', function () {
+			const objectId = $(this).data('bs-id');
+			const collection = $(this).data('bs-collection') + 's';
+			const action = $(this).data('bs-action');
+			const modal = $('#confirm_modal');
+			const btn = $(this);
+			btn.prop('disabled', true);
+
+			// starting an exercise
+			if (action === 'start' && collection === 'exercises') {
+				pb.collection('exercises').update(objectId, { started: true })
+					.then(() => {
+						modal.modal('hide');
+						btn.prop('disabled', false);
+					})
+					.catch(err => {
+						console.error('Error starting exercise:', err);
+						alert(`Error starting exercise: ${err.message}`);
+					});
+			// stopping an exercise
+			} else if (action === 'stop' && collection === 'exercises') {
+				pb.collection('exercises').update(objectId, { started: false })
+					.then(() => {
+						modal.modal('hide');
+						btn.prop('disabled', false);
+					})
+					.catch(err => {
+						console.error('Error stopping exercise:', err);
+						alert(`Error stopping exercise: ${err.message}`);
+					});
+			// deleting an object
+			} else if (action === 'delete') {
+				pb.collection(collection).delete(objectId)
+					.then(() => {
+						modal.modal('hide');
+						btn.prop('disabled', false);
+					})
+					.catch(err => {
+						console.error(`Error deleting ${collection}:`, err);
+						alert(`Error deleting ${collection}: ${err.message}`);
+					});
+			// deleting all objects
+			} else if (action === 'delete all') {
+				// get list of objects to delete
+				pb.collection(collection).getFullList()
+					.then(objects => {
+						// delete all objects in the collection one at a time
+						let deleteQueue = Promise.resolve();
+						objects.forEach(object => {
+							deleteQueue = deleteQueue.then(async () => {
+								try {
+									await pb.collection(collection).delete(object.id);
+								} catch (err) {
+									console.error(`Error deleting ${collection} ${object.id}:`, err);
+									alert(`Error deleting ${collection} ${object.id}: ${err.message}`);
+								}
+							});
+						});
+
+						// wait for all deletions to finish
+						deleteQueue.then(() => {
+							modal.modal('hide');
+							btn.prop('disabled', false);
+						});
+					})
+					.catch(err => {
+						console.error(`Error getting list to delete all ${collection}s:`, err);
+						alert(`Error getting list to delete all ${collection}s: ${err.message}`);
+						modal.modal('hide');
+						btn.prop('disabled', false);
+					});
+			// reset all rejection counts
+			} else if (action === 'reset all "rejected" counts for' && collection === 'users') {
+				pb.collection('users').getFullList({requestKey: null})
+					.then(users => {
+						let queue = Promise.resolve();
+						users.forEach(user => {
+							queue = queue.then(async () => {
+								try {
+									await pb.collection('users').update(user.id, { rejected: 0 });
+								} catch (err) {
+									console.error(`Error resetting rejection count for user ${user.id}:`, err);
+									alert(`Error resetting rejection count for user ${user.id}: ${err.message}`);
+								}
+							});
+						});
+						queue.then(() => {
+							modal.modal('hide');
+							btn.prop('disabled', false);
+						});
+					})
+					.catch(err => {
+						alert('Error resetting all reject counts: ' + err.message);
+						modal.modal('hide');
+						btn.prop('disabled', false);
+					});
+			// reset rejection count
+			} else if (action === 'reset the "rejected" count for' && collection === 'users') {
+				pb.collection(collection).update(objectId, { rejected: 0 })
+					.then(() => {
+						modal.modal('hide');
+						btn.prop('disabled', false);
+					})
+					.catch(err => {
+						console.error('Error resetting rejection count:', err);
+						alert(`Error resetting rejection count: ${err.message}`);
+					});
+			// unknown action
+			} else {
+				console.error('Unknown action:', action);
+				alert(`Unknown action: ${action}`);
+				modal.modal('hide');
+				btn.prop('disabled', false);
+			}
+		});
+
+		//#endregion
+
+		//#region configuration tab
+
 		// update list of exercises
 		function updateExercises(exercises) {
+			// reset the exercises table
 			const tbody = $('#exercise-list');
 			tbody.empty();
 
+			// reset the exercises filter and note the current value
+			const tasks_exercise_filter = $('#tasks_exercise_filter');
+			const current_tasks_exercise_filter = tasks_exercise_filter.val();
+			tasks_exercise_filter.prop('disabled', true);
+			tasks_exercise_filter.empty();
+
+			// fetch exercises from the database
 			pb.collection('exercises').getFullList({sort: '-start', requestKey: 'exercises'}).then(exercises => {
 				// check if the exercises array is empty
 				if (exercises.length === 0) {
@@ -386,6 +714,11 @@ ERC Exercise Admin
 							</td>
 						</tr>
 					`);
+
+					// update tasks filter
+					tasks_exercise_filter.append('<option value="" disabled selected>No exercises found</option>');
+					tasks_exercise_filter.prop('disabled', true);
+					updateTasks();
 					return;
 				}
 
@@ -404,11 +737,32 @@ ERC Exercise Admin
 								}
 								<a href="/admin/exercise/${exercise.id}" class="btn btn-primary m-1">View/Edit</a>
 								<button type="button" class="btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="exercise" data-bs-id="${exercise.id}" data-bs-name="${exercise.name}" data-bs-action="delete">Delete</button>
+								<a href="/monitor?exercise_id=${exercise.id}" class="btn btn-secondary m-1" target="_blank">Monitor</a>
+								<a href="/report?exercise_id=${exercise.id}" class="btn btn-secondary m-1" target="_blank">Report</a>
 							</td>
 						</tr>
 					`);
 					tbody.append(tr);
 				});
+
+				// update the exercise filter select options
+				exercises.forEach(exercise => {
+					const option = $(`
+						<option value="${exercise.id}" data-start="${exercise.start}" data-end="${exercise.end}">${exercise.name} (${new Date(exercise.start).toLocaleString()} - ${new Date(exercise.end).toLocaleString()})</option>
+					`);
+					tasks_exercise_filter.append(option);
+				});
+				tasks_exercise_filter.append('<option value="">All exercises</option>');
+				tasks_exercise_filter.prop('disabled', false);
+
+				// if the current tasks filter value is still valid, set it
+				if (current_tasks_exercise_filter && tasks_exercise_filter.find(`option[value="${current_tasks_exercise_filter}"]`).length) {
+					tasks_exercise_filter.val(current_tasks_exercise_filter);
+				} else {
+					// select the first option if no valid current filter
+					tasks_exercise_filter.val(tasks_exercise_filter.find('option').first().val());
+					updateTasks();
+				}
 			}).catch(err => {
 				console.error('Error fetching exercises:', err);
 				tbody.append(`
@@ -420,6 +774,11 @@ ERC Exercise Admin
 						</td>
 					</tr>
 				`);
+
+				// update tasks filter
+				tasks_exercise_filter.append('<option value="" disabled selected>Error loading exercises</option>');
+				tasks_exercise_filter.prop('disabled', true);
+				updateTasks();
 			});
 		}
 		updateExercises();
@@ -506,6 +865,11 @@ ERC Exercise Admin
 							</td>
 						</tr>
 					`);
+
+					// also clear user_stake select if no stakes
+					const userStakeSelect = $('#user_stake');
+					userStakeSelect.empty();
+					userStakeSelect.append('<option value="" disabled selected>Select a Stake</option>');
 					return;
 				}
 
@@ -523,6 +887,15 @@ ERC Exercise Admin
 					`);
 					tbody.append(tr);
 				});
+
+				// update the user_stake select options
+				const userStakeSelect = $('#user_stake');
+				userStakeSelect.empty();
+				userStakeSelect.append('<option value="" disabled selected>Select a Stake</option>');
+				stakes.forEach(stake => {
+					const option = $(`<option value="${stake.id}">${stake.name}</option>`);
+					userStakeSelect.append(option);
+				});
 			}).catch(err => {
 				console.error('Error fetching stakes:', err);
 				tbody.append(`
@@ -534,6 +907,11 @@ ERC Exercise Admin
 						</td>
 					</tr>
 				`);
+
+				// on error, clear user_stake select
+				const userStakeSelect = $('#user_stake');
+				userStakeSelect.empty();
+				userStakeSelect.append('<option value="" disabled selected>Select a Stake</option>');
 			});
 		}
 		updateStakes();
@@ -601,104 +979,6 @@ ERC Exercise Admin
 				`);
 			});
 		}
-
-		// handle action confirmation modal
-		$('#confirm_modal').on('show.bs.modal', function (event) {
-			// get data from the button that triggered the modal
-			const button = $(event.relatedTarget);
-			const action = button.data('bs-action');
-			const collection = button.data('bs-collection');
-			const objectId = button.data('bs-id');
-			const objectName = button.data('bs-name');
-
-			// update the modal's content
-			const modal = $(this);
-			modal.find('#action_name').text(action);
-			modal.find('#item_name').text(action === 'delete all' ? '' : `"${objectName}"`);
-			modal.find('#collection_name').text(action === 'delete all' ? collection+'s' : collection);
-			modal.find('#action_confirm')
-				.data('bs-id', objectId)
-				.data('bs-collection', collection)
-				.data('bs-action', action);
-		});
-		$('#action_confirm').on('click', function () {
-			const objectId = $(this).data('bs-id');
-			const collection = $(this).data('bs-collection') + 's';
-			const action = $(this).data('bs-action');
-			const modal = $('#confirm_modal');
-			const btn = $(this);
-			btn.prop('disabled', true);
-
-			// starting an exercise
-			if (action === 'start' && collection === 'exercises') {
-				pb.collection('exercises').update(objectId, { started: true })
-					.then(() => {
-						modal.modal('hide');
-						btn.prop('disabled', false);
-					})
-					.catch(err => {
-						console.error('Error starting exercise:', err);
-						alert(`Error starting exercise: ${err.message}`);
-					});
-			// stopping an exercise
-			} else if (action === 'stop' && collection === 'exercises') {
-				pb.collection('exercises').update(objectId, { started: false })
-					.then(() => {
-						modal.modal('hide');
-						btn.prop('disabled', false);
-					})
-					.catch(err => {
-						console.error('Error stopping exercise:', err);
-						alert(`Error stopping exercise: ${err.message}`);
-					});
-			// deleting an object
-			} else if (action === 'delete') {
-				pb.collection(collection).delete(objectId)
-					.then(() => {
-						modal.modal('hide');
-						btn.prop('disabled', false);
-					})
-					.catch(err => {
-						console.error(`Error deleting ${collection}:`, err);
-						alert(`Error deleting ${collection}: ${err.message}`);
-					});
-			// deleting all objects
-			} else if (action === 'delete all') {
-				// get list of objects to delete
-				pb.collection(collection).getFullList()
-					.then(items => {
-						// delete all items in the collection one at a time
-						let deleteQueue = Promise.resolve();
-						items.forEach(item => {
-							deleteQueue = deleteQueue.then(async () => {
-								try {
-									pb.collection(collection).delete(item.id);
-								} catch (err) {
-									console.error(`Error deleting ${collection} ${item.id}:`, err);
-									alert(`Error deleting ${collection} ${item.id}: ${err.message}`);
-								}
-							});
-						});
-
-						// wait for all deletions to finish
-						deleteQueue.then(() => {
-							modal.modal('hide');
-							btn.prop('disabled', false);
-						});
-					})
-					.catch(err => {
-						console.error(`Error getting list to delete all ${collection}s:`, err);
-						alert(`Error getting list to delete all ${collection}s: ${err.message}`);
-						modal.modal('hide');
-						btn.prop('disabled', false);
-					});
-			} else {
-				console.error('Unknown action:', action);
-				alert(`Unknown action: ${action}`);
-				modal.modal('hide');
-				btn.prop('disabled', false);
-			}
-		});
 
 		// handle region modal
 		$('#region_modal').on('show.bs.modal', function (event) {
@@ -997,6 +1277,385 @@ ERC Exercise Admin
 				}
 			});
 		});
-	})
+
+		//#endregion
+
+		//#region users tab
+
+		// update list of users
+		function updateUsers() {
+			const tbody = $('#user-list');
+			tbody.empty();
+
+			pb.collection('users').getFullList({
+				sort: 'name',
+				requestKey: 'users',
+				expand: 'stake,stake.region',
+			}).then(users => {
+				// check if the users array is empty
+				if (users.length === 0) {
+					tbody.append(`
+						<tr>
+							<td colspan="8" class="text-center">
+								<div class="d-flex justify-content-center align-items-center">
+									<span>No users found</span>
+								</div>
+							</td>
+						</tr>
+					`);
+					return;
+				}
+
+				// loop through the users and create a table row for each
+				users.forEach(user => {
+					const tr = $(`
+						<tr>
+							<td class="align-middle fw-bold">${user.name}</td>
+							<td class="align-middle">${user.email}</td>
+							<td class="align-middle">${user.callsign}</td>
+							<td class="align-middle">${user.comm_type}</td>
+							<td class="align-middle">${user.expand?.stake?.name || '(deleted)'}<br>/ ${user.expand?.stake?.expand?.region?.name || '(deleted)'}</td>
+							<td class="align-middle">${user.ready ? '<span class="badge text-bg-success">Ready</span>' : '<span class="badge text-bg-warning">Not Ready</span>'}</td>
+							<td class="align-middle">${user.rejected}</td>
+							<td class="align-middle text-end">
+								<button type="button" class="btn btn-primary m-1" data-bs-toggle="modal" data-bs-target="#user_modal" data-bs-id="${user.id}" data-bs-name="${user.name}" data-bs-email="${user.email}" data-bs-callsign="${user.callsign}" data-bs-comm-type="${user.comm_type}" data-bs-stake="${user.expand?.stake?.id}">Edit</button>
+								<button type="button" class="btn btn-warning m-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="user" data-bs-id="${user.id}" data-bs-name="${user.name}" data-bs-action=\'reset the "rejected" count for\'>Reset Reject #</button>
+								<button type="button" class="btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="user" data-bs-id="${user.id}" data-bs-name="${user.name}" data-bs-action="delete">Delete</button>
+							</td>
+						</tr>
+					`);
+					tbody.append(tr);
+				});
+			}).catch(err => {
+				console.error('Error fetching users:', err);
+				tbody.append(`
+					<tr>
+						<td colspan="8" class="text-center">
+							<div class="d-flex justify-content-center align-items-center">
+								<span>Error loading users</span>
+							</div>
+						</td>
+					</tr>
+				`);
+			});
+		}
+		updateUsers();
+		pb.collection('users').subscribe('*', updateUsers);
+
+		// export users csv
+		$('#export-users-csv-btn').on('click', function () {
+			const btn = $(this);
+			btn.prop('disabled', true);
+
+			pb.collection('users').getFullList({
+				sort: 'name',
+				expand: 'stake,stake.region'
+			}).then(users => {
+				const csvRows = [];
+				csvRows.push([
+					'Name',
+					'Email',
+					'Callsign',
+					'Service',
+					'Stake',
+					'Region',
+					'Rejected'
+				]);
+				users.forEach(user => {
+					const stake = user.expand?.stake?.name || '';
+					const region = user.expand?.stake?.expand?.region?.name || '';
+					csvRows.push([
+						user.name || '',
+						user.email || '',
+						user.callsign || '',
+						user.comm_type || '',
+						stake,
+						region,
+						user.rejected != null ? user.rejected : ''
+					]);
+				});
+				const csv = Papa.unparse(csvRows);
+				const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'erc-exercise-users.csv';
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+				URL.revokeObjectURL(url);
+				btn.prop('disabled', false);
+			}).catch(err => {
+				alert('Error exporting users: ' + err.message);
+				btn.prop('disabled', false);
+			});
+		});
+
+		// handle user modal
+		$('#user_modal').on('show.bs.modal', function (event) {
+			// get data from the button that triggered the modal
+			const button = $(event.relatedTarget);
+			const userId = button.data('bs-id');
+			const userName = button.data('bs-name');
+			const userEmail = button.data('bs-email');
+			const userCallsign = button.data('bs-callsign');
+			const userCommType = button.data('bs-comm-type');
+			const userStake = button.data('bs-stake');
+
+			// update the modal's content
+			const modal = $(this);
+			modal.find('#user_name').val(userName);
+			modal.find('#user_email').val(userEmail);
+			modal.find('#user_callsign').val(userCallsign);
+			modal.find('#user_comm_type').val(userCommType);
+			modal.find('#user_stake').val(userStake);
+			modal.find('#user_confirm').data('bs-id', userId);
+		});
+		$('#user_confirm').on('click', function () {
+			const userId = $(this).data('bs-id');
+			const userName = $('#user_name').val();
+			const userEmail = $('#user_email').val();
+			const userCallsign = $('#user_callsign').val();
+			const userCommType = $('#user_comm_type').val();
+			const userStake = $('#user_stake').val();
+
+			// update existing user
+			if (userId) {
+				pb.collection('users').update(userId, {
+					name: userName,
+					email: userEmail,
+					callsign: userCallsign,
+					comm_type: userCommType,
+					stake: userStake,
+				})
+					.catch(err => {
+						console.error('Error updating user:', err);
+						alert(`Error updating user: ${err.message}`);
+					});
+			} else {
+				console.warn('No user ID provided! This should not happen.');
+			}
+		});
+
+		//#endregion
+
+		//#region tasks tab
+
+		// task helpers
+		function getTaskScope(task) {
+			if (!task.expand?.need_user?.stake || !task.expand?.resource_user?.stake) return `<span class="fs-6 badge text-bg-secondary">Unknown</span>`;
+			if (task.expand?.need_user?.stake === task.expand?.resource_user?.stake) return `<span class="fs-6 badge text-bg-success">Stake</span>`;
+			if (task.expand?.need_user?.expand?.stake?.region === task.expand?.resource_user?.expand?.stake?.region) return `<span class="fs-6 badge text-bg-primary">Region</span>`;
+			return `<span class="fs-6 badge text-bg-warning">Storehouse</span>`;
+		}
+		function getTaskStatus(task) {
+			if (!task.resource_confirmed) return '<span class="fs-6 badge text-bg-warning">Waiting for Resource to Confirm</span>';
+			if (task.completed) return '<span class="fs-6 badge text-bg-success">Completed</span>';
+			if (task.cancelled) return '<span class="fs-6 badge text-bg-danger">Skipped</span>';
+			return '<span class="fs-6 badge text-bg-primary">In Progress</span>';
+		}
+
+		// update list of tasks
+		function updateTasks() {
+			const tbody = $('#task-list');
+			tbody.empty();
+
+			// get start and end dates from the selected exercise filter, if selected
+			const tasks_exercise_filter = $('#tasks_exercise_filter');
+			let selectedExercise = null;
+			let startDate = '';
+			let endDate = '';
+			if (tasks_exercise_filter.val()) {
+				selectedExercise = tasks_exercise_filter.find('option:selected');
+				startDate = selectedExercise.data('start');
+				endDate = selectedExercise.data('end');
+			}
+
+			pb.collection('tasks').getFullList({
+				filter: selectedExercise ? `created >= "${startDate}" && created <= "${endDate}"` : '',
+				sort: 'created',
+				requestKey: 'tasks',
+				expand: 'resource_user,need_user,item,resource_user.stake,need_user.stake',
+			}).then(tasks => {
+				// check if the tasks array is empty
+				if (tasks.length === 0) {
+					tbody.append(`
+						<tr>
+							<td colspan="5" class="text-center">
+								<div class="d-flex justify-content-center align-items-center">
+									<span>No tasks found</span>
+								</div>
+							</td>
+						</tr>
+					`);
+					return;
+				}
+
+				// loop through the tasks and create a table row for each
+				tasks.forEach(task => {
+					// determine priority badge color
+					var badge_type;
+					switch (task.expand?.item?.priority || '(deleted)') {
+						case 'Emergency': badge_type = 'danger'; break;
+						case 'Priority': badge_type = 'warning'; break;
+						case 'Welfare': badge_type = 'primary'; break;
+						case 'Routine': badge_type = 'success'; break;
+						default: break;
+					}
+
+					// create table row
+					const tr = $(`
+						<tr>
+							<td class="align-middle">
+								<span class="badge text-bg-${badge_type}">${task.expand?.item?.priority || '(deleted)'}</span><br>
+								<span class="fw-bold">${task.expand?.item?.description || '(deleted)'}</span><br>
+								${task.expand?.item?.quantity || '(deleted)'}
+							</td>
+							<td class="align-middle">
+								${task.expand?.need_user?.name || '(deleted)'}<br>
+								${task.expand?.need_user?.callsign || '(deleted)'}
+							</td>
+							<td class="align-middle">
+								${task.expand?.resource_user?.name || '(deleted)'}<br>
+								${task.expand?.resource_user?.callsign || '(deleted)'}
+							</td>
+							<td class="align-middle">${getTaskScope(task)}</td>
+							<td class="align-middle">${getTaskStatus(task)}</td>
+						</tr>
+					`);
+					tbody.append(tr);
+				});
+			}).catch(err => {
+				console.error('Error fetching tasks:', err);
+				tbody.append(`
+					<tr>
+						<td colspan="5" class="text-center">
+							<div class="d-flex justify-content-center align-items-center">
+								<span>Error loading tasks</span>
+							</div>
+						</td>
+					</tr>
+				`);
+			});
+		}
+		// updateTasks(); // will be called after exercises are loaded
+		pb.collection('tasks').subscribe('*', updateTasks);
+
+		// handle task filter change
+		$('#tasks_exercise_filter').on('change', updateTasks);
+
+		// export tasks csv
+		$('#export-tasks-csv-btn').on('click', function () {
+			const btn = $(this);
+			btn.prop('disabled', true);
+
+			// get start and end dates from the selected exercise filter, if selected
+			const tasks_exercise_filter = $('#tasks_exercise_filter');
+			let selectedExercise = null;
+			let startDate = '';
+			let endDate = '';
+			if (tasks_exercise_filter.val()) {
+				selectedExercise = tasks_exercise_filter.find('option:selected');
+				startDate = selectedExercise.data('start');
+				endDate = selectedExercise.data('end');
+			}
+
+			// fetch tasks with the selected filter
+			pb.collection('tasks').getFullList({
+				filter: selectedExercise ? `created >= "${startDate}" && created <= "${endDate}"` : '',
+				sort: 'created',
+				expand: 'resource_user,need_user,item,resource_user.stake,need_user.stake,resource_user.stake.region,need_user.stake.region',
+			}).then(tasks => {
+				const csvRows = [];
+				csvRows.push([
+					'Item Description',
+					'Item Quantity',
+					'Item Priority',
+					'Need User Name',
+					'Need User Callsign',
+					'Need User Email',
+					'Need User Stake',
+					'Need User Region',
+					'Resource User Name',
+					'Resource User Callsign',
+					'Resource User Email',
+					'Resource User Stake',
+					'Resource User Region',
+					'Scope',
+					'Status',
+					'Resource Confirmed',
+					'Completed',
+					'Cancelled',
+					'Created',
+					'Updated'
+				]);
+				tasks.forEach(task => {
+					// figure out scope
+					let scope = '';
+					if (!task.expand?.need_user?.stake || !task.expand?.resource_user?.stake) {
+						scope = 'Unknown';
+					} else if (task.expand?.need_user?.stake === task.expand?.resource_user?.stake) {
+						scope = 'Stake';
+					} else if (task.expand?.need_user?.expand?.stake?.region === task.expand?.resource_user?.expand?.stake?.region) {
+						scope = 'Region';
+					} else {
+						scope = 'Storehouse';
+					}
+
+					// figure out status
+					let status = '';
+					if (!task.resource_confirmed) {
+						status = 'Waiting for Resource to Confirm';
+					} else if (task.completed) {
+						status = 'Completed';
+					} else if (task.cancelled) {
+						status = 'Skipped';
+					} else {
+						status = 'In Progress';
+					}
+
+					// add the task data to the csv rows
+					csvRows.push([
+						task.expand?.item?.description || '',
+						task.expand?.item?.quantity || '',
+						task.expand?.item?.priority || '',
+						task.expand?.need_user?.name || '',
+						task.expand?.need_user?.callsign || '',
+						task.expand?.need_user?.email || '',
+						task.expand?.need_user?.expand?.stake?.name || '',
+						task.expand?.need_user?.expand?.stake?.expand?.region?.name || '',
+						task.expand?.resource_user?.name || '',
+						task.expand?.resource_user?.callsign || '',
+						task.expand?.resource_user?.email || '',
+						task.expand?.resource_user?.expand?.stake?.name || '',
+						task.expand?.resource_user?.expand?.stake?.expand?.region?.name || '',
+						scope,
+						status,
+						task.resource_confirmed ? 'Yes' : 'No',
+						task.completed ? new Date(task.completed).toLocaleString() : '',
+						task.cancelled ? new Date(task.cancelled).toLocaleString() : '',
+						task.created ? new Date(task.created).toLocaleString() : '',
+						task.updated ? new Date(task.updated).toLocaleString() : ''
+					]);
+				});
+				const csv = Papa.unparse(csvRows);
+				const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'erc-exercise-tasks.csv';
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+				URL.revokeObjectURL(url);
+				btn.prop('disabled', false);
+			}).catch(err => {
+				alert('Error exporting tasks: ' + err.message);
+				btn.prop('disabled', false);
+			});
+		});
+
+		//#endregion
+})
 </script>
 {{end}}

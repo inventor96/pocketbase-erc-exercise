@@ -63,28 +63,36 @@
 			<div class="col">
 				<div class="card border-secondary">
 					<div class="card-header bg-secondary-subtle">
-						<h3 class="card-title">Avg Fulfillment Time</h3>
+						<h3 class="card-title">Fulfillment Times</h3>
 					</div>
 					<div class="card-body">
 						<table class="table table-striped table-hover mb-0 fs-5">
 							<thead>
 								<tr>
 									<th scope="col">Scope</th>
-									<th scope="col">Time</th>
+									<th scope="col">Min</th>
+									<th scope="col">Avg</th>
+									<th scope="col">Max</th>
 								</tr>
 							</thead>
 							<tbody class="table-group-divider" id="fulfillment_time">
 								<tr>
 									<td>Storehouse</td>
-									<td id="fulfillment_time_storehouse">--</td>
+									<td id="fulfillment_time_storehouse_min">--</td>
+									<td id="fulfillment_time_storehouse_avg">--</td>
+									<td id="fulfillment_time_storehouse_max">--</td>
 								</tr>
 								<tr>
 									<td>Region</td>
-									<td id="fulfillment_time_region">--</td>
+									<td id="fulfillment_time_region_min">--</td>
+									<td id="fulfillment_time_region_avg">--</td>
+									<td id="fulfillment_time_region_max">--</td>
 								</tr>
 								<tr>
 									<td>Stake</td>
-									<td id="fulfillment_time_stake">--</td>
+									<td id="fulfillment_time_stake_min">--</td>
+									<td id="fulfillment_time_stake_avg">--</td>
+									<td id="fulfillment_time_stake_max">--</td>
 								</tr>
 							</tbody>
 						</table>
@@ -289,16 +297,28 @@
 
 			function updateDisplay() {
 				// get the data using jquery
-				$.getJSON('/monitordata', function(data) {
+				const urlParams = new URLSearchParams(window.location.search)
+				let monitorDataUrl = '/monitordata'
+				const idParam = urlParams.get('exercise_id')
+				if (idParam && idParam.trim() !== '') {
+					monitorDataUrl += `?exercise_id=${encodeURIComponent(idParam)}`
+				}
+				$.getJSON(monitorDataUrl, function(data) {
 					// update the display
 					$('#participants').text(data.participants.total)
 					$('#registered_users').text(data.participants.registered)
 					$('#open_needs').text(data.tasks.total.open)
 					$('#fulfilled_needs').text(data.tasks.total.fulfilled)
 					$('#skipped_needs').text(data.tasks.total.skipped)
-					$('#fulfillment_time_storehouse').text(data.tasks.scope.storehouse.avg_time)
-					$('#fulfillment_time_region').text(data.tasks.scope.region.avg_time)
-					$('#fulfillment_time_stake').text(data.tasks.scope.stake.avg_time)
+					$('#fulfillment_time_storehouse_min').text(data.tasks.scope.storehouse.min_time)
+					$('#fulfillment_time_storehouse_avg').text(data.tasks.scope.storehouse.avg_time)
+					$('#fulfillment_time_storehouse_max').text(data.tasks.scope.storehouse.max_time)
+					$('#fulfillment_time_region_min').text(data.tasks.scope.region.min_time)
+					$('#fulfillment_time_region_avg').text(data.tasks.scope.region.avg_time)
+					$('#fulfillment_time_region_max').text(data.tasks.scope.region.max_time)
+					$('#fulfillment_time_stake_min').text(data.tasks.scope.stake.min_time)
+					$('#fulfillment_time_stake_avg').text(data.tasks.scope.stake.avg_time)
+					$('#fulfillment_time_stake_max').text(data.tasks.scope.stake.max_time)
 
 					for (const scope in data.tasks.scope) {
 						const scope_data = data.tasks.scope[scope]
@@ -335,9 +355,15 @@
 					$('#open_needs').text('0')
 					$('#fulfilled_needs').text('0')
 					$('#skipped_needs').text('0')
-					$('#fulfillment_time_storehouse').text('-- mins')
-					$('#fulfillment_time_region').text('-- mins')
-					$('#fulfillment_time_stake').text('-- mins')
+					$('#fulfillment_time_storehouse_min').text('--')
+					$('#fulfillment_time_storehouse_avg').text('--')
+					$('#fulfillment_time_storehouse_max').text('--')
+					$('#fulfillment_time_region_min').text('--')
+					$('#fulfillment_time_region_avg').text('--')
+					$('#fulfillment_time_region_max').text('--')
+					$('#fulfillment_time_stake_min').text('--')
+					$('#fulfillment_time_stake_avg').text('--')
+					$('#fulfillment_time_stake_max').text('--')
 				})
 			}
 			updateDisplay()

@@ -40,12 +40,22 @@ routerAdd("GET", "/monitordata", function (e) {
 		"participants": 0,
 	}))
 	$app.db()
-		.newQuery("SELECT regions.name AS name, COUNT(DISTINCT users.id) AS participants\
-			FROM tasks\
-			LEFT JOIN users ON tasks.resource_user = users.id\
-			LEFT JOIN stakes ON users.stake = stakes.id\
+		.newQuery("SELECT regions.name AS name, COUNT(DISTINCT user_participation.id) AS participants\
+			FROM (\
+				SELECT users.id, users.stake\
+				FROM tasks\
+				LEFT JOIN users ON tasks.resource_user = users.id\
+				WHERE tasks.resource_confirmed = true\
+					AND tasks.created BETWEEN {:start} AND {:end}\
+				UNION\
+				SELECT users.id, users.stake\
+				FROM tasks\
+				LEFT JOIN users ON tasks.need_user = users.id\
+				WHERE (tasks.completed != '' OR tasks.cancelled != '')\
+					AND tasks.created BETWEEN {:start} AND {:end}\
+			) AS user_participation\
+			LEFT JOIN stakes ON user_participation.stake = stakes.id\
 			LEFT JOIN regions ON stakes.region = regions.id\
-			WHERE tasks.created BETWEEN {:start} AND {:end}\
 			GROUP BY regions.name\
 			ORDER BY regions.name")
 		.bind({
@@ -61,13 +71,22 @@ routerAdd("GET", "/monitordata", function (e) {
 		"count": 0,
 	}))
 	$app.db()
-		.newQuery("SELECT users.comm_type AS name, COUNT(DISTINCT users.id) AS count\
-			FROM tasks\
-			LEFT JOIN users ON tasks.resource_user = users.id\
-			LEFT JOIN stakes ON users.stake = stakes.id\
-			LEFT JOIN regions ON stakes.region = regions.id\
-			WHERE tasks.created BETWEEN {:start} AND {:end}\
-			GROUP BY comm_type\
+		.newQuery("SELECT users.comm_type AS name, COUNT(DISTINCT user_participation.id) AS count\
+			FROM (\
+				SELECT users.id, users.comm_type\
+				FROM tasks\
+				LEFT JOIN users ON tasks.resource_user = users.id\
+				WHERE tasks.resource_confirmed = true\
+					AND tasks.created BETWEEN {:start} AND {:end}\
+				UNION\
+				SELECT users.id, users.comm_type\
+				FROM tasks\
+				LEFT JOIN users ON tasks.need_user = users.id\
+				WHERE (tasks.completed != '' OR tasks.cancelled != '')\
+					AND tasks.created BETWEEN {:start} AND {:end}\
+			) AS user_participation\
+			LEFT JOIN users ON users.id = user_participation.id\
+			GROUP BY users.comm_type\
 			ORDER BY count DESC, name")
 		.bind({
 			"start": reporting_exercise.start,
@@ -338,7 +357,7 @@ routerAdd("GET", "/monitordata", function (e) {
 		region_data[region.name].skipped += region.count
 	})
 
-	// calculate average time between task creation and completion with the need and resource being in the same stake
+	// get times between task creation and completion with the need and resource being in the same stake
 	const stake_tasks_time = arrayOf(new DynamicModel({
 		"completed": "",
 		"created": "",
@@ -356,20 +375,30 @@ routerAdd("GET", "/monitordata", function (e) {
 			"end": reporting_exercise.end
 		})
 		.all(stake_tasks_time)
-	const stake_tasks_time_sum = stake_tasks_time.reduce((acc, task) => {
+	const stake_tasks_times = stake_tasks_time.map(task => {
 		const createdStr = typeof task.created === "string" ? task.created.replace(' ', 'T') : task.created
 		const completedStr = typeof task.completed === "string" ? task.completed.replace(' ', 'T') : task.completed
 		const created = new Date(createdStr).getTime()
 		const completed = new Date(completedStr).getTime()
 		if (isNaN(created) || isNaN(completed)) {
-			return acc
+			return null
 		}
-		return acc + (completed - created)
-	}, 0)
-	const stake_tasks_time_avg = stake_tasks_time.length > 0 ? stake_tasks_time_sum / stake_tasks_time.length : 0
-	const stake_tasks_time_avg_formatted = stake_tasks_time.length > 0 ? new Date(stake_tasks_time_avg).toISOString().substr(11, 8) : '--'
+		return completed - created
+	})
+	.filter(time => time !== null && !isNaN(time))
 
-	// calculate average time between task creation and completion with the need and resource being in the same region (excluding stake)
+	// calculate average, min, and max times for stake tasks
+	const stake_tasks_time_sum = stake_tasks_times.reduce((acc, time) => acc + time, 0)
+	const stake_tasks_time_avg = stake_tasks_times.length > 0 ? stake_tasks_time_sum / stake_tasks_times.length : null
+	const stake_tasks_time_min = stake_tasks_times.length > 0 ? Math.min(...stake_tasks_times) : null
+	const stake_tasks_time_max = stake_tasks_times.length > 0 ? Math.max(...stake_tasks_times) : null
+
+	// format times for stake tasks
+	const stake_tasks_time_min_formatted = stake_tasks_time_min !== null ? new Date(stake_tasks_time_min).toISOString().substr(11, 8) : '--'
+	const stake_tasks_time_max_formatted = stake_tasks_time_max !== null ? new Date(stake_tasks_time_max).toISOString().substr(11, 8) : '--'
+	const stake_tasks_time_avg_formatted = stake_tasks_time_avg !== null ? new Date(stake_tasks_time_avg).toISOString().substr(11, 8) : '--'
+
+	// get times between task creation and completion with the need and resource being in the same region (excluding stake)
 	const region_tasks_time = arrayOf(new DynamicModel({
 		"completed": "",
 		"created": "",
@@ -390,20 +419,30 @@ routerAdd("GET", "/monitordata", function (e) {
 			"end": reporting_exercise.end
 		})
 		.all(region_tasks_time)
-	const region_tasks_time_sum = region_tasks_time.reduce((acc, task) => {
+	const region_tasks_times = region_tasks_time.map(task => {
 		const createdStr = typeof task.created === "string" ? task.created.replace(' ', 'T') : task.created
 		const completedStr = typeof task.completed === "string" ? task.completed.replace(' ', 'T') : task.completed
 		const created = new Date(createdStr).getTime()
 		const completed = new Date(completedStr).getTime()
 		if (isNaN(created) || isNaN(completed)) {
-			return acc
+			return null
 		}
-		return acc + (completed - created)
-	}, 0)
-	const region_tasks_time_avg = region_tasks_time.length > 0 ? region_tasks_time_sum / region_tasks_time.length : 0
-	const region_tasks_time_avg_formatted = region_tasks_time.length > 0 ? new Date(region_tasks_time_avg).toISOString().substr(11, 8) : '--'
+		return completed - created
+	})
+	.filter(time => time !== null && !isNaN(time))
 
-	// calculate average time between task creation and completion with the need and resource NOT in the same region
+	// calculate average, min, and max times for region tasks
+	const region_tasks_time_sum = region_tasks_times.reduce((acc, time) => acc + time, 0)
+	const region_tasks_time_avg = region_tasks_times.length > 0 ? region_tasks_time_sum / region_tasks_times.length : null
+	const region_tasks_time_min = region_tasks_times.length > 0 ? Math.min(...region_tasks_times) : null
+	const region_tasks_time_max = region_tasks_times.length > 0 ? Math.max(...region_tasks_times) : null
+
+	// format times for region tasks
+	const region_tasks_time_min_formatted = region_tasks_time_min !== null ? new Date(region_tasks_time_min).toISOString().substr(11, 8) : '--'
+	const region_tasks_time_max_formatted = region_tasks_time_max !== null ? new Date(region_tasks_time_max).toISOString().substr(11, 8) : '--'
+	const region_tasks_time_avg_formatted = region_tasks_time_avg !== null ? new Date(region_tasks_time_avg).toISOString().substr(11, 8) : '--'
+
+	// get times between task creation and completion with the need and resource NOT in the same region (i.e. storehouse)
 	const storehouse_tasks_time = arrayOf(new DynamicModel({
 		"completed": "",
 		"created": "",
@@ -423,18 +462,28 @@ routerAdd("GET", "/monitordata", function (e) {
 			"end": reporting_exercise.end
 		})
 		.all(storehouse_tasks_time)
-	const storehouse_tasks_time_sum = storehouse_tasks_time.reduce((acc, task) => {
+	const storehouse_tasks_times = storehouse_tasks_time.map(task => {
 		const createdStr = typeof task.created === "string" ? task.created.replace(' ', 'T') : task.created
 		const completedStr = typeof task.completed === "string" ? task.completed.replace(' ', 'T') : task.completed
 		const created = new Date(createdStr).getTime()
 		const completed = new Date(completedStr).getTime()
 		if (isNaN(created) || isNaN(completed)) {
-			return acc
+			return null
 		}
-		return acc + (completed - created)
-	}, 0)
-	const storehouse_tasks_time_avg = storehouse_tasks_time.length > 0 ? storehouse_tasks_time_sum / storehouse_tasks_time.length : 0
-	const storehouse_tasks_time_avg_formatted = storehouse_tasks_time.length > 0 ? new Date(storehouse_tasks_time_avg).toISOString().substr(11, 8) : '--'
+		return completed - created
+	})
+	.filter(time => time !== null && !isNaN(time))
+
+	// calculate average, min, and max times for storehouse tasks
+	const storehouse_tasks_time_sum = storehouse_tasks_times.reduce((acc, time) => acc + time, 0)
+	const storehouse_tasks_time_avg = storehouse_tasks_times.length > 0 ? storehouse_tasks_time_sum / storehouse_tasks_times.length : null
+	const storehouse_tasks_time_min = storehouse_tasks_times.length > 0 ? Math.min(...storehouse_tasks_times) : null
+	const storehouse_tasks_time_max = storehouse_tasks_times.length > 0 ? Math.max(...storehouse_tasks_times) : null
+
+	// format times for storehouse tasks
+	const storehouse_tasks_time_min_formatted = storehouse_tasks_time_min !== null ? new Date(storehouse_tasks_time_min).toISOString().substr(11, 8) : '--'
+	const storehouse_tasks_time_max_formatted = storehouse_tasks_time_max !== null ? new Date(storehouse_tasks_time_max).toISOString().substr(11, 8) : '--'
+	const storehouse_tasks_time_avg_formatted = storehouse_tasks_time_avg !== null ? new Date(storehouse_tasks_time_avg).toISOString().substr(11, 8) : '--'
 
 	// total number of registered users
 	const registered_users = new DynamicModel({
@@ -459,18 +508,24 @@ routerAdd("GET", "/monitordata", function (e) {
 					"fulfilled": stake_tasks_completed.count,
 					"skipped": stake_tasks_cancelled.count,
 					"avg_time": stake_tasks_time_avg_formatted,
+					"min_time": stake_tasks_time_min_formatted,
+					"max_time": stake_tasks_time_max_formatted,
 				},
 				"region": {
 					"open": region_tasks_open.count,
 					"fulfilled": region_tasks_completed.count,
 					"skipped": region_tasks_cancelled.count,
 					"avg_time": region_tasks_time_avg_formatted,
+					"min_time": region_tasks_time_min_formatted,
+					"max_time": region_tasks_time_max_formatted,
 				},
 				"storehouse": {
 					"open": storehouse_tasks_open.count,
 					"fulfilled": storehouse_tasks_completed.count,
 					"skipped": storehouse_tasks_cancelled.count,
 					"avg_time": storehouse_tasks_time_avg_formatted,
+					"min_time": storehouse_tasks_time_min_formatted,
+					"max_time": storehouse_tasks_time_max_formatted,
 				},
 			},
 			"region": region_data,

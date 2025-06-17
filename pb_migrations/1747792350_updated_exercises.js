@@ -38,7 +38,7 @@ migrate((db) => {
   return dao.saveCollection(collection)
 }, (db) => {
   const dao = new Dao(db)
-  const collection = dao.findCollectionByNameOrId("9k67dzf3isudpv3")
+  const collection = dao.findCollectionByNameOrId("exercises")
 
   // remove
   collection.schema.removeField("tpa6kj0o")

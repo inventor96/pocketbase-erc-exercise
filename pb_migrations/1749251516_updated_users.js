@@ -54,7 +54,7 @@ migrate((db) => {
   return dao.saveCollection(collection)
 }, (db) => {
   const dao = new Dao(db)
-  const collection = dao.findCollectionByNameOrId("_pb_users_auth_")
+  const collection = dao.findCollectionByNameOrId("users")
 
   // update
   collection.schema.addField(new SchemaField({

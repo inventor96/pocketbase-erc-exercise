@@ -1,18 +1,26 @@
-# Pocketbase ERC Exercise
+# PocketBase ERC Exercise
 ## Description
-This is a simple application written for the [Pocketbase backend and framework](https://pocketbase.io/). The general idea is to generate need/resource pairs to give a real reason to pass around radio traffic for an ERC exercise. One user/participate/operator is assigned the need, and another one is assigned the matching resource. It's then the responsibility of "need" user (and the necessary net control stations) to then find the "resource" user. The app works with three scopes: stakes, regions, and storehouse (the top level, i.e. global). The app spreads the pair across scopes as configured per exercise.
+The hardest part of any communications exercise is having something to talk about or to do. This application is designed to help with that by generating need/resource pairs for users (i.e. participants/operators) to find and fulfill during an exercise. One user is assigned the need, and another one is assigned the matching resource. It's then the responsibility of "need" user (and the necessary net control stations) to then find the "resource" user. The app works with three scopes: stakes, regions, and storehouse (the top level, i.e. global). The app spreads the pairs across scopes as configured per exercise.
 
 The application is built to handle only one exercise at a time. If more than one exercise needs to happen at a time, you should create separate instances.
+
+This application is built on [PocketBase](https://pocketbase.io/), which provides authentication, user management, a SQLite database, and realtime updates to the frontend via server-sent events (SSE). The frontend is built with [jQuery](https://jquery.com/), the [PocketBase JS SDK](https://github.com/pocketbase/js-sdk) and [Bootstrap](https://getbootstrap.com/).
 
 ## Setup
 Note that these setup instructions are geared toward Linux hosts. You'll have to adjust and refactor stuff as necessary for other platforms.
 
 1. Get this repo on your host.
 1. Before proceeding, consider the point in [Production-ready Setup](#production-ready-setup) regarding a reverse proxy.
-1. If needed, update the URL in the initial config (found in `pb_migrations/1697331567_initial_settings.js`).
 1. Start the server (e.g. `systemctl start pocketbase-erc` if you setup the systemd service, or `./pocketbase serve` to just do it manually).
 1. Create your admin user in the PocketBase Admin UI at `/_` (e.g. if running locally, go to `http://127.0.0.1:8090/_`).
-1. If you want to enable password reset emails, you'll need to set up the SMTP settings in the PocketBase Admin UI.
+1. Set your application URL in the PocketBase Admin UI at `/_`:
+	- Go to the "Settings" tab (the tools icon in the left sidebar).
+	- Click the "Application" section if it's not already selected.
+	- Set the "Application URL" to the URL where your application will be accessible (e.g. `https://exercise.idahoerc.org`, or `http://127.0.0.1:8090` if developing locally).
+1. (Optional) If you want to enable password reset requests, you'll need to set up the SMTP settings in the PocketBase Admin UI. If you skip this step, users will not be able to reset their passwords, and the "Forgot Password" link will not be shown on the login page.
+	- Go to the "Settings" tab (the tools icon in the left sidebar).
+	- Click the "Mail settings" section.
+	- Set the Sender and SMTP settings to your email provider's SMTP server, port, username, and password.
 
 Congrats! The application is functional!
 
@@ -41,7 +49,55 @@ That's it! You should have a complete ERC Exercise site ready to go.
 ## Production-ready Setup
 Just a few more things to get you ready for go-time.
 
-1. (Optional, but highly recommended) Consider using a reverse proxy so you can use a nice domain and HTTPS.
+1. (Optional, but highly recommended) Consider using a reverse proxy so you can use a nice domain and HTTPS. e.g., if using Apache2/httpd, you could create a config like this:
+	```apache
+	<VirtualHost *:80>
+		ServerName exercise.idahoerc.org
+
+		ErrorLog ${APACHE_LOG_DIR}/error.log
+		CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+		RedirectMatch permanent "(.*)" "https://exercise.idahoerc.org$1"
+	</VirtualHost>
+
+	<IfModule mod_ssl.c>
+		<VirtualHost *:443>
+			ServerName exercise.idahoerc.org
+			DocumentRoot /var/www/pocketbase-erc-exercise/pb_public
+			<Directory /var/www/pocketbase-erc-exercise>
+				Options -Indexes +FollowSymLinks +Includes
+				AllowOverride All
+				Order allow,deny
+				Allow from All
+			</Directory>
+
+			ErrorLog ${APACHE_LOG_DIR}/exercise.idahoerc.org/error.log
+			CustomLog ${APACHE_LOG_DIR}/exercise.idahoerc.org/access.log vhost_combined
+
+			# enable SSL with LetsEncrypt
+			SSLCertificateFile /etc/letsencrypt/live/exercise.idahoerc.org/fullchain.pem
+			SSLCertificateKeyFile /etc/letsencrypt/live/exercise.idahoerc.org/privkey.pem
+
+			# main proxy stuff
+			ProxyPass / http://127.0.0.1:8090/ connectiontimeout=5 timeout=600
+			ProxyPassReverse / http://127.0.0.1:8090/
+
+			# special stuff for SSE
+			<Location /api/realtime>
+				# enables chunked responses from upstream to support streaming
+				SetEnv proxy-sendchunked
+				# ensures HTTP/1.0 is used from Apache to upstream (some versions of Apache have issues with HTTP/1.1 + chunking)
+				SetEnv force-proxy-request-1.0
+				# no gzip
+				SetEnvIfNoCase Request_URI "^/api/realtime" no-gzip
+
+				ProxyPass http://127.0.0.1:8090/api/realtime connectiontimeout=5 timeout=600
+				ProxyPassReverse http://127.0.0.1:8090/api/realtime
+			</Location>
+		</VirtualHost>
+	</IfModule>
+	```
+	Make sure to adjust the `ServerName` value, and the `DocumentRoot` path to point to the public directory of the repo. Also, make sure to enable the necessary Apache modules (e.g. `proxy`, `proxy_http`, `ssl`, `rewrite`, etc.) and restart the service.
 1. (Optional, but highly recommended) Create a system service for the application. e.g. for a systemd service on a Linux host, create `/etc/systemd/system/pocketbase-erc.service`:
 	```ini
 	[Unit]
@@ -57,7 +113,7 @@ Just a few more things to get you ready for go-time.
 	[Install]
 	WantedBy=multi-user.target
 	```
-1. (Sorta optional, but basically required for user sanity) Create a system service that triggers the handling of unconfirmed tasks. e.g. `/etc/systemd/system/pocketbase-erc-check.service`:
+1. (Basically required for user sanity) Create a system service that triggers the handling of unconfirmed tasks. e.g. `/etc/systemd/system/pocketbase-erc-check.service`:
 	```ini
 	[Unit]
 	Description=Pocketbase - ERC Exercise - check unconfirmed tasks
