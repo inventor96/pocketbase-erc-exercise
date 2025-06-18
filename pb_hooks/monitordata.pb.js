@@ -10,7 +10,7 @@ routerAdd("GET", "/monitordata", function (e) {
 	})
 	try {
 		// check if we looking for a specific exercise
-		const exercise_id = e.request.pathValue("exercise_id")
+		const exercise_id = e.request.url.query().get("exercise_id")
 		if (exercise_id) {
 			$app.db()
 				.newQuery("SELECT id, name, start, end\
