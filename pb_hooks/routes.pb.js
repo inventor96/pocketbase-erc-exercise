@@ -54,7 +54,6 @@ routerUse(new Middleware((e) => {
 // render home page
 routerAdd("GET", "/{$}", (e) => {
 	// redirect to login page if not logged in
-	console.log(e.auth)
 	if (!e.auth) {
 		return e.redirect(302, "/login")
 	}
