@@ -65,7 +65,7 @@ migrate((app) => {
 
   return app.save(collection);
 }, (app) => {
-  const collection = app.findCollectionByNameOrId("pbc_859047449");
+  const collection = app.findCollectionByNameOrId("regions");
 
   return app.delete(collection);
 })

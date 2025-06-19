@@ -130,7 +130,7 @@ migrate((app) => {
 
   return app.save(collection);
 }, (app) => {
-  const collection = app.findCollectionByNameOrId("pbc_2602490748");
+  const collection = app.findCollectionByNameOrId("tasks");
 
   return app.delete(collection);
 })

@@ -156,7 +156,7 @@ migrate((app) => {
 
   return app.save(collection);
 }, (app) => {
-  const collection = app.findCollectionByNameOrId("pbc_1804250889");
+  const collection = app.findCollectionByNameOrId("exercises");
 
   return app.delete(collection);
 })
