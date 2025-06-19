@@ -75,7 +75,7 @@ routerAdd("POST", "/fulfill-need", (e) => {
 	// get data
 	const user = e.auth
 	const data = $apis.requestInfo(e).data
-	const task = $app.dao().findRecordById("tasks", data.need_id)
+	const task = $app.findRecordById("tasks", data.need_id)
 
 	// require correct user
 	if (task.getString('need_user') != user.id) {
@@ -83,13 +83,13 @@ routerAdd("POST", "/fulfill-need", (e) => {
 	}
 
 	// check callsign
-	$app.dao().expandRecord(task, ["resource_user"], null)
+	$app.expandRecord(task, ["resource_user"], null)
 	const result = data.need_callsign == task.expandedOne('resource_user').getString('callsign')
 
 	// update the task if successful
 	if (result) {
 		task.set('completed', new Date().toISOString().replace('T', ' ').substr(0, 19))
-		$app.dao().saveRecord(task)
+		$app.save(task)
 	}
 
 	return e.json(200, {"success": result})
@@ -102,7 +102,7 @@ routerAdd("POST", "/not-ready", (e) => {
 	console.log(`Clearing pending tasks for user ${user.id}...`)
 
 	// get all pending tasks for the user
-	const pending_tasks = $app.dao().findRecordsByExpr("tasks",
+	const pending_tasks = $app.findAllRecords("tasks",
 		$dbx.hashExp({
 			need_user: user.id,
 			resource_rejected: false,
@@ -112,12 +112,12 @@ routerAdd("POST", "/not-ready", (e) => {
 
 	// remove the tasks
 	pending_tasks.forEach(task => {
-		$app.dao().deleteRecord(task)
+		$app.delete(task)
 	})
 
 	// set the user to not ready
 	user.set('ready', false)
-	$app.dao().saveRecord(user)
+	$app.save(user)
 
 	return e.json(200, {"success": true})
 }, $apis.requireAuth("users"))
@@ -160,7 +160,7 @@ routerAdd("GET", "/callsign", (e) => {
 		callsign = `ERC${rand}`
 		var exists = false
 		try {
-			$app.dao().findFirstRecordByData("users", "callsign", callsign)
+			$app.findFirstRecordByData("users", "callsign", callsign)
 			exists = true
 		} catch (err) {
 			if (err.toString().includes('no rows in result set')) {
@@ -225,7 +225,7 @@ routerAdd("GET", "/forgot", (e) => {
 routerAdd("GET", "/check-unconfirmed-tasks", (e) => {
 	// get all unconfirmed resources that haven't been updated in at least 130 seconds
 	const report = []
-	const unconfirmed_tasks = $app.dao().findRecordsByExpr("tasks",
+	const unconfirmed_tasks = $app.findAllRecords("tasks",
 		$dbx.hashExp({
 			completed: "",
 			cancelled: "",
@@ -243,7 +243,7 @@ routerAdd("GET", "/check-unconfirmed-tasks", (e) => {
 			prev_resource_user: task.get('resource_user')
 		})
 		task.set('resource_rejected', true)
-		$app.dao().saveRecord(task)
+		$app.save(task)
 	})
 	if (report.length > 0) {
 		return e.json(200, report)

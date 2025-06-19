@@ -2,7 +2,7 @@
 
 onRecordUpdateExecute((e) => {
 	const table = e.model.tableName()
-	const current_model = $app.dao().findRecordById(table, e.model.id)
+	const current_model = $app.findRecordById(table, e.model.id)
 	var user_ids = []
 	var exercise_record
 	var old_resource_user_id = ''
@@ -16,7 +16,7 @@ onRecordUpdateExecute((e) => {
 
 		// check if there's an active exercise
 		try {
-			exercise_record = $app.dao().findFirstRecordByFilter(
+			exercise_record = $app.findFirstRecordByFilter(
 				"exercises",
 				"started = true && end > {:now}", // omiting the start so admins can start early if desired
 				{ now: new Date().toISOString().replace('T', ' ').substr(0, 19) }
@@ -37,16 +37,16 @@ onRecordUpdateExecute((e) => {
 		}
 
 		// get list of users who are already ready
-		const ready_users = $app.dao().findRecordsByExpr("users", $dbx.hashExp({ready: true}))
+		const ready_users = $app.findAllRecords("users", $dbx.hashExp({ready: true}))
 		ready_users.forEach(ready_user => user_ids.push(ready_user.get('id')))
 
 		exercise_record = e.model
 	} else if (table == 'tasks') {
 		// reset user rejection count if they confirm the resource
 		if (current_model.get('resource_confirmed') == false && e.model.get('resource_confirmed') == true) {
-			const confirmed_resource_user = $app.dao().findRecordById('users', e.model.get('resource_user'))
+			const confirmed_resource_user = $app.findRecordById('users', e.model.get('resource_user'))
 			confirmed_resource_user.set('rejected', 0)
-			$app.dao().saveRecord(confirmed_resource_user)
+			$app.save(confirmed_resource_user)
 		}
 
 		// only go through this process if the task is being updated from resource_rejected:false to resource_rejected:true
@@ -56,7 +56,7 @@ onRecordUpdateExecute((e) => {
 
 		// check if there's an active exercise
 		try {
-			exercise_record = $app.dao().findFirstRecordByFilter(
+			exercise_record = $app.findFirstRecordByFilter(
 				"exercises",
 				"started = true && end > {:now}", // omiting the start so admins can start early if desired
 				{ now: new Date().toISOString().replace('T', ' ').substr(0, 19) }
@@ -70,9 +70,9 @@ onRecordUpdateExecute((e) => {
 
 		// update resource user rejection count
 		old_resource_user_id = e.model.get('resource_user')
-		const old_resource_user = $app.dao().findRecordById('users', old_resource_user_id)
+		const old_resource_user = $app.findRecordById('users', old_resource_user_id)
 		old_resource_user.set('rejected', old_resource_user.getInt('rejected') + 1)
-		$app.dao().saveRecord(old_resource_user)
+		$app.save(old_resource_user)
 
 		// only have the need_user to work with
 		user_ids.push(e.model.get('need_user'))
@@ -82,7 +82,7 @@ onRecordUpdateExecute((e) => {
 	}
 
 	// shoring up
-	const tasks_collection = $app.dao().findCollectionByNameOrId("tasks")
+	const tasks_collection = $app.findCollectionByNameOrId("tasks")
 	const stake_weight = exercise_record.get('stake_distribution')
 	const region_weight = exercise_record.get('region_distribution')
 	const storehouse_weight = exercise_record.get('storehouse_distribution')
@@ -92,8 +92,8 @@ onRecordUpdateExecute((e) => {
 
 	function chooseUser(user_id) {
 		const resource_user = new DynamicModel({ "id": "" })
-		const user_model = $app.dao().findRecordById('users', user_id)
-		const region_id = $app.dao().findRecordById("stakes", user_model.get('stake')).get('region')
+		const user_model = $app.findRecordById('users', user_id)
+		const region_id = $app.findRecordById("stakes", user_model.get('stake')).get('region')
 		var skip_stake = false,
 			skip_region = false,
 			skip_storehouse = false
@@ -235,7 +235,7 @@ onRecordUpdateExecute((e) => {
 				var resource_user = chooseUser(user_id)
 
 				// create task
-				$app.dao().saveRecord(new Record(tasks_collection, {
+				$app.save(new Record(tasks_collection, {
 					"need_user": user_id,
 					"resource_user": resource_user,
 					"item": task.id,
@@ -249,7 +249,7 @@ onRecordUpdateExecute((e) => {
 			// update existing task with new user
 			e.model.set('resource_user', resource_user)
 			e.model.set('resource_rejected', false)
-			$app.dao().saveRecord(e.model)
+			$app.save(e.model)
 		} else {
 			// some programmer made a boo boo
 			throw new ApiError(500, "Unhandled table")
@@ -271,9 +271,9 @@ onRecordUpdateExecute((e) => {
 
 	// update needs user when a task resource has been confirmed
 	if (e.model.get('resource_confirmed') == true) {
-		const need_user = $app.dao().findRecordById("users", e.model.get('need_user'))
+		const need_user = $app.findRecordById("users", e.model.get('need_user'))
 		need_user.set('ready', false)
-		$app.dao().saveRecord(need_user)
+		$app.save(need_user)
 	}
 }, 'tasks')
 
@@ -282,8 +282,8 @@ onRecordCreateExecute((e) => {
 
 	// update needs user when a task resource has been created as confirmed
 	if (e.model.get('resource_confirmed') == true) {
-		const need_user = $app.dao().findRecordById("users", e.model.get('need_user'))
+		const need_user = $app.findRecordById("users", e.model.get('need_user'))
 		need_user.set('ready', false)
-		$app.dao().saveRecord(need_user)
+		$app.save(need_user)
 	}
 }, 'tasks')
