@@ -1,8 +1,8 @@
 /// <reference path="../pb_data/types.d.ts" />
 
 onRecordUpdateExecute((e) => {
-	const table = e.model.tableName()
-	const current_model = $app.findRecordById(table, e.model.id)
+	const table = e.record.tableName()
+	const current_model = $app.findRecordById(table, e.record.id)
 	var user_ids = []
 	var exercise_record
 	var old_resource_user_id = ''
@@ -10,7 +10,8 @@ onRecordUpdateExecute((e) => {
 	// setup based on table
 	if (table == 'users') {
 		// only go through this process if the user is being updated from ready:false to ready:true
-		if (current_model.get('ready') == true || e.model.get('ready') == false) {
+		if (current_model.get('ready') == true || e.record.get('ready') == false) {
+			e.next()
 			return
 		}
 
@@ -25,14 +26,16 @@ onRecordUpdateExecute((e) => {
 
 		// stop if there's no active exercise
 		if (exercise_record == undefined) {
+			e.next()
 			return
 		}
 
 		// add user to processing list
-		user_ids.push(e.model.id)
+		user_ids.push(e.record.id)
 	} else if (table == 'exercises') {
 		// only go through this process if the exercise is being updated from started:false to started:true
-		if (current_model.get('started') != false || e.model.get('started') != true) {
+		if (current_model.get('started') != false || e.record.get('started') != true) {
+			e.next()
 			return
 		}
 
@@ -40,17 +43,18 @@ onRecordUpdateExecute((e) => {
 		const ready_users = $app.findAllRecords("users", $dbx.hashExp({ready: true}))
 		ready_users.forEach(ready_user => user_ids.push(ready_user.get('id')))
 
-		exercise_record = e.model
+		exercise_record = e.record
 	} else if (table == 'tasks') {
 		// reset user rejection count if they confirm the resource
-		if (current_model.get('resource_confirmed') == false && e.model.get('resource_confirmed') == true) {
-			const confirmed_resource_user = $app.findRecordById('users', e.model.get('resource_user'))
+		if (current_model.get('resource_confirmed') == false && e.record.get('resource_confirmed') == true) {
+			const confirmed_resource_user = $app.findRecordById('users', e.record.get('resource_user'))
 			confirmed_resource_user.set('rejected', 0)
 			$app.save(confirmed_resource_user)
 		}
 
 		// only go through this process if the task is being updated from resource_rejected:false to resource_rejected:true
-		if (current_model.get('resource_rejected') == true || e.model.get('resource_rejected') == false) {
+		if (current_model.get('resource_rejected') == true || e.record.get('resource_rejected') == false) {
+			e.next()
 			return
 		}
 
@@ -65,17 +69,18 @@ onRecordUpdateExecute((e) => {
 
 		// stop if there's no active exercise
 		if (exercise_record == undefined) {
+			e.next()
 			return
 		}
 
 		// update resource user rejection count
-		old_resource_user_id = e.model.get('resource_user')
+		old_resource_user_id = e.record.get('resource_user')
 		const old_resource_user = $app.findRecordById('users', old_resource_user_id)
 		old_resource_user.set('rejected', old_resource_user.getInt('rejected') + 1)
 		$app.save(old_resource_user)
 
 		// only have the need_user to work with
-		user_ids.push(e.model.get('need_user'))
+		user_ids.push(e.record.get('need_user'))
 	} else {
 		// some programmer made a boo boo
 		throw new ApiError(500, "Unhandled table")
@@ -247,9 +252,9 @@ onRecordUpdateExecute((e) => {
 			var resource_user = chooseUser(user_id)
 
 			// update existing task with new user
-			e.model.set('resource_user', resource_user)
-			e.model.set('resource_rejected', false)
-			$app.save(e.model)
+			e.record.set('resource_user', resource_user)
+			e.record.set('resource_rejected', false)
+			$app.save(e.record)
 		} else {
 			// some programmer made a boo boo
 			throw new ApiError(500, "Unhandled table")
@@ -261,7 +266,7 @@ onRecordUpdateExecute((e) => {
 
 onRecordCreateExecute((e) => {
 	// prevent new exercises from being created as already started
-	e.model.set('started', false)
+	e.record.set('started', false)
 
 	e.next()
 }, 'exercises')
@@ -270,8 +275,8 @@ onRecordUpdateExecute((e) => {
 	e.next()
 
 	// update needs user when a task resource has been confirmed
-	if (e.model.get('resource_confirmed') == true) {
-		const need_user = $app.findRecordById("users", e.model.get('need_user'))
+	if (e.record.get('resource_confirmed') == true) {
+		const need_user = $app.findRecordById("users", e.record.get('need_user'))
 		need_user.set('ready', false)
 		$app.save(need_user)
 	}
@@ -281,8 +286,8 @@ onRecordCreateExecute((e) => {
 	e.next()
 
 	// update needs user when a task resource has been created as confirmed
-	if (e.model.get('resource_confirmed') == true) {
-		const need_user = $app.findRecordById("users", e.model.get('need_user'))
+	if (e.record.get('resource_confirmed') == true) {
+		const need_user = $app.findRecordById("users", e.record.get('need_user'))
 		need_user.set('ready', false)
 		$app.save(need_user)
 	}
