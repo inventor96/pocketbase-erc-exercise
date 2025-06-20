@@ -113,21 +113,6 @@ Just a few more things to get you ready for go-time.
 	[Install]
 	WantedBy=multi-user.target
 	```
-1. (Basically required for user sanity) Create a system service that triggers the handling of unconfirmed tasks. e.g. `/etc/systemd/system/pocketbase-erc-check.service`:
-	```ini
-	[Unit]
-	Description=Pocketbase - ERC Exercise - check unconfirmed tasks
-	After=network.target
-
-	[Service]
-	User=www-data
-	Group=www-data
-	ExecStart=/your/repo/path/check_unconfirmed_tasks.sh
-	Restart=always
-
-	[Install]
-	WantedBy=multi-user.target
-	```
 
 ## Pocketbase Updates
 This was built and used with Pocketbase v0.28.3, which is also the version included in the repo. To update it, you'll need to head over to https://pocketbase.io/docs/ for the executable, and https://github.com/pocketbase/js-sdk for the browser SDK. Make sure to test to make sure the update doesn't require additional changes in the code!
@@ -146,7 +131,10 @@ When an exercise is changed from **not started** to **started**, the application
 As soon as the `end` timestamp is reached for an exercise, the countdown timer will update accordingly, and the application will stop making new assignments, even if the `started` field is still set to `true`.
 
 ### Need and Resource Assignments
-For each needs assignment (or task), a random item is selected (priorizing the least used items first), then a random scope (stake, region, storehouse) will be chosen based on the weights/distributions defined for the exercise, and finally a user from the scope's pool is selected as the resource user. The record is created, and then the application waits between 120 and 130 seconds for the resource user to accept the resource assignment. If the user does not accept (either by lack of response, or by explicitly rejecting the assignment), then the process repeats for selecting another user as the resource. Once a resource user accepts the assignment, then the task shows up for both the need user and the resource user.
+For each needs assignment (or task), a random item is selected (priorizing the least used items first), then a random scope (stake, region, storehouse) will be chosen based on the weights/distributions defined for the exercise, and finally a user from the scope's pool is selected as the resource user. The record is created, and then the application waits between 2 - 3 minutes for the resource user to accept the resource assignment. If the user does not accept (either by lack of response, or by explicitly rejecting the assignment), then the process repeats for selecting another user as the resource. Once a resource user accepts the assignment, then the task shows up for both the need user and the resource user.
+
+#### Rejection Counts
+The application counts the number of times that a user rejects a resource (again, eith by lack of response, or by explicitly rejecting the assignment), and will not assign them another resource for the remainder of the exercise if a user's rejection count reaches 3 or more. This is to avoid unnecessary delays in users receiving their needs assignments. For example, if a user signs up and immediately clicks the "Ready" button, but then never joins the exercise when it starts. The rejection count can be reset by an admin user in the admin portal.
 
 ### Fulfilling and Cancelling a Need
 Once the need user finds the resource user and has received their callsign, the need user can then enter the callsign in the respective field in the web app and submit it. If the callsign is correct, the need user gets a visual confirmation, and then the need/resource is moved into the respective statistics column for each user. If it's incorrect, they are informed and allowed to retry as many times as they want until it's correct.

@@ -218,37 +218,6 @@ routerAdd("GET", "/forgot", (e) => {
 	return e.html(200, html)
 })
 
-// cron job to handle unconfirmed tasks
-routerAdd("GET", "/check-unconfirmed-tasks", (e) => {
-	// get all unconfirmed resources that haven't been updated in at least 130 seconds
-	const report = []
-	const unconfirmed_tasks = $app.findAllRecords("tasks",
-		$dbx.hashExp({
-			completed: "",
-			cancelled: "",
-			resource_confirmed: false,
-			resource_rejected: false
-		}),
-		$dbx.exp(
-			'updated < {:reftime}',
-			{ "reftime": new Date(Date.now() - 130000).toISOString().replace('T', ' ').substr(0, 19) }
-		)
-	)
-	unconfirmed_tasks.forEach(task => {
-		report.push({
-			task_id: task.id,
-			prev_resource_user: task.get('resource_user')
-		})
-		task.set('resource_rejected', true)
-		$app.save(task)
-	})
-	if (report.length > 0) {
-		return e.json(200, report)
-	} else {
-		return e.noContent(204)
-	}
-})
-
 // get json report of the current item pool
 routerAdd("GET", "/item-pool", (e) => {
 	var items = arrayOf(new DynamicModel({
