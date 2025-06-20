@@ -357,6 +357,19 @@ routerAdd("GET", "/monitordata", function (e) {
 		region_data[region.name].skipped += region.count
 	})
 
+	// helper function to format the time in HH:MM:SS format, adding the days if needed
+	const formatTime = (time) => {
+		if (time === null) {
+			return '--';
+		}
+		const totalSeconds = Math.floor(time / 1000);
+		const days = Math.floor(totalSeconds / 86400);
+		const hours = Math.floor((totalSeconds % 86400) / 3600);
+		const minutes = Math.floor((totalSeconds % 3600) / 60);
+		const seconds = totalSeconds % 60;
+		return `${days > 0 ? days + 'd ' : ''}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+	}
+
 	// get times between task creation and completion with the need and resource being in the same stake
 	const stake_tasks_time = arrayOf(new DynamicModel({
 		"completed": "",
@@ -394,9 +407,9 @@ routerAdd("GET", "/monitordata", function (e) {
 	const stake_tasks_time_max = stake_tasks_times.length > 0 ? Math.max(...stake_tasks_times) : null
 
 	// format times for stake tasks
-	const stake_tasks_time_min_formatted = stake_tasks_time_min !== null ? new Date(stake_tasks_time_min).toISOString().substr(11, 8) : '--'
-	const stake_tasks_time_max_formatted = stake_tasks_time_max !== null ? new Date(stake_tasks_time_max).toISOString().substr(11, 8) : '--'
-	const stake_tasks_time_avg_formatted = stake_tasks_time_avg !== null ? new Date(stake_tasks_time_avg).toISOString().substr(11, 8) : '--'
+	const stake_tasks_time_min_formatted = formatTime(stake_tasks_time_min)
+	const stake_tasks_time_max_formatted = formatTime(stake_tasks_time_max)
+	const stake_tasks_time_avg_formatted = formatTime(stake_tasks_time_avg)
 
 	// get times between task creation and completion with the need and resource being in the same region (excluding stake)
 	const region_tasks_time = arrayOf(new DynamicModel({
@@ -438,9 +451,9 @@ routerAdd("GET", "/monitordata", function (e) {
 	const region_tasks_time_max = region_tasks_times.length > 0 ? Math.max(...region_tasks_times) : null
 
 	// format times for region tasks
-	const region_tasks_time_min_formatted = region_tasks_time_min !== null ? new Date(region_tasks_time_min).toISOString().substr(11, 8) : '--'
-	const region_tasks_time_max_formatted = region_tasks_time_max !== null ? new Date(region_tasks_time_max).toISOString().substr(11, 8) : '--'
-	const region_tasks_time_avg_formatted = region_tasks_time_avg !== null ? new Date(region_tasks_time_avg).toISOString().substr(11, 8) : '--'
+	const region_tasks_time_min_formatted = formatTime(region_tasks_time_min)
+	const region_tasks_time_max_formatted = formatTime(region_tasks_time_max)
+	const region_tasks_time_avg_formatted = formatTime(region_tasks_time_avg)
 
 	// get times between task creation and completion with the need and resource NOT in the same region (i.e. storehouse)
 	const storehouse_tasks_time = arrayOf(new DynamicModel({
@@ -481,9 +494,9 @@ routerAdd("GET", "/monitordata", function (e) {
 	const storehouse_tasks_time_max = storehouse_tasks_times.length > 0 ? Math.max(...storehouse_tasks_times) : null
 
 	// format times for storehouse tasks
-	const storehouse_tasks_time_min_formatted = storehouse_tasks_time_min !== null ? new Date(storehouse_tasks_time_min).toISOString().substr(11, 8) : '--'
-	const storehouse_tasks_time_max_formatted = storehouse_tasks_time_max !== null ? new Date(storehouse_tasks_time_max).toISOString().substr(11, 8) : '--'
-	const storehouse_tasks_time_avg_formatted = storehouse_tasks_time_avg !== null ? new Date(storehouse_tasks_time_avg).toISOString().substr(11, 8) : '--'
+	const storehouse_tasks_time_min_formatted = formatTime(storehouse_tasks_time_min)
+	const storehouse_tasks_time_max_formatted = formatTime(storehouse_tasks_time_max)
+	const storehouse_tasks_time_avg_formatted = formatTime(storehouse_tasks_time_avg)
 
 	// total number of registered users
 	const registered_users = new DynamicModel({
