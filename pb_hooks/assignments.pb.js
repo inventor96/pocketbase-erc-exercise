@@ -73,11 +73,16 @@ onRecordUpdateExecute((e) => {
 			return
 		}
 
-		// update resource user rejection count
+		// update resource user rejection count if last_reject is at least 2 minutes ago
 		old_resource_user_id = e.record.get('resource_user')
 		const old_resource_user = $app.findRecordById('users', old_resource_user_id)
-		old_resource_user.set('rejected', old_resource_user.getInt('rejected') + 1)
-		$app.save(old_resource_user)
+		// .unix() returns the number of seconds since the epoch, so we need to multiply by 1000 to get milliseconds
+		if (old_resource_user.get('last_reject').isZero() || (old_resource_user.get('last_reject').unix() * 1000) < (Date.now() - 120000)) {
+			old_resource_user.set('rejected', old_resource_user.getInt('rejected') + 1)
+			old_resource_user.set('last_reject', new DateTime())
+			$app.save(old_resource_user)
+			$app.logger().info(`Updated old resource user ${old_resource_user_id} rejection count to ${old_resource_user.get('rejected')}.`)
+		}
 
 		// only have the need_user to work with
 		user_ids.push(e.record.get('need_user'))
