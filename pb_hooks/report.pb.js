@@ -312,7 +312,7 @@ routerAdd("GET", "/report", (e) => {
 		"reports": {
 			"multiple_tasks": {
 				"count": multiple_tasks.length,
-				"description": "Items that are/were used in more than one task",
+				"description": "Items that are/were used in more than one task (and may have caused confusion)",
 				"report": multiple_tasks_details
 			},
 			"top_needs_users": {
@@ -358,7 +358,7 @@ routerAdd("GET", "/report", (e) => {
 				}
 			},
 			"user_participation": {
-				"description": "The number of users with evidence of participation in the exercise",
+				"description": "The number of users with evidence of participation in the exercise (defined as having either completed a task, cancelled a task, or confirmed a resource)",
 				"report": user_participation.count
 			}
 		}
