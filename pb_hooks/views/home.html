@@ -176,7 +176,6 @@
 		// hide the prompt and try the next one if the modal is shown for an id that is no longer in the queue
 		const curent_id = $('.resource-action').data('id');
 		if (resource_prompt_modal._isShown && curent_id && !resource_prompt_queue.some(task => task.id == curent_id)) {
-			console.log(Date.now(), `Resource prompt for ${curent_id} is no longer in the queue. Hiding modal...`)
 			clearInterval(interaction_timeout)
 			resource_prompt_modal.hide()
 			return
@@ -184,7 +183,6 @@
 
 		// skip if it's already shown or transitioning
 		if (resource_prompt_modal._isShown || resource_prompt_modal._isTransitioning || resource_prompt_queue.length == 0) {
-			console.log(Date.now(), "Resource prompt modal is already shown or transitioning, or queue is empty. Skipping...")
 			return
 		}
 
@@ -192,22 +190,19 @@
 		var i = 0
 		while (i < resource_prompt_queue.length && notified_resources.includes(resource_prompt_queue[i].id)) {
 			// skip if already notified
-			console.log(Date.now(), `Skipping resource ${resource_prompt_queue[i].id} as it has already been displayed.`)
 			i++
 		}
 
 		// nothing for us to do here
 		if (i == resource_prompt_queue.length) {
-			console.log(Date.now(), "No new resources to prompt for.")
 			return
 		}
 
 		// show the prompt
-		console.log(Date.now(), `Showing resource prompt for ${resource_prompt_queue[i].id}...`)
 		$('.resource-action').data('id', resource_prompt_queue[i].id)
 		$('#resource_name').text(resource_prompt_queue[i].expand?.item?.description || '(deleted)')
 		resource_prompt_modal.show()
-		notification.play().catch(error => console.log(Date.now(), "Failed to play notification sound:", error))
+		notification.play().catch(error => console.log("Failed to play notification sound:", error))
 		notified_resources.push(resource_prompt_queue[i].id)
 		const $interaction_timer = $('#interaction_timer')
 		$interaction_timer.text('120')
@@ -217,14 +212,12 @@
 			const timer = Number($interaction_timer.text()) - 1
 			$interaction_timer.text(timer)
 			if (timer == 0) {
-				console.log(Date.now(), "Interaction timeout reached. Rejecting resource...")
 				clearInterval(interaction_timeout)
 				$('#resource_reject').trigger('click')
 			}
 		}, 1000)
 	}
 	$resource_prompt_modal.on('hidden.bs.modal', () => {
-		console.log(Date.now(), "Resource prompt modal hidden. Scheduling check for next resource...")
 		$('.resource-action').data('id', '')
 		setTimeout(showResourcePrompt, 600)
 	})
