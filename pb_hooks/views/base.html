@@ -54,7 +54,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 	<script src="/pocketbase.umd.js"></script>
 	<script type="text/javascript">
-		const pb = new PocketBase('{{.appUrl}}')
+		const pb = new PocketBase('{{.appURL}}')
 
 		$(() => {
 			// update user info
@@ -62,7 +62,7 @@
 				$('.user-disp').text(pb.authStore?.model?.email)
 				$('.name-disp').text(pb.authStore?.model?.name)
 				$('#current_email').val(pb.authStore?.model?.email)
-				$('.callsign-disp').text(pb.authStore?.isAdmin ? 'admin' : pb.authStore?.model?.callsign)
+				$('.callsign-disp').text(pb.authStore?.isSuperuser ? 'admin' : pb.authStore?.model?.callsign)
 			}
 
 			// handle logout
@@ -138,6 +138,12 @@
 			const $save_change_password = $('#save_change_password')
 			$save_change_password.on('click', () => {
 				$save_change_password.prop('disabled', true)
+
+				// unsubscribe from all collections
+				pb.collection('tasks').unsubscribe()
+				pb.collection('users').unsubscribe()
+				pb.collection('exercises').unsubscribe()
+
 				pb.collection('users').update(pb.authStore.model.id, {
 					oldPassword: $('#old_password').val(),
 					password: $('#new_password').val(),
@@ -147,19 +153,19 @@
 						// refresh log in
 						const email = pb.authStore.model.email
 						pb.authStore.clear()
-						pb.collection('users').authWithPassword(email, $('#password').val())
+						pb.collection('users').authWithPassword(email, $('#new_password').val())
 							.then(() => {
 								if (pb.authStore.isValid) {
 									window.location.reload()
 								}
 							})
 							.catch(error => {
-								alert(`There was an error while refreshing your login: ${error}`)
+								alert(`There was an error while refreshing your login: ${error}\n\nPlease refresh the page.`)
 								$submit.prop('disabled', false)
 							})
 					})
 					.catch(err => {
-						alert(`There was an error while trying to change your password:\n${err}`)
+						alert(`There was an error while trying to change your password:\n${err}\n\nPlease refresh the page.`)
 					})
 				return false
 			})

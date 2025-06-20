@@ -1,6 +1,6 @@
 /// <reference path="../pb_data/types.d.ts" />
 
-routerAdd("GET", "/report", (c) => {
+routerAdd("GET", "/report", (e) => {
 	// get exercise to report on
 	const reporting_exercise = new DynamicModel({
 		"id": "",
@@ -10,9 +10,9 @@ routerAdd("GET", "/report", (c) => {
 	})
 	try {
 		// check if we looking for a specific exercise
-		const exercise_id = c.queryParam("exercise_id")
+		const exercise_id = e.request.url.query().get("exercise_id")
 		if (exercise_id) {
-			$app.dao().db()
+			$app.db()
 				.newQuery("SELECT id, name, start, end\
 					FROM exercises\
 					WHERE id = {:id}\
@@ -20,7 +20,7 @@ routerAdd("GET", "/report", (c) => {
 				.bind({ id: exercise_id })
 				.one(reporting_exercise)
 		} else {
-			$app.dao().db()
+			$app.db()
 				.newQuery("SELECT id, name, start, end\
 					FROM exercises\
 					WHERE start <= {:now}\
@@ -30,7 +30,8 @@ routerAdd("GET", "/report", (c) => {
 				.one(reporting_exercise)
 		}
 	} catch (error) {
-		c.json(404, {"error": "Could not find an exercise to report on."})
+		console.error("Error finding exercise for report:", error)
+		e.json(404, {"error": "Could not find an exercise to report on."})
 		return
 	}
 
@@ -40,7 +41,7 @@ routerAdd("GET", "/report", (c) => {
 		"description": "",
 		"count": 0
 	}))
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT items.id, items.description, COUNT(tasks.id) AS count\
 			FROM items\
 			LEFT JOIN tasks ON items.id = tasks.item\
@@ -63,7 +64,7 @@ routerAdd("GET", "/report", (c) => {
 			"resource_user_callsign": "",
 			"resource_user_stake": "",
 		}))
-		$app.dao().db()
+		$app.db()
 			.newQuery('SELECT tasks.id AS task_id, need_users.callsign AS need_user_callsign, need_stakes.name AS need_user_stake, resource_users.callsign AS resource_user_callsign, resource_stakes.name AS resource_user_stake\
 				FROM tasks\
 				LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -91,7 +92,7 @@ routerAdd("GET", "/report", (c) => {
 		"callsign": "",
 		"count": 0
 	}))
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT users.email, users.callsign, COUNT(tasks.id) AS count\
 			FROM users\
 			LEFT JOIN tasks ON users.id = tasks.need_user\
@@ -112,7 +113,7 @@ routerAdd("GET", "/report", (c) => {
 		"callsign": "",
 		"count": 0
 	}))
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT users.email, users.callsign, COUNT(tasks.id) AS count\
 			FROM users\
 			LEFT JOIN tasks ON users.id = tasks.resource_user\
@@ -129,7 +130,7 @@ routerAdd("GET", "/report", (c) => {
 
 	// count of tasks with the need and resource being in the same stake
 	const stake_tasks = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -144,7 +145,7 @@ routerAdd("GET", "/report", (c) => {
 
 	// count of completed tasks with the need and resource being in the same stake
 	const stake_tasks_completed = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -160,7 +161,7 @@ routerAdd("GET", "/report", (c) => {
 
 	// count of cancelled tasks with the need and resource being in the same stake
 	const stake_tasks_cancelled = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -176,7 +177,7 @@ routerAdd("GET", "/report", (c) => {
 
 	// count of tasks with the need and resource being in the same region (excluding stake)
 	const region_tasks = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -194,7 +195,7 @@ routerAdd("GET", "/report", (c) => {
 
 	// count of completed tasks with the need and resource being in the same region (excluding stake)
 	const region_tasks_completed = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -213,7 +214,7 @@ routerAdd("GET", "/report", (c) => {
 
 	// count of cancelled tasks with the need and resource being in the same region (excluding stake)
 	const region_tasks_cancelled = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -232,7 +233,7 @@ routerAdd("GET", "/report", (c) => {
 
 	// count of tasks with the need and resource NOT in the same region
 	const storehouse_tasks = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -249,7 +250,7 @@ routerAdd("GET", "/report", (c) => {
 
 	// count of completed tasks with the need and resource NOT in the same region
 	const storehouse_tasks_completed = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -267,7 +268,7 @@ routerAdd("GET", "/report", (c) => {
 
 	// count of cancelled tasks with the need and resource NOT in the same region
 	const storehouse_tasks_cancelled = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(tasks.id) AS count\
 			FROM tasks\
 			LEFT JOIN users AS resource_users ON resource_users.id = tasks.resource_user\
@@ -285,7 +286,7 @@ routerAdd("GET", "/report", (c) => {
 
 	// count of unique users who have shown evidence of participation in the exercise
 	const user_participation = new DynamicModel({ "count": 0 })
-	$app.dao().db()
+	$app.db()
 		.newQuery("SELECT COUNT(DISTINCT id) AS count\
 			FROM (\
 				SELECT resource_user AS id FROM tasks\
@@ -306,12 +307,12 @@ routerAdd("GET", "/report", (c) => {
 
 	// output report
 	const total_tasks = stake_tasks.count + region_tasks.count + storehouse_tasks.count
-	c.json(200, {
+	e.json(200, {
 		"exercise": reporting_exercise,
 		"reports": {
 			"multiple_tasks": {
 				"count": multiple_tasks.length,
-				"description": "Items that are/were used in more than one task",
+				"description": "Items that are/were used in more than one task (and may have caused confusion)",
 				"report": multiple_tasks_details
 			},
 			"top_needs_users": {
@@ -357,7 +358,7 @@ routerAdd("GET", "/report", (c) => {
 				}
 			},
 			"user_participation": {
-				"description": "The number of users with evidence of participation in the exercise",
+				"description": "The number of users with evidence of participation in the exercise (defined as having either completed a task, cancelled a task, or confirmed a resource)",
 				"report": user_participation.count
 			}
 		}

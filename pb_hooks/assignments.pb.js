@@ -1,8 +1,8 @@
 /// <reference path="../pb_data/types.d.ts" />
 
-onModelBeforeUpdate((e) => {
-	const table = e.model.tableName()
-	const current_model = $app.dao().findRecordById(table, e.model.id)
+onRecordUpdateExecute((e) => {
+	const table = e.record.tableName()
+	const current_model = $app.findRecordById(table, e.record.id)
 	var user_ids = []
 	var exercise_record
 	var old_resource_user_id = ''
@@ -10,13 +10,14 @@ onModelBeforeUpdate((e) => {
 	// setup based on table
 	if (table == 'users') {
 		// only go through this process if the user is being updated from ready:false to ready:true
-		if (current_model.get('ready') == true || e.model.get('ready') == false) {
+		if (current_model.get('ready') == true || e.record.get('ready') == false) {
+			e.next()
 			return
 		}
 
 		// check if there's an active exercise
 		try {
-			exercise_record = $app.dao().findFirstRecordByFilter(
+			exercise_record = $app.findFirstRecordByFilter(
 				"exercises",
 				"started = true && end > {:now}", // omiting the start so admins can start early if desired
 				{ now: new Date().toISOString().replace('T', ' ').substr(0, 19) }
@@ -25,38 +26,41 @@ onModelBeforeUpdate((e) => {
 
 		// stop if there's no active exercise
 		if (exercise_record == undefined) {
+			e.next()
 			return
 		}
 
 		// add user to processing list
-		user_ids.push(e.model.id)
+		user_ids.push(e.record.id)
 	} else if (table == 'exercises') {
 		// only go through this process if the exercise is being updated from started:false to started:true
-		if (current_model.get('started') != false || e.model.get('started') != true) {
+		if (current_model.get('started') != false || e.record.get('started') != true) {
+			e.next()
 			return
 		}
 
 		// get list of users who are already ready
-		const ready_users = $app.dao().findRecordsByExpr("users", $dbx.hashExp({ready: true}))
+		const ready_users = $app.findAllRecords("users", $dbx.hashExp({ready: true}))
 		ready_users.forEach(ready_user => user_ids.push(ready_user.get('id')))
 
-		exercise_record = e.model
+		exercise_record = e.record
 	} else if (table == 'tasks') {
 		// reset user rejection count if they confirm the resource
-		if (current_model.get('resource_confirmed') == false && e.model.get('resource_confirmed') == true) {
-			const confirmed_resource_user = $app.dao().findRecordById('users', e.model.get('resource_user'))
+		if (current_model.get('resource_confirmed') == false && e.record.get('resource_confirmed') == true) {
+			const confirmed_resource_user = $app.findRecordById('users', e.record.get('resource_user'))
 			confirmed_resource_user.set('rejected', 0)
-			$app.dao().saveRecord(confirmed_resource_user)
+			$app.save(confirmed_resource_user)
 		}
 
 		// only go through this process if the task is being updated from resource_rejected:false to resource_rejected:true
-		if (current_model.get('resource_rejected') == true || e.model.get('resource_rejected') == false) {
+		if (current_model.get('resource_rejected') == true || e.record.get('resource_rejected') == false) {
+			e.next()
 			return
 		}
 
 		// check if there's an active exercise
 		try {
-			exercise_record = $app.dao().findFirstRecordByFilter(
+			exercise_record = $app.findFirstRecordByFilter(
 				"exercises",
 				"started = true && end > {:now}", // omiting the start so admins can start early if desired
 				{ now: new Date().toISOString().replace('T', ' ').substr(0, 19) }
@@ -65,24 +69,25 @@ onModelBeforeUpdate((e) => {
 
 		// stop if there's no active exercise
 		if (exercise_record == undefined) {
+			e.next()
 			return
 		}
 
 		// update resource user rejection count
-		old_resource_user_id = e.model.get('resource_user')
-		const old_resource_user = $app.dao().findRecordById('users', old_resource_user_id)
+		old_resource_user_id = e.record.get('resource_user')
+		const old_resource_user = $app.findRecordById('users', old_resource_user_id)
 		old_resource_user.set('rejected', old_resource_user.getInt('rejected') + 1)
-		$app.dao().saveRecord(old_resource_user)
+		$app.save(old_resource_user)
 
 		// only have the need_user to work with
-		user_ids.push(e.model.get('need_user'))
+		user_ids.push(e.record.get('need_user'))
 	} else {
 		// some programmer made a boo boo
 		throw new ApiError(500, "Unhandled table")
 	}
 
 	// shoring up
-	const tasks_collection = $app.dao().findCollectionByNameOrId("tasks")
+	const tasks_collection = $app.findCollectionByNameOrId("tasks")
 	const stake_weight = exercise_record.get('stake_distribution')
 	const region_weight = exercise_record.get('region_distribution')
 	const storehouse_weight = exercise_record.get('storehouse_distribution')
@@ -92,8 +97,8 @@ onModelBeforeUpdate((e) => {
 
 	function chooseUser(user_id) {
 		const resource_user = new DynamicModel({ "id": "" })
-		const user_model = $app.dao().findRecordById('users', user_id)
-		const region_id = $app.dao().findRecordById("stakes", user_model.get('stake')).get('region')
+		const user_model = $app.findRecordById('users', user_id)
+		const region_id = $app.findRecordById("stakes", user_model.get('stake')).get('region')
 		var skip_stake = false,
 			skip_region = false,
 			skip_storehouse = false
@@ -105,7 +110,7 @@ onModelBeforeUpdate((e) => {
 			if (scope_chooser <= stake_weight && !skip_stake) {
 				try {
 					// get user from the stake
-					$app.dao().db()
+					$app.db()
 						.newQuery("SELECT users.id, COUNT(tasks.id) AS count\
 							FROM users\
 							LEFT JOIN tasks ON tasks.resource_user = users.id\
@@ -130,7 +135,7 @@ onModelBeforeUpdate((e) => {
 			} else if (scope_chooser <= region_weight + stake_weight && !skip_region) {
 				try {
 					// get user from the region
-					$app.dao().db()
+					$app.db()
 						.newQuery("SELECT users.id, COUNT(tasks.id) AS count\
 							FROM users\
 							LEFT JOIN tasks ON tasks.resource_user = users.id\
@@ -156,7 +161,7 @@ onModelBeforeUpdate((e) => {
 			} else if (!skip_storehouse) {
 				try {
 					// get user from the storehouse
-					$app.dao().db()
+					$app.db()
 						.newQuery("SELECT users.id, COUNT(tasks.id) AS count\
 							FROM users\
 							LEFT JOIN tasks ON tasks.resource_user = users.id\
@@ -198,7 +203,7 @@ onModelBeforeUpdate((e) => {
 		if (table == 'users' || table == 'exercises') {
 			// check users existing tasks
 			var tasks = new DynamicModel({ "count": 0 })
-			$app.dao().db()
+			$app.db()
 				.newQuery("SELECT COUNT(id) AS count\
 					FROM tasks\
 					WHERE need_user = {:need_user}\
@@ -216,7 +221,7 @@ onModelBeforeUpdate((e) => {
 			for (let j = 0; j < new_task_count; j++) {
 				// pick a random task
 				var task = new DynamicModel({ "id": "" })
-				$app.dao().db() // should reflect the item pool query in routes.pb.js
+				$app.db() // should reflect the item pool query in routes.pb.js
 					.newQuery(`SELECT items.id, COUNT(tasks.id) AS used
 						FROM items
 						LEFT JOIN tasks ON tasks.item = items.id
@@ -235,7 +240,7 @@ onModelBeforeUpdate((e) => {
 				var resource_user = chooseUser(user_id)
 
 				// create task
-				$app.dao().saveRecord(new Record(tasks_collection, {
+				$app.save(new Record(tasks_collection, {
 					"need_user": user_id,
 					"resource_user": resource_user,
 					"item": task.id,
@@ -247,35 +252,43 @@ onModelBeforeUpdate((e) => {
 			var resource_user = chooseUser(user_id)
 
 			// update existing task with new user
-			e.model.set('resource_user', resource_user)
-			e.model.set('resource_rejected', false)
-			$app.dao().saveRecord(e.model)
+			e.record.set('resource_user', resource_user)
+			e.record.set('resource_rejected', false)
+			$app.save(e.record)
 		} else {
 			// some programmer made a boo boo
 			throw new ApiError(500, "Unhandled table")
 		}
 	})
+
+	e.next()
 }, 'users', 'tasks', 'exercises')
 
-onModelBeforeCreate((e) => {
+onRecordCreateExecute((e) => {
 	// prevent new exercises from being created as already started
-	e.model.set('started', false)
+	e.record.set('started', false)
+
+	e.next()
 }, 'exercises')
 
-onModelAfterUpdate((e) => {
+onRecordUpdateExecute((e) => {
+	e.next()
+
 	// update needs user when a task resource has been confirmed
-	if (e.model.get('resource_confirmed') == true) {
-		const need_user = $app.dao().findRecordById("users", e.model.get('need_user'))
+	if (e.record.get('resource_confirmed') == true) {
+		const need_user = $app.findRecordById("users", e.record.get('need_user'))
 		need_user.set('ready', false)
-		$app.dao().saveRecord(need_user)
+		$app.save(need_user)
 	}
 }, 'tasks')
 
-onModelAfterCreate((e) => {
+onRecordCreateExecute((e) => {
+	e.next()
+
 	// update needs user when a task resource has been created as confirmed
-	if (e.model.get('resource_confirmed') == true) {
-		const need_user = $app.dao().findRecordById("users", e.model.get('need_user'))
+	if (e.record.get('resource_confirmed') == true) {
+		const need_user = $app.findRecordById("users", e.record.get('need_user'))
 		need_user.set('ready', false)
-		$app.dao().saveRecord(need_user)
+		$app.save(need_user)
 	}
 }, 'tasks')

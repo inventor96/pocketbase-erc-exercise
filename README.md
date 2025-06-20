@@ -130,7 +130,7 @@ Just a few more things to get you ready for go-time.
 	```
 
 ## Pocketbase Updates
-This was built and used with Pocketbase v0.18.10, which is also the version included in the repo. To update it, you'll need to head over to https://pocketbase.io/docs/ for the executable, and https://github.com/pocketbase/js-sdk for the browser SDK. Make sure to test to make sure the update doesn't require additional changes in the code!
+This was built and used with Pocketbase v0.28.3, which is also the version included in the repo. To update it, you'll need to head over to https://pocketbase.io/docs/ for the executable, and https://github.com/pocketbase/js-sdk for the browser SDK. Make sure to test to make sure the update doesn't require additional changes in the code!
 
 ## How the heck does this thing work?
 Good question!
@@ -154,9 +154,7 @@ Once the need user finds the resource user and has received their callsign, the 
 If the user decides they are unable to find the resource user, they can click the respective button for the need assignment, and then it will be cancelled after confirmation. It is then hidden from both the need and resource users.
 
 ### Monitoring
-The application has a monitoring page at `/monitor` that shows information about the current exercise, including various details about the participating users and needs/resource assignments. This page is accessible publicly. Optionally, you can query for a specific exercise by adding the `exercise_id` query parameter to the URL. e.g. `/monitor?exercise_id=ID_FROM_THE_COLLECTION`.
+The application has a monitoring page at `/monitor` that shows information about the current exercise, including various details about the participating users and needs/resource assignments. This page is accessible publicly. Optionally, you can query for a specific exercise by adding the `exercise_id` query parameter to the URL. e.g. `/monitor?exercise_id=ID_FROM_THE_COLLECTION`. The button on the admin portal will also redirect to the monitoring page for the respective exercise.
 
 ### Reporting
-A JSON report is available publicly at the `/report` URL. This includes details about task success/failure rates per scope, a list of items that have been used in more than one task/assignment, the top users for needs and resources, and a participation head count. By default, the report shows stats for the timeframe of the most recent exercise for which the start time has passed (irrespective of the `started` status). Optionally, you can query for a specific exercise by adding the `exercise_id` query parameter to the URL. e.g. `/report?exercise_id=ID_FROM_THE_COLLECTION`.
-
-**Note:** Any items that are used in more than one task will cause confusion if the respective scopes overlap, because the application will still require the callsign of the resource user as defined by the assignment, even if the item is the same. This is why that part of the report is useful.
+A JSON report is available publicly at the `/report` URL. This includes details about task success/failure rates per scope, a list of items that have been used in more than one task/assignment, the top users for needs and resources, and a participation head count. By default, the report shows stats for the timeframe of the most recent exercise for which the start time has passed (irrespective of the `started` status). Optionally, you can query for a specific exercise by adding the `exercise_id` query parameter to the URL. e.g. `/report?exercise_id=ID_FROM_THE_COLLECTION`. The button on the admin portal will also redirect to the report page for the respective exercise.
