@@ -1,4 +1,10 @@
 /// <reference path="../pb_data/types.d.ts" />
+
+/*
+ * This migration script is used for installations updating from v0.18 to v0.28.3.
+ * Remove the ".disabled" suffix from the filename to enable it after updating and before starting the app.
+ */
+
 migrate((app) => {
   app.db().newQuery("INSERT INTO `_migrations` (`applied`, `file`) VALUES\
 	(1750298328, '1750298328_created_exercises.js'),\
