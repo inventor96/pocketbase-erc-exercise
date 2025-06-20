@@ -54,7 +54,7 @@ routerUse(new Middleware((e) => {
 // render home page
 routerAdd("GET", "/{$}", (e) => {
 	// redirect to login page if not logged in
-	if (!e.auth) {
+	if (!e.auth || e.hasSuperuserAuth()) {
 		return e.redirect(302, "/login")
 	}
 
@@ -173,7 +173,7 @@ routerAdd("GET", "/callsign", (e) => {
 // render the login page
 routerAdd("GET", "/login", (e) => {
 	// redirect to home if already logged in
-	if (e.auth) {
+	if (e.auth && !e.hasSuperuserAuth()) {
 		return e.redirect(302, "/")
 	}
 
