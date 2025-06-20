@@ -71,19 +71,17 @@ routerAdd("GET", "/{$}", (e) => {
 
 // handle need fulfillment verification
 routerAdd("POST", "/fulfill-need", (e) => {
-	// get data
-	const user = e.auth
-	const data = $apis.requestInfo(e).data
-	const task = $app.findRecordById("tasks", data.need_id)
+	// get task
+	const task = $app.findRecordById("tasks", e.requestInfo().body.need_id)
 
 	// require correct user
-	if (task.getString('need_user') != user.id) {
+	if (task.getString('need_user') != e.auth.id) {
 		throw new UnauthorizedError('You look familiar, but not who we were expecting...')
 	}
 
 	// check callsign
 	$app.expandRecord(task, ["resource_user"], null)
-	const result = data.need_callsign == task.expandedOne('resource_user').getString('callsign')
+	const result = e.requestInfo().body.need_callsign == task.expandedOne('resource_user').getString('callsign')
 
 	// update the task if successful
 	if (result) {
