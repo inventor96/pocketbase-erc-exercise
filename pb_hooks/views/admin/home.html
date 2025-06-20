@@ -764,21 +764,23 @@ ERC Exercise Admin
 					updateTasks();
 				}
 			}).catch(err => {
-				console.error('Error fetching exercises:', err);
-				tbody.append(`
-					<tr>
-						<td colspan="5" class="text-center">
-							<div class="d-flex justify-content-center align-items-center">
-								<span>Error loading exercises</span>
-							</div>
-						</td>
-					</tr>
-				`);
+				if (!error.message.match('request was autocancelled')) {
+					console.error('Error fetching exercises:', err);
+					tbody.append(`
+						<tr>
+							<td colspan="5" class="text-center">
+								<div class="d-flex justify-content-center align-items-center">
+									<span>Error loading exercises</span>
+								</div>
+							</td>
+						</tr>
+					`);
 
-				// update tasks filter
-				tasks_exercise_filter.append('<option value="" disabled selected>Error loading exercises</option>');
-				tasks_exercise_filter.prop('disabled', true);
-				updateTasks();
+					// update tasks filter
+					tasks_exercise_filter.append('<option value="" disabled selected>Error loading exercises</option>');
+					tasks_exercise_filter.prop('disabled', true);
+					updateTasks();
+				}
 			});
 		}
 		updateExercises();
@@ -829,16 +831,18 @@ ERC Exercise Admin
 					stakeRegionSelect.append(option);
 				});
 			}).catch(err => {
-				console.error('Error fetching regions:', err);
-				tbody.append(`
-					<tr>
-						<td colspan="2" class="text-center">
-							<div class="d-flex justify-content-center align-items-center">
-								<span>Error loading regions</span>
-							</div>
-						</td>
-					</tr>
-				`);
+				if (!err.message.match('request was autocancelled')) {
+					console.error('Error fetching regions:', err);
+					tbody.append(`
+						<tr>
+							<td colspan="2" class="text-center">
+								<div class="d-flex justify-content-center align-items-center">
+									<span>Error loading regions</span>
+								</div>
+							</td>
+						</tr>
+					`);
+				}
 			});
 		}
 		updateRegions();
@@ -897,21 +901,23 @@ ERC Exercise Admin
 					userStakeSelect.append(option);
 				});
 			}).catch(err => {
-				console.error('Error fetching stakes:', err);
-				tbody.append(`
-					<tr>
-						<td colspan="3" class="text-center">
-							<div class="d-flex justify-content-center align-items-center">
-								<span>Error loading stakes</span>
-							</div>
-						</td>
-					</tr>
-				`);
+				if (!err.message.match('request was autocancelled')) {
+					console.error('Error fetching stakes:', err);
+					tbody.append(`
+						<tr>
+							<td colspan="3" class="text-center">
+								<div class="d-flex justify-content-center align-items-center">
+									<span>Error loading stakes</span>
+								</div>
+							</td>
+						</tr>
+					`);
 
-				// on error, clear user_stake select
-				const userStakeSelect = $('#user_stake');
-				userStakeSelect.empty();
-				userStakeSelect.append('<option value="" disabled selected>Select a Stake</option>');
+					// on error, clear user_stake select
+					const userStakeSelect = $('#user_stake');
+					userStakeSelect.empty();
+					userStakeSelect.append('<option value="" disabled selected>Select a Stake</option>');
+				}
 			});
 		}
 		updateStakes();
@@ -967,16 +973,18 @@ ERC Exercise Admin
 					tbody.append(tr);
 				});
 			}).catch(err => {
-				console.error('Error fetching items:', err);
-				tbody.append(`
-					<tr>
-						<td colspan="4" class="text-center">
-							<div class="d-flex justify-content-center align-items-center">
-								<span>Error loading items</span>
-							</div>
-						</td>
-					</tr>
-				`);
+				if (!err.message.match('request was autocancelled')) {
+					console.error('Error fetching items:', err);
+					tbody.append(`
+						<tr>
+							<td colspan="4" class="text-center">
+								<div class="d-flex justify-content-center align-items-center">
+									<span>Error loading items</span>
+								</div>
+							</td>
+						</tr>
+					`);
+				}
 			});
 		}
 
@@ -1291,53 +1299,56 @@ ERC Exercise Admin
 				sort: 'name',
 				requestKey: 'users',
 				expand: 'stake,stake.region',
-			}).then(users => {
-				// check if the users array is empty
-				if (users.length === 0) {
-					tbody.append(`
-						<tr>
-							<td colspan="8" class="text-center">
-								<div class="d-flex justify-content-center align-items-center">
-									<span>No users found</span>
-								</div>
-							</td>
-						</tr>
-					`);
-					return;
-				}
+			})
+				.then(users => {
+					// check if the users array is empty
+					if (users.length === 0) {
+						tbody.append(`
+							<tr>
+								<td colspan="8" class="text-center">
+									<div class="d-flex justify-content-center align-items-center">
+										<span>No users found</span>
+									</div>
+								</td>
+							</tr>
+						`);
+						return;
+					}
 
-				// loop through the users and create a table row for each
-				users.forEach(user => {
-					const tr = $(`
-						<tr>
-							<td class="align-middle fw-bold">${user.name}</td>
-							<td class="align-middle">${user.email}</td>
-							<td class="align-middle">${user.callsign}</td>
-							<td class="align-middle">${user.comm_type}</td>
-							<td class="align-middle">${user.expand?.stake?.name || '(deleted)'}<br>/ ${user.expand?.stake?.expand?.region?.name || '(deleted)'}</td>
-							<td class="align-middle">${user.ready ? '<span class="badge text-bg-success">Ready</span>' : '<span class="badge text-bg-warning">Not Ready</span>'}</td>
-							<td class="align-middle">${user.rejected}</td>
-							<td class="align-middle text-end">
-								<button type="button" class="btn btn-primary m-1" data-bs-toggle="modal" data-bs-target="#user_modal" data-bs-id="${user.id}" data-bs-name="${user.name}" data-bs-email="${user.email}" data-bs-callsign="${user.callsign}" data-bs-comm-type="${user.comm_type}" data-bs-stake="${user.expand?.stake?.id}">Edit</button>
-								<button type="button" class="btn btn-warning m-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="user" data-bs-id="${user.id}" data-bs-name="${user.name}" data-bs-action=\'reset the "rejected" count for\'>Reset Reject #</button>
-								<button type="button" class="btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="user" data-bs-id="${user.id}" data-bs-name="${user.name}" data-bs-action="delete">Delete</button>
-							</td>
-						</tr>
-					`);
-					tbody.append(tr);
+					// loop through the users and create a table row for each
+					users.forEach(user => {
+						const tr = $(`
+							<tr>
+								<td class="align-middle fw-bold">${user.name}</td>
+								<td class="align-middle">${user.email}</td>
+								<td class="align-middle">${user.callsign}</td>
+								<td class="align-middle">${user.comm_type}</td>
+								<td class="align-middle">${user.expand?.stake?.name || '(deleted)'}<br>/ ${user.expand?.stake?.expand?.region?.name || '(deleted)'}</td>
+								<td class="align-middle">${user.ready ? '<span class="badge text-bg-success">Ready</span>' : '<span class="badge text-bg-warning">Not Ready</span>'}</td>
+								<td class="align-middle">${user.rejected}</td>
+								<td class="align-middle text-end">
+									<button type="button" class="btn btn-primary m-1" data-bs-toggle="modal" data-bs-target="#user_modal" data-bs-id="${user.id}" data-bs-name="${user.name}" data-bs-email="${user.email}" data-bs-callsign="${user.callsign}" data-bs-comm-type="${user.comm_type}" data-bs-stake="${user.expand?.stake?.id}">Edit</button>
+									<button type="button" class="btn btn-warning m-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="user" data-bs-id="${user.id}" data-bs-name="${user.name}" data-bs-action=\'reset the "rejected" count for\'>Reset Reject #</button>
+									<button type="button" class="btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#confirm_modal" data-bs-collection="user" data-bs-id="${user.id}" data-bs-name="${user.name}" data-bs-action="delete">Delete</button>
+								</td>
+							</tr>
+						`);
+						tbody.append(tr);
+					});
+				}).catch(err => {
+					if (!error.message.match('request was autocancelled')) {
+						console.error('Error fetching users:', err);
+						tbody.append(`
+							<tr>
+								<td colspan="8" class="text-center">
+									<div class="d-flex justify-content-center align-items-center">
+										<span>Error loading users</span>
+									</div>
+								</td>
+							</tr>
+						`);
+					}
 				});
-			}).catch(err => {
-				console.error('Error fetching users:', err);
-				tbody.append(`
-					<tr>
-						<td colspan="8" class="text-center">
-							<div class="d-flex justify-content-center align-items-center">
-								<span>Error loading users</span>
-							</div>
-						</td>
-					</tr>
-				`);
-			});
 		}
 		updateUsers();
 		pb.collection('users').subscribe('*', updateUsers);
@@ -1476,67 +1487,70 @@ ERC Exercise Admin
 				sort: 'created',
 				requestKey: 'tasks',
 				expand: 'resource_user,need_user,item,resource_user.stake,need_user.stake',
-			}).then(tasks => {
-				// check if the tasks array is empty
-				if (tasks.length === 0) {
-					tbody.append(`
-						<tr>
-							<td colspan="5" class="text-center">
-								<div class="d-flex justify-content-center align-items-center">
-									<span>No tasks found</span>
-								</div>
-							</td>
-						</tr>
-					`);
-					return;
-				}
-
-				// loop through the tasks and create a table row for each
-				tasks.forEach(task => {
-					// determine priority badge color
-					var badge_type;
-					switch (task.expand?.item?.priority || '(deleted)') {
-						case 'Emergency': badge_type = 'danger'; break;
-						case 'Priority': badge_type = 'warning'; break;
-						case 'Welfare': badge_type = 'primary'; break;
-						case 'Routine': badge_type = 'success'; break;
-						default: break;
+			})
+				.then(tasks => {
+					// check if the tasks array is empty
+					if (tasks.length === 0) {
+						tbody.append(`
+							<tr>
+								<td colspan="5" class="text-center">
+									<div class="d-flex justify-content-center align-items-center">
+										<span>No tasks found</span>
+									</div>
+								</td>
+							</tr>
+						`);
+						return;
 					}
 
-					// create table row
-					const tr = $(`
-						<tr>
-							<td class="align-middle">
-								<span class="badge text-bg-${badge_type}">${task.expand?.item?.priority || '(deleted)'}</span><br>
-								<span class="fw-bold">${task.expand?.item?.description || '(deleted)'}</span><br>
-								${task.expand?.item?.quantity || '(deleted)'}
-							</td>
-							<td class="align-middle">
-								${task.expand?.need_user?.name || '(deleted)'}<br>
-								${task.expand?.need_user?.callsign || '(deleted)'}
-							</td>
-							<td class="align-middle">
-								${task.expand?.resource_user?.name || '(deleted)'}<br>
-								${task.expand?.resource_user?.callsign || '(deleted)'}
-							</td>
-							<td class="align-middle">${getTaskScope(task)}</td>
-							<td class="align-middle">${getTaskStatus(task)}</td>
-						</tr>
-					`);
-					tbody.append(tr);
+					// loop through the tasks and create a table row for each
+					tasks.forEach(task => {
+						// determine priority badge color
+						var badge_type;
+						switch (task.expand?.item?.priority || '(deleted)') {
+							case 'Emergency': badge_type = 'danger'; break;
+							case 'Priority': badge_type = 'warning'; break;
+							case 'Welfare': badge_type = 'primary'; break;
+							case 'Routine': badge_type = 'success'; break;
+							default: break;
+						}
+
+						// create table row
+						const tr = $(`
+							<tr>
+								<td class="align-middle">
+									<span class="badge text-bg-${badge_type}">${task.expand?.item?.priority || '(deleted)'}</span><br>
+									<span class="fw-bold">${task.expand?.item?.description || '(deleted)'}</span><br>
+									${task.expand?.item?.quantity || '(deleted)'}
+								</td>
+								<td class="align-middle">
+									${task.expand?.need_user?.name || '(deleted)'}<br>
+									${task.expand?.need_user?.callsign || '(deleted)'}
+								</td>
+								<td class="align-middle">
+									${task.expand?.resource_user?.name || '(deleted)'}<br>
+									${task.expand?.resource_user?.callsign || '(deleted)'}
+								</td>
+								<td class="align-middle">${getTaskScope(task)}</td>
+								<td class="align-middle">${getTaskStatus(task)}</td>
+							</tr>
+						`);
+						tbody.append(tr);
+					});
+				}).catch(err => {
+					if (!err.message.match('request was autocancelled')) {
+						console.error('Error fetching tasks:', err);
+						tbody.append(`
+							<tr>
+								<td colspan="5" class="text-center">
+									<div class="d-flex justify-content-center align-items-center">
+										<span>Error loading tasks</span>
+									</div>
+								</td>
+							</tr>
+						`);
+					}
 				});
-			}).catch(err => {
-				console.error('Error fetching tasks:', err);
-				tbody.append(`
-					<tr>
-						<td colspan="5" class="text-center">
-							<div class="d-flex justify-content-center align-items-center">
-								<span>Error loading tasks</span>
-							</div>
-						</td>
-					</tr>
-				`);
-			});
 		}
 		// updateTasks(); // will be called after exercises are loaded
 		pb.collection('tasks').subscribe('*', updateTasks);
