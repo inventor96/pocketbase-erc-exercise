@@ -175,33 +175,40 @@
 	function showResourcePrompt() {
 		// hide the prompt and try the next one if the modal is shown for an id that is no longer in the queue
 		const curent_id = $('.resource-action').data('id');
-		if (curent_id && !resource_prompt_queue.some(task => task.id == curent_id)) {
+		if (resource_prompt_modal._isShown && curent_id && !resource_prompt_queue.some(task => task.id == curent_id)) {
+			console.log(Date.now(), `Resource prompt for ${curent_id} is no longer in the queue. Hiding modal...`)
 			clearInterval(interaction_timeout)
 			resource_prompt_modal.hide()
-			setTimeout(showResourcePrompt, 100)
+			//setTimeout(showResourcePrompt, 500)
+			return
 		}
 
 		// skip if it's already shown or transitioning
 		if (resource_prompt_modal._isShown || resource_prompt_modal._isTransitioning || resource_prompt_queue.length == 0) {
+			console.log(Date.now(), "Resource prompt modal is already shown or transitioning, or queue is empty. Skipping...")
 			return
 		}
 
 		// get next resource
 		var i = 0
 		while (i < resource_prompt_queue.length && notified_resources.includes(resource_prompt_queue[i].id)) {
+			// skip if already notified
+			console.log(Date.now(), `Skipping resource ${resource_prompt_queue[i].id} as it has already been displayed.`)
 			i++
 		}
 
 		// nothing for us to do here
 		if (i == resource_prompt_queue.length) {
+			console.log(Date.now(), "No new resources to prompt for.")
 			return
 		}
 
 		// show the prompt
+		console.log(Date.now(), `Showing resource prompt for ${resource_prompt_queue[i].id}...`)
 		$('.resource-action').data('id', resource_prompt_queue[i].id)
 		$('#resource_name').text(resource_prompt_queue[i].expand?.item?.description || '(deleted)')
 		resource_prompt_modal.show()
-		notification.play()
+		notification.play().catch(error => console.log(Date.now(), "Failed to play notification sound:", error))
 		notified_resources.push(resource_prompt_queue[i].id)
 		const $interaction_timer = $('#interaction_timer')
 		$interaction_timer.text('120')
@@ -211,12 +218,17 @@
 			const timer = Number($interaction_timer.text()) - 1
 			$interaction_timer.text(timer)
 			if (timer == 0) {
+				console.log(Date.now(), "Interaction timeout reached. Rejecting resource...")
 				clearInterval(interaction_timeout)
 				$('#resource_reject').trigger('click')
 			}
 		}, 1000)
 	}
-	$resource_prompt_modal.on('hidden.bs.modal', () => setTimeout(showResourcePrompt, 100))
+	$resource_prompt_modal.on('hidden.bs.modal', () => {
+		console.log(Date.now(), "Resource prompt modal hidden. Scheduling check for next resource...")
+		$('.resource-action').data('id', '')
+		setTimeout(showResourcePrompt, 600)
+	})
 
 	function checkUpdateStatusView() {
 		const $ready_btn = $('#ready_btn')
@@ -227,248 +239,249 @@
 		const $resources_list = $('#resources_list')
 		const $leave_exercise_btn = $('#leave_exercise_btn')
 
-		// refresh user details
-		pb.collection('users').authRefresh().then(() => {
-			// show not ready button if user is ready
-			if (pb.authStore.model.ready) {
-				$not_ready_btn
-					.removeClass('d-none')
-					.prop('disabled', false)
-			} else {
-				$not_ready_btn
-					.addClass('d-none')
-					.prop('disabled', true)
-			}
+		// show not ready button if user is ready
+		if (pb.authStore.model.ready) {
+			$not_ready_btn
+				.removeClass('d-none')
+				.prop('disabled', false)
+		} else {
+			$not_ready_btn
+				.addClass('d-none')
+				.prop('disabled', true)
+		}
 
-			// check if there's open needs
-			pb.collection('tasks').getFullList({
-				filter: `need_user = "${pb.authStore.model.id}" && completed = "" && cancelled = "" && resource_confirmed = true`,
-				sort: 'created',
-				expand: 'item',
-				requestKey: 'needs'
-			})
-				.then(needs_list => {
-					if (needs_list.length > 0) {
-						// remove existing needs not in the list
-						$needs_list.find('li.list-group-item').each((_, el) => {
-							if (!needs_list.some(need => need.id == $(el).data('id'))) {
-								$(el).remove()
-							}
-						})
-
-						// add missing needs
-						var i = $needs_list.find('li.list-group-item').length;
-						var added = false;
-						needs_list.forEach(need => {
-							// skip if already in the list
-							if ($needs_list.find(`li.list-group-item[data-id="${need.id}"]`).length > 0) {
-								return
-							}
-
-							// determine priority badge color
-							var badge_type;
-							switch (need.expand?.item?.priority || '(deleted)') {
-								case 'Emergency': badge_type = 'danger'; break;
-								case 'Priority': badge_type = 'warning'; break;
-								case 'Welfare': badge_type = 'primary'; break;
-								case 'Routine': badge_type = 'success'; break;
-								default: break;
-							}
-
-							// add row
-							$needs_list.append(`<li class="list-group-item ${++i % 2 ? 'list-group-item-secondary' : ''}" data-id="${need.id}">\
-									<div class="row row-cols-1 row-cols-md-2 gy-2 align-items-center">\
-										<div class="col">\
-											<h5><span class="badge text-bg-${badge_type}">${need.expand?.item?.priority || ''}</span></h5>\
-											<span class="fw-bold">${need.expand?.item?.description || '(deleted)'}</span>\
-											(${need.expand?.item?.quantity || '(deleted)'})\
-										</div>\
-										<div class="col">\
-											<form class="need-check" id="${need.id}">\
-												<div class="input-group">\
-													<input type="text" placeholder="Resource callsign" class="form-control callsign-input" required>\
-													<button type="submit" class="btn btn-success">\
-														<span class="spinner-grow spinner-grow-sm"></span>\
-														Fulfill Need\
-													</button>\
-												</div>\
-												<button type="button" class="btn btn-warning mt-2" data-bs-id="${need.id}" data-bs-toggle="modal" data-bs-target="#cancel_confirm_modal">\
-													<span class="spinner-grow spinner-grow-sm"></span>\
-													I Can't Find It...\
-												</button>\
-											</form>\
-										</div>\
-									</div>\
-								</li>`)
-							added = true
-						})
-
-						if (added) {
-							// user has open needs
-							$ready_btn.prop('disabled', true)
-							$ready_btn_spinner.addClass('d-none')
-							$ready_btn_text.text("Woohoo! Go find the resources for your needs!")
-						}
-
-						// after a while, let the user request more needs as long as none are pending confirmation by the resource user
-						setTimeout(() => {
-							pb.collection('tasks').getFullList({
-								filter: `need_user = "${pb.authStore.model.id}" && completed = "" && cancelled = "" && resource_rejected = false && resource_confirmed = false`,
-								requestKey: 'pending_needs'
-							})
-								.then(pending_needs_list => {
-									if (pending_needs_list.length > 0 || pb.authStore.model.ready) {
-										$ready_btn.prop('disabled', true)
-										$ready_btn_spinner.removeClass('d-none')
-										$ready_btn_text.text("More needs incoming...")
-
-										// show not ready button
-										$not_ready_btn
-											.removeClass('d-none')
-											.prop('disabled', false)
-									} else {
-										$ready_btn.prop('disabled', false)
-										$ready_btn_spinner.removeClass('d-none')
-										$ready_btn_text.text("I'm ready to be assigned more needs!")
-
-										// hide not ready button
-										$not_ready_btn
-											.addClass('d-none')
-											.prop('disabled', true)
-									}
-								})
-								.catch(error => {
-									if (!error.message.match('request was autocancelled')) {
-										alert(`There was an error while checking for pending needs:\n${error}\nPlease refresh the page.`)
-									}
-								})
-						}, 5000)
-					} else {
-						// no needs
-						$needs_list.empty()
-						$needs_list.append('<li class="list-group-item"><span class="placeholder-glow"><span class="placeholder col-4"></span></span></li>')
-
-						if (pb.authStore.model.ready) {
-							// user ready
-							$ready_btn.prop('disabled', true)
-							$ready_btn_spinner.removeClass('d-none')
-							$ready_btn_text.text("Waiting to be assigned needs...")
-						} else {
-							// user not ready
-							$ready_btn.prop('disabled', false)
-							$ready_btn_spinner.removeClass('d-none')
-							$ready_btn_text.text("I'm ready to be assigned needs!")
-						}
-					}
-				})
-				.catch(error => {
-					if (!error.message.match('request was autocancelled')) {
-						alert(`There was an error while checking for assigned needs:\n${error}\nPlease refresh the page.`)
-					}
-				})
-
-			// check if there's open resources
-			pb.collection('tasks').getFullList({
-				filter: `resource_user = "${pb.authStore.model.id}" && completed = "" && cancelled = "" && resource_confirmed = true && resource_rejected = false`,
-				sort: 'created',
-				expand: 'item',
-				requestKey: 'resources'
-			})
-				.then(resource_list => {
-					$resources_list.empty()
-					if (resource_list.length > 0) {
-						// user has open resources
-						$leave_exercise_btn.removeClass('d-none')
-						var i = 0
-						resource_list.forEach(resource => {
-							$resources_list.append(`<li class="list-group-item ${++i % 2 ? 'list-group-item-secondary' : ''}" data-id="${resource.id}">\
-									<span class="fw-bold">${resource.expand?.item?.description || '(deleted)'}</span>\
-									(${resource.expand?.item?.quantity || '(deleted)'})\
-								</li>`)
-						});
-					} else {
-						// no resources
-						$leave_exercise_btn.addClass('d-none')
-						$resources_list.append('<li class="list-group-item"><span class="placeholder-glow"><span class="placeholder col-4"></span></span></li>')
-					}
-				})
-				.catch(error => {
-					if (!error.message.match('request was autocancelled')) {
-						alert(`There was an error while checking for assigned resources:\n${error}`)
-					}
-				})
-
-			// check for resources pending confirmation
-			pb.collection('tasks').getFullList({
-				filter: `resource_user = "${pb.authStore.model.id}" && completed = "" && cancelled = "" && resource_confirmed = false && resource_rejected = false`,
-				sort: 'created',
-				expand: 'item',
-				requestKey: 'pending_resources'
-			})
-				.then(pending_resources_list => {
-					resource_prompt_queue = pending_resources_list
-					showResourcePrompt()
-				})
-				.catch(error => console.warn('There was an error while fetching pending resources:', error))
-
-			// update list of fulfilled needs
-			pb.collection('tasks').getFullList({
-				filter: `need_user = "${pb.authStore.model.id}" && completed != ""`,
-				sort: 'created',
-				expand: 'item,resource_user',
-				requestKey: 'fulfilled_needs'
-			})
-				.then(fulfilled_needs_list => {
-					const $needs_fulfilled_list = $('#needs_fulfilled_list')
-					$needs_fulfilled_list.empty()
-					if (fulfilled_needs_list.length > 0) {
-						var i = 0
-						fulfilled_needs_list.forEach(need => {
-							$needs_fulfilled_list.append(`<tr>\
-									<td>${need.expand?.item?.description || '(deleted)'}</td>\
-									<td>${need.expand?.resource_user?.callsign || '(deleted)'}</td>\
-								</tr>`)
-						})
-					}
-
-					// update count of fulfilled needs
-					$('#needs_count').text(fulfilled_needs_list.length)
-				})
-				.catch(error => {
-					if (!error.message.match('request was autocancelled')) {
-						alert(`There was an error while checking fulfilled needs:\n${error}\nPlease refresh the page.`)
-					}
-				})
-
-			// update list of fulfilled resources
-			pb.collection('tasks').getFullList({
-				filter: `resource_user = "${pb.authStore.model.id}" && completed != ""`,
-				sort: 'created',
-				expand: 'item,need_user',
-				requestKey: 'fulfilled_resources'
-			})
-				.then(fulfilled_resources_list => {
-					const $resources_fulfilled_list = $('#resources_fulfilled_list')
-					$resources_fulfilled_list.empty()
-					if (fulfilled_resources_list.length > 0) {
-						var i = 0
-						fulfilled_resources_list.forEach(resource => {
-							$resources_fulfilled_list.append(`<tr>\
-									<td>${resource.expand?.item?.description || '(deleted)'}</td>\
-									<td>${resource.expand?.need_user?.callsign || '(deleted)'}</td>\
-								</tr>`)
-						})
-					}
-
-					// update count of fulfilled resources
-					$('#resources_count').text(fulfilled_resources_list.length)
-				})
-				.catch(error => {
-					if (!error.message.match('request was autocancelled')) {
-						alert(`There was an error while checking fulfilled resources:\n${error}\nPlease refresh the page.`)
-					}
-				})
+		// check if there's open needs
+		pb.collection('tasks').getFullList({
+			filter: `need_user = "${pb.authStore.model.id}" && completed = "" && cancelled = "" && resource_confirmed = true`,
+			sort: 'created',
+			expand: 'item',
+			requestKey: 'needs'
 		})
+			.then(needs_list => {
+				if (needs_list.length > 0) {
+					// remove existing needs not in the list
+					$needs_list.find('li.list-group-item').each((_, el) => {
+						if (!needs_list.some(need => need.id == $(el).data('id'))) {
+							$(el).remove()
+						}
+					})
+
+					// add missing needs
+					var i = $needs_list.find('li.list-group-item').length;
+					var added = false;
+					needs_list.forEach(need => {
+						// skip if already in the list
+						if ($needs_list.find(`li.list-group-item[data-id="${need.id}"]`).length > 0) {
+							return
+						}
+
+						// determine priority badge color
+						var badge_type;
+						switch (need.expand?.item?.priority || '(deleted)') {
+							case 'Emergency': badge_type = 'danger'; break;
+							case 'Priority': badge_type = 'warning'; break;
+							case 'Welfare': badge_type = 'primary'; break;
+							case 'Routine': badge_type = 'success'; break;
+							default: break;
+						}
+
+						// add row
+						$needs_list.append(`<li class="list-group-item ${++i % 2 ? 'list-group-item-secondary' : ''}" data-id="${need.id}">\
+								<div class="row row-cols-1 row-cols-md-2 gy-2 align-items-center">\
+									<div class="col">\
+										<h5><span class="badge text-bg-${badge_type}">${need.expand?.item?.priority || ''}</span></h5>\
+										<span class="fw-bold">${need.expand?.item?.description || '(deleted)'}</span>\
+										(${need.expand?.item?.quantity || '(deleted)'})\
+									</div>\
+									<div class="col">\
+										<form class="need-check" id="${need.id}">\
+											<div class="input-group">\
+												<input type="text" placeholder="Resource callsign" class="form-control callsign-input" required>\
+												<button type="submit" class="btn btn-success">\
+													<span class="spinner-grow spinner-grow-sm"></span>\
+													Fulfill Need\
+												</button>\
+											</div>\
+											<button type="button" class="btn btn-warning mt-2" data-bs-id="${need.id}" data-bs-toggle="modal" data-bs-target="#cancel_confirm_modal">\
+												<span class="spinner-grow spinner-grow-sm"></span>\
+												I Can't Find It...\
+											</button>\
+										</form>\
+									</div>\
+								</div>\
+							</li>`)
+						added = true
+					})
+
+					if (added) {
+						// user has open needs
+						$ready_btn.prop('disabled', true)
+						$ready_btn_spinner.addClass('d-none')
+						$ready_btn_text.text("Woohoo! Go find the resources for your needs!")
+					}
+
+					// after a while, let the user request more needs as long as none are pending confirmation by the resource user
+					setTimeout(() => {
+						pb.collection('tasks').getFullList({
+							filter: `need_user = "${pb.authStore.model.id}" && completed = "" && cancelled = "" && resource_rejected = false && resource_confirmed = false`,
+							requestKey: 'pending_needs'
+						})
+							.then(pending_needs_list => {
+								if (pending_needs_list.length > 0 || pb.authStore.model.ready) {
+									$ready_btn.prop('disabled', true)
+									$ready_btn_spinner.removeClass('d-none')
+									$ready_btn_text.text("More needs incoming...")
+
+									// show not ready button
+									$not_ready_btn
+										.removeClass('d-none')
+										.prop('disabled', false)
+								} else {
+									$ready_btn.prop('disabled', false)
+									$ready_btn_spinner.removeClass('d-none')
+									$ready_btn_text.text("I'm ready to be assigned more needs!")
+
+									// hide not ready button
+									$not_ready_btn
+										.addClass('d-none')
+										.prop('disabled', true)
+								}
+							})
+							.catch(error => {
+								if (!error.message.match('request was autocancelled')) {
+									alert(`There was an error while checking for pending needs:\n${error}\nPlease refresh the page.`)
+								}
+							})
+					}, 5000)
+				} else {
+					// no needs
+					$needs_list.empty()
+					$needs_list.append('<li class="list-group-item"><span class="placeholder-glow"><span class="placeholder col-4"></span></span></li>')
+
+					if (pb.authStore.model.ready) {
+						// user ready
+						$ready_btn.prop('disabled', true)
+						$ready_btn_spinner.removeClass('d-none')
+						$ready_btn_text.text("Waiting to be assigned needs...")
+					} else {
+						// user not ready
+						$ready_btn.prop('disabled', false)
+						$ready_btn_spinner.removeClass('d-none')
+						$ready_btn_text.text("I'm ready to be assigned needs!")
+					}
+				}
+			})
+			.catch(error => {
+				if (!error.message.match('request was autocancelled')) {
+					alert(`There was an error while checking for assigned needs:\n${error}\nPlease refresh the page.`)
+				}
+			})
+
+		// check if there's open resources
+		pb.collection('tasks').getFullList({
+			filter: `resource_user = "${pb.authStore.model.id}" && completed = "" && cancelled = "" && resource_confirmed = true && resource_rejected = false`,
+			sort: 'created',
+			expand: 'item',
+			requestKey: 'resources'
+		})
+			.then(resource_list => {
+				$resources_list.empty()
+				if (resource_list.length > 0) {
+					// user has open resources
+					$leave_exercise_btn.removeClass('d-none')
+					var i = 0
+					resource_list.forEach(resource => {
+						$resources_list.append(`<li class="list-group-item ${++i % 2 ? 'list-group-item-secondary' : ''}" data-id="${resource.id}">\
+								<span class="fw-bold">${resource.expand?.item?.description || '(deleted)'}</span>\
+								(${resource.expand?.item?.quantity || '(deleted)'})\
+							</li>`)
+					});
+				} else {
+					// no resources
+					$leave_exercise_btn.addClass('d-none')
+					$resources_list.append('<li class="list-group-item"><span class="placeholder-glow"><span class="placeholder col-4"></span></span></li>')
+				}
+			})
+			.catch(error => {
+				if (!error.message.match('request was autocancelled')) {
+					alert(`There was an error while checking for assigned resources:\n${error}`)
+				}
+			})
+
+		// check for resources pending confirmation
+		pb.collection('tasks').getFullList({
+			filter: `resource_user = "${pb.authStore.model.id}" && completed = "" && cancelled = "" && resource_confirmed = false && resource_rejected = false`,
+			sort: 'created',
+			expand: 'item',
+			requestKey: 'pending_resources'
+		})
+			.then(pending_resources_list => {
+				resource_prompt_queue = pending_resources_list
+				showResourcePrompt()
+			})
+			.catch(error => {
+				if (!error.message.match('request was autocancelled')) {
+					alert(`There was an error while checking pending resources:\n${error}\nPlease refresh the page.`)
+				}
+			})
+
+		// update list of fulfilled needs
+		pb.collection('tasks').getFullList({
+			filter: `need_user = "${pb.authStore.model.id}" && completed != ""`,
+			sort: 'created',
+			expand: 'item,resource_user',
+			requestKey: 'fulfilled_needs'
+		})
+			.then(fulfilled_needs_list => {
+				const $needs_fulfilled_list = $('#needs_fulfilled_list')
+				$needs_fulfilled_list.empty()
+				if (fulfilled_needs_list.length > 0) {
+					var i = 0
+					fulfilled_needs_list.forEach(need => {
+						$needs_fulfilled_list.append(`<tr>\
+								<td>${need.expand?.item?.description || '(deleted)'}</td>\
+								<td>${need.expand?.resource_user?.callsign || '(deleted)'}</td>\
+							</tr>`)
+					})
+				}
+
+				// update count of fulfilled needs
+				$('#needs_count').text(fulfilled_needs_list.length)
+			})
+			.catch(error => {
+				if (!error.message.match('request was autocancelled')) {
+					alert(`There was an error while checking fulfilled needs:\n${error}\nPlease refresh the page.`)
+				}
+			})
+
+		// update list of fulfilled resources
+		pb.collection('tasks').getFullList({
+			filter: `resource_user = "${pb.authStore.model.id}" && completed != ""`,
+			sort: 'created',
+			expand: 'item,need_user',
+			requestKey: 'fulfilled_resources'
+		})
+			.then(fulfilled_resources_list => {
+				const $resources_fulfilled_list = $('#resources_fulfilled_list')
+				$resources_fulfilled_list.empty()
+				if (fulfilled_resources_list.length > 0) {
+					var i = 0
+					fulfilled_resources_list.forEach(resource => {
+						$resources_fulfilled_list.append(`<tr>\
+								<td>${resource.expand?.item?.description || '(deleted)'}</td>\
+								<td>${resource.expand?.need_user?.callsign || '(deleted)'}</td>\
+							</tr>`)
+					})
+				}
+
+				// update count of fulfilled resources
+				$('#resources_count').text(fulfilled_resources_list.length)
+			})
+			.catch(error => {
+				if (!error.message.match('request was autocancelled')) {
+					alert(`There was an error while checking fulfilled resources:\n${error}\nPlease refresh the page.`)
+				}
+			})
 	}
 
 	$(() => {
@@ -607,7 +620,6 @@
 			$('#leave_confirm').prop('disabled', true)
 			rejectNextResource()
 		})
-
 
 		// update status view
 		checkUpdateStatusView()
