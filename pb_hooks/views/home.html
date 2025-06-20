@@ -238,16 +238,38 @@
 		const $resources_list = $('#resources_list')
 		const $leave_exercise_btn = $('#leave_exercise_btn')
 
-		// show not ready button if user is ready
-		if (pb.authStore.model.ready) {
-			$not_ready_btn
-				.removeClass('d-none')
-				.prop('disabled', false)
-		} else {
-			$not_ready_btn
-				.addClass('d-none')
-				.prop('disabled', true)
-		}
+		// check if auth store needs updated
+		pb.collection('users').getOne(pb.authStore.model.id, {
+			requestKey: 'ready',
+		})
+			.then(async user => {
+				// check if new user model is different than auth store model
+				if (Object.keys(user).some(key => user.hasOwnProperty(key) && pb.authStore.model.hasOwnProperty(key) && user[key] !== pb.authStore.model[key])) {
+					try {
+						await pb.collection('users').authRefresh()
+					} catch (error) {
+						if (!error.message.match('request was autocancelled')) {
+							alert(`There was an error while refreshing your profile status:\n${error}\nPlease refresh the page.`)
+						}
+					}
+				}
+
+				// show not ready button if user is ready
+				if (pb.authStore.model.ready) {
+					$not_ready_btn
+						.removeClass('d-none')
+						.prop('disabled', false)
+				} else {
+					$not_ready_btn
+						.addClass('d-none')
+						.prop('disabled', true)
+				}
+			})
+			.catch(error => {
+				if (!error.message.match('request was autocancelled')) {
+					alert(`There was an error while checking your profile status:\n${error}\nPlease refresh the page.`)
+				}
+			})
 
 		// check if there's open needs
 		pb.collection('tasks').getFullList({
