@@ -129,7 +129,7 @@ onRecordUpdateExecute((e) => {
 						.one(resource_user)
 				} catch (err) {
 					// no stake user available
-					console.log('Could not find a resource user in the stake:', err)
+					$app.logger().warn('Could not find a resource user in the stake', 'error', err)
 					skip_stake = true
 				}
 			} else if (scope_chooser <= region_weight + stake_weight && !skip_region) {
@@ -155,7 +155,7 @@ onRecordUpdateExecute((e) => {
 						.one(resource_user)
 				} catch (err) {
 					// no region user available
-					console.log('Could not find a resource user in the region:', err)
+					$app.logger().warn('Could not find a resource user in the region', 'error', err)
 					skip_region = true
 				}
 			} else if (!skip_storehouse) {
@@ -179,7 +179,7 @@ onRecordUpdateExecute((e) => {
 						.one(resource_user)
 				} catch (err) {
 					// no storehouse user available
-					console.log('Could not find a resource user in the storehouse:', err)
+					$app.logger().warn('Could not find a resource user in the storehouse', 'error', err)
 					skip_storehouse = true
 				}
 			} else {
@@ -190,7 +190,7 @@ onRecordUpdateExecute((e) => {
 
 		// sanity check to make sure there's enough users
 		if (!resource_user.id) {
-			console.error("chooseUser() logic error! There doesn't seem to be any other users available to use as the resource user!")
+			$app.logger().error("chooseUser() logic error! There doesn't seem to be any other users available to use as the resource user!")
 			throw new ApiError(500, 'Unable to find a resource user!')
 		}
 

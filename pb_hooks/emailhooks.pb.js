@@ -2,6 +2,6 @@
 
 onMailerRecordAuthAlertSend((e) => {
 	// don't send the email
-	console.log("Skipping auth alert email")
+	$app.logger().info("Skipping auth alert email")
 	return;
 })

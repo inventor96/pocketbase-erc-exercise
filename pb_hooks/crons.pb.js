@@ -18,19 +18,20 @@ cronAdd("check-unconfirmed-tasks", "* * * * *", () => {
 
 	// mark them as rejected and add them to a report
 	unconfirmed_tasks.forEach(task => {
+		task.set('resource_rejected', true)
+		try {
+			$app.save(task)
+		} catch (error) {
+			$app.logger().error("Error saving task as rejected!", 'task_id', task.id, 'error', error)
+			return
+		}
 		report.push({
 			task_id: task.id,
 			prev_resource_user: task.get('resource_user')
 		})
-		task.set('resource_rejected', true)
-		$app.save(task)
 	})
 
 	// return the report if there are any tasks
 	const l = $app.logger().withGroup('check-unconfirmed-tasks')
-	if (report.length > 0) {
-		l.info(`${report.length} unconfirmed tasks found and marked as rejected.`, 'report', report)
-	} else {
-		l.info("No unconfirmed tasks found.")
-	}
+	l.info(`${report.length} unconfirmed tasks found and marked as rejected.`, 'report', report)
 })

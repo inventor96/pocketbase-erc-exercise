@@ -30,7 +30,7 @@ routerAdd("GET", "/report", (e) => {
 				.one(reporting_exercise)
 		}
 	} catch (error) {
-		console.error("Error finding exercise for report:", error)
+		$app.logger().error("Error finding exercise for report:", 'error', error)
 		e.json(404, {"error": "Could not find an exercise to report on."})
 		return
 	}

@@ -96,7 +96,7 @@ routerAdd("POST", "/fulfill-need", (e) => {
 routerAdd("POST", "/not-ready", (e) => {
 	// get data
 	const user = e.auth
-	console.log(`Clearing pending tasks for user ${user.id}...`)
+	$app.logger().info(`Clearing pending tasks for user ${user.id}...`)
 
 	// get all pending tasks for the user
 	const pending_tasks = $app.findAllRecords("tasks",
